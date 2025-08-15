@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>Consultas Realizadas</title>
+</h:head>
+<h:body>
+<h:form id="formConsultas">
+    <p:toolbar>
+        <p:toolbarGroup>
+            <p:commandButton value="Nova Consulta" icon="pi pi-plus"
+                             action="#{consultasRealizadasBean.novaConsulta}" />
+        </p:toolbarGroup>
+    </p:toolbar>
+
+    <p:dataTable value="#{consultasRealizadasBean.consultas}" var="c" paginator="true" rows="10" responsiveLayout="scroll">
+
+        <p:column headerText="ID Animal">
+            <h:outputText value="#{c.idAnimal}" />
+        </p:column>
+
+        <p:column headerText="Animal">
+            <h:outputText value="#{c.nomeAnimal}" />
+        </p:column>
+
+        <p:column headerText="Proprietário">
+            <h:outputText value="#{c.nomeProprietario}" />
+        </p:column>
+
+        <p:column headerText="Endereço">
+            <h:outputText value="#{c.enderecoProprietario}" />
+        </p:column>
+
+        <p:column headerText="Telefone">
+            <h:outputText value="#{c.contatoProprietario}" />
+        </p:column>
+
+        <p:column headerText="Data da Consulta">
+            <h:outputText value="#{c.dataConsulta}">
+                <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+            </h:outputText>
+        </p:column>
+
+    </p:dataTable>
+</h:form>
+</h:body>
+</html>

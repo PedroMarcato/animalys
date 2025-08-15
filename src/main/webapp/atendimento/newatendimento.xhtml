@@ -1,0 +1,125 @@
+<ui:composition template="/WEB-INF/template/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui">
+
+	<f:metadata>
+		<f:viewParam name="solicitacao"
+			value="#{newAtendimentoBean.solicitacao}" />
+		<f:viewAction action="#{newAtendimentoBean.inicializar()}" />
+	</f:metadata>
+	<ui:define name="titulo">Consulta Clínica</ui:define>
+
+	<ui:define name="content">
+		<h:form id="form">
+			<h1 class="aw-page-title">Consulta Clínica</h1>
+
+			<p:messages id="msg" closable="true" />
+
+			<p:panelGrid columns="2" layout="grid"
+				columnClasses="ui-grid-col-1, ui-grid-col-6"
+				styleClass="panelgrid-noborder">
+
+				<p:outputLabel value="N° " style="font-weight: bold" />
+				<p:outputLabel
+					value="#{newAtendimentoBean.solicitacao.idSolicitacao}" />
+
+				<p:outputLabel value="Proprietário: " style="font-weight: bold" />
+				<p:outputLabel
+					value="#{newAtendimentoBean.solicitacao.proprietario.nome}" />
+				<p:outputLabel value=" CPF: " style="font-weight: bold" />
+				<p:outputLabel
+					value="#{newAtendimentoBean.solicitacao.proprietario.cpf}" />
+
+			</p:panelGrid>
+
+			<p:dataTable id="animais" var="animal"
+				value="#{newAtendimentoBean.animaisDoProprietario}"
+				emptyMessage="Nenhum animal carregado!" style="margin-top: 20px"
+				rowStyleClass="#{animal.status le 'AGENDADOCASTRACAO' ? 'blue' : null }">
+				<f:facet name="header">
+            		Animais da Solicitação
+        			</f:facet>
+				<p:column headerText="Nome">
+					<h:outputText value="#{animal.nome}" />
+				</p:column>
+				<p:column headerText="Raça/Espécie">
+					<h:outputText
+						value="#{animal.raca.nome} / #{animal.raca.especie.nome}" />
+				</p:column>
+				<p:column headerText="Idade">
+					<h:outputText value="#{animal.idade}" />
+				</p:column>
+				<p:column headerText="Status">
+					<h:outputText value="#{animal.status.descricao}" />
+				</p:column>
+				<p:column headerText="Foto" style="width: 100px;">
+						    <p:commandLink onclick="PF('imagemDialog').show();" 
+						                   action="#{pesquisaSolicitacoesBean.selecionarImagem(animal.foto)}"
+						                   process="@this" 
+						                   update="imagemDialogContent">
+						        <img src="/uploads/#{not empty animal.foto ? animal.foto : 'no_image.jpg'}"
+						             width="100"
+						             alt="Foto de #{animal.nome}"
+						             style="cursor: pointer;" />
+						    </p:commandLink>
+						</p:column>
+				
+				<p:column style="width:32px;text-align: center">
+					<p:button icon="fa fa-external-link" title="Atender"
+						outcome="/atendimento/consultaAnimal">
+						<f:param name="animal" value="#{animal.idAnimal}" />
+						<f:param name="solicitacao"
+							value="#{newAtendimentoBean.solicitacao.idSolicitacao}" />
+					</p:button>
+				</p:column>
+			</p:dataTable>
+			
+			<!-- tabela separada 
+			<p:dataTable var="animal"
+				value="#{newAtendimentoBean.animaisDoProprietario}"
+				emptyMessage="Nenhum animal carregado!" style="margin-top: 0.5px; max-width: 550px;"
+				rowStyleClass="#{animal.status le 'AGENDADOCASTRACAO' ? 'blue' : null }">
+				
+				<p:column headerText="Foto" style="width: 100px;">
+						    <p:commandLink onclick="PF('imagemDialog').show();" 
+						                   action="#{pesquisaSolicitacoesBean.selecionarImagem(animal.foto)}"
+						                   process="@this" 
+						                   update="imagemDialogContent">
+						              <div style="display: flex">
+						              <div style="margin: 0 auto">
+						        <img src="/uploads/#{not empty animal.foto ? animal.foto : 'no_image.jpg'}"
+						             alt="Foto de #{animal.nome}"
+						             style="cursor: pointer; max-width: 500px;" />
+						             </div>
+						             </div>
+						    </p:commandLink>
+				</p:column>
+				
+			</p:dataTable> -->
+		</h:form>
+		
+		<p:dialog header="Visualização da Imagem" 
+	          widgetVar="imagemDialog"
+	          hideEffect="fade" 
+	          showEffect="fade"
+	          id="imagemDialog" 
+	          style="max-width: 700px; min-height: 400px;"
+	          modal="true"
+	          resizable="true">
+	    
+	    <h:panelGroup id="imagemDialogContent">
+	        <div style="text-align: center;">
+	            <img src="/uploads/#{not empty pesquisaSolicitacoesBean.imagemSelecionada ? pesquisaSolicitacoesBean.imagemSelecionada : 'no_image.jpg'}"
+	                 style="max-width: 100%; max-height: 500px;"
+	                 alt="Imagem ampliada" />
+	        </div>
+	    </h:panelGroup>
+	    
+	</p:dialog>
+		
+	</ui:define>
+
+</ui:composition>

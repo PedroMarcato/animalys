@@ -1,0 +1,252 @@
+<ui:composition template="/WEB-INF/template/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui">
+
+	<f:metadata>
+		<f:viewParam name="animal"
+			value="#{consultaAnimalBean.animalSelecionado}" />
+		<f:viewParam name="solicitacao"
+			value="#{consultaAnimalBean.solicitacao}" />
+		<f:viewAction action="#{consultaAnimalBean.inicializar}" />
+	</f:metadata>
+	<ui:define name="titulo">Consulta Clínica</ui:define>
+
+	<ui:define name="content">
+		<h:form id="form">
+			<h1 class="aw-page-title">Consulta Clínica</h1>
+
+			<p:messages id="msg" closable="true" />
+			<p:toolbar>
+				<p:toolbarGroup>
+					<p:commandButton value="Salvar" icon="fa fa-save" id="botaoSalvar"
+						action="#{consultaAnimalBean.salvar}" update="@form, eventDetails"
+						disabled="#{consultaAnimalBean.atendido}" />
+				</p:toolbarGroup>
+				<p:toolbarGroup align="right">
+					<p:button value="Pesquisa" icon="fa fa-search"
+						outcome="/atendimento/newatendimento">
+						<f:param name="solicitacao"
+							value="#{consultaAnimalBean.solicitacao.idSolicitacao}" />
+					</p:button>
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<p:panelGrid columns="2" layout="grid"
+				columnClasses="ui-grid-col-1, ui-grid-col-6"
+				styleClass="panelgrid-noborder" style="margin-top: 10px">
+
+				<p:outputLabel value="Animal: " style="font-weight: bold" />
+				<p:outputLabel value="#{consultaAnimalBean.animalSelecionado.nome}" />
+				<p:outputLabel value=" Espécie: " style="font-weight: bold" />
+				<p:outputLabel
+					value="#{consultaAnimalBean.animalSelecionado.raca.especie.nome}" />
+				<p:outputLabel value=" Raça: " style="font-weight: bold" />
+				<p:outputLabel
+					value="#{consultaAnimalBean.animalSelecionado.raca.nome}" />
+				<p:outputLabel value=" Sexo: " style="font-weight: bold" />
+				<p:outputLabel
+					value="#{consultaAnimalBean.animalSelecionado.sexo.descricao}" />
+				<p:outputLabel value=" Idade: " style="font-weight: bold" />
+				<p:outputLabel value="#{consultaAnimalBean.animalSelecionado.idade}" />
+
+				<p:outputLabel value=" Solicitação: " style="font-weight: bold" />
+				<p:outputLabel
+					value="#{consultaAnimalBean.solicitacao.idSolicitacao}" />
+
+
+			</p:panelGrid>
+			<p:tabView id="tabView1">
+
+				<p:tab title="Diagnóstico">
+
+					<p:panelGrid columns="1" id="painel" layout="grid"
+						columnClasses="ui-grid-col-12" styleClass="panelgrid-noborder">
+
+						<p:textEditor id="parecer" widgetVar="editor1"
+							value="#{consultaAnimalBean.atendimento.diagnostico}"
+							height="300" style="margin-bottom:10px" rendered="true"
+							required="true" requiredMessage="Informe o parecer!"
+							readonly="#{consultaAnimalBean.atendido}" />
+
+					</p:panelGrid>
+				</p:tab>
+
+				<p:tab title="Medicamentos">
+
+					<p:panelGrid columns="2" id="painelMedicamento" layout="grid"
+						columnClasses="ui-grid-col-2,ui-grid-col-10"
+						styleClass="panelgrid-noborder">
+
+						<p:outputLabel value="Medicamento" for="medicamento" />
+						<h:panelGroup>
+							<p:autoComplete id="medicamento" dropdown="true"
+								value="#{consultaAnimalBean.itemLoteSelecionado.lote}"
+								completeMethod="#{consultaAnimalBean.completarLote}" var="lote"
+								itemLabel="#{lote}" itemValue="#{lote}" forceSelection="true"
+								minQueryLength="2" maxResults="10"
+								readonly="#{consultaAnimalBean.atendido}">
+								<p:ajax update="labelEstoque" event="blur" />
+							</p:autoComplete>
+							<p:outputLabel
+								value="Estoque: #{consultaAnimalBean.itemLoteSelecionado.lote.quantidade}"
+								id="labelEstoque" style="margin-left: 10px;" />
+						</h:panelGroup>
+						<p:outputLabel value="Quantidade" />
+						<h:panelGroup>
+							<p:inputText value="#{consultaAnimalBean.quantidade}"
+								readonly="#{consultaAnimalBean.atendido}" />
+							<p:commandButton value="Adicionar" icon="fa fa-plus"
+								id="botaoAdicionar2"
+								action="#{consultaAnimalBean.adicionarLote}" update="@form"
+								style="margin-left: 10px;"
+								disabled="#{consultaAnimalBean.atendido}" />
+						</h:panelGroup>
+					</p:panelGrid>
+
+					<p:dataTable id="itensTable" style="margin-top: 20px"
+						emptyMessage="Nenhum item adicionado!" rows="5" reflow="true"
+						value="#{consultaAnimalBean.itensLotes}" var="item">
+						<p:column headerText="Nome">
+							<h:outputText value="#{item.lote.produto.nome}" />
+						</p:column>
+						<p:column headerText="Lote">
+							<h:outputText value="#{item.lote.numeroLote}" />
+						</p:column>
+						<p:column headerText="Validade">
+							<h:outputText value="#{item.lote.validadeFormatada}" />
+						</p:column>
+						<p:column headerText="QTD">
+							<h:outputText value="#{item.quantidade}" />
+						</p:column>
+						<p:column headerText="Ações"
+							style="width: 120px; text-align: center">
+							<p:commandButton icon="ui-icon-trash" title="Excluir"
+								oncomplete="PF('confirmacaoExclusao2').show()" process="@this"
+								update="form:tabView1:confirmacaoExclusaoDialog2"
+								disabled="#{consultaAnimalBean.atendido}">
+								<f:setPropertyActionListener
+									target="#{consultaAnimalBean.itemLoteSelecionado}"
+									value="#{item}" />
+							</p:commandButton>
+						</p:column>
+					</p:dataTable>
+
+					<p:confirmDialog header="Remover Item"
+						message="Tem certeza que deseja remover este item?"
+						widgetVar="confirmacaoExclusao2" id="confirmacaoExclusaoDialog2">
+						<p:button value="Não" icon="fa fa-close"
+							onclick="PF('confirmacaoExclusao').hide(); return false;" />
+						<p:commandButton value="Sim" icon="fa fa-check"
+							oncomplete="PF('confirmacaoExclusao2').hide();"
+							action="#{consultaAnimalBean.removerProduto}" process="@this"
+							update="itensTable" />
+					</p:confirmDialog>
+				</p:tab>
+				<p:tab title="Agendar Castração">
+
+					<p:schedule id="scheduleLocale"
+						value="#{consultaAnimalBean.eventModel}" locale="pt"
+						timeZone="GMT-3" resizable="true" timeFormat="HH:mm"
+						style="margin-top: 20px; width: 800px">
+
+						<p:ajax event="dateSelect"
+							listener="#{consultaAnimalBean.onDateSelect}"
+							update=":form:eventDetails"
+							oncomplete="PF('eventDialog').show();" />
+
+						<p:ajax event="eventSelect"
+							listener="#{consultaAnimalBean.onEventSelect}"
+							update=":form:eventDetails2"
+							oncomplete="PF('eventDialog2').show();" />
+
+					</p:schedule>
+				</p:tab>
+
+				<p:tab title="Atendimentos anteriores"
+					rendered="#{consultaAnimalBean.temAtendimentoAnterior}">
+					<p:accordionPanel var="anterior"
+						value="#{consultaAnimalBean.atendimentosAnteriores}">
+						<p:tab
+							title="#{anterior.dataAtendimentoFormatada} - #{anterior.profissional.nome}">
+							<h:panelGrid columns="2" cellpadding="10">
+								<p:outputLabel value="Diagnóstico:" />
+								<p:outputLabel value="#{anterior.diagnostico}" escape="false" />
+
+								<p:outputLabel value="Data para Castração" />
+								<p:outputLabel
+									value="#{anterior.animal.dataAgendaCastracao.time}">
+									<f:convertDateTime locale="pt" pattern="dd/MM/yyyy HH:mm"
+										type="date" />
+								</p:outputLabel>
+
+								<p:outputLabel value="Medicamentos" />
+								<p:dataTable id="medicamentosFeitos" style="margin-top: 20px"
+									emptyMessage="Nenhum medicamento adicionado!" rows="10"
+									reflow="true" value="#{anterior.itemLoteAtendimento}"
+									var="item">
+									<p:column headerText="Medicamento">
+										<h:outputText value="#{item.lote.produto.nome}" />
+									</p:column>
+									<p:column headerText="Quantidade">
+										<h:outputText value="#{item.quantidade}" />
+									</p:column>
+									<p:column headerText="Vencimento">
+										<h:outputText value="#{item.lote.validadeFormatada}" />
+									</p:column>
+
+								</p:dataTable>
+
+							</h:panelGrid>
+						</p:tab>
+					</p:accordionPanel>
+				</p:tab>
+			</p:tabView>
+
+			<p:dialog widgetVar="eventDialog" header="Agendar Castração"
+				showEffect="clip" hideEffect="clip">
+				<h:panelGrid id="eventDetails" columns="2">
+
+					<p:outputLabel for="from" value="Data:" />
+					<p:calendar id="from" mask="99/99/9999 99:99"
+						value="#{consultaAnimalBean.event.startDate}"
+						pattern="dd/MM/yyyy HH:mm" locale="pt" />
+
+					<p:commandButton value="Salvar" icon="fa fa-check"
+						oncomplete="PF('eventDialog').hide();"
+						action="#{consultaAnimalBean.adicionaCastracao}" update="@form"
+						disable="#{consultaAnimalBean.atendido}" />
+				</h:panelGrid>
+			</p:dialog>
+
+			<p:dialog widgetVar="eventDialog2"
+				header="Agendamendo da visita clínica" showEffect="clip"
+				hideEffect="clip">
+				<h:panelGrid id="eventDetails2" columns="2">
+
+					<p:outputLabel value="Proprietário:" style="font-weight: bold" />
+
+					<p:outputLabel
+						value="#{consultaAnimalBean.animalSelecionadoSchedule.proprietario.nome}" />
+						
+					<p:outputLabel value="Animal:" style="font-weight: bold"/>
+
+					<p:outputLabel
+						value="#{consultaAnimalBean.animalSelecionadoSchedule.nome}" />	
+						
+					<p:outputLabel value="Data para castração:" style="font-weight: bold"/>	
+
+					<p:outputLabel
+						value="#{consultaAnimalBean.animalSelecionadoSchedule.dataAgendaCastracao.time}">
+						<f:convertDateTime type="date" locale="pt"
+							pattern="dd/MM/yyyy HH:mm" />
+					</p:outputLabel>
+
+				</h:panelGrid>
+			</p:dialog>
+
+		</h:form>
+	</ui:define>
+</ui:composition>

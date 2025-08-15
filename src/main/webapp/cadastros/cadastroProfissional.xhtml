@@ -1,0 +1,126 @@
+<ui:composition template="/WEB-INF/template/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui">
+
+
+	<ui:define name="titulo">#{cadastroProfissionalBean.editando ? 'Edição de Profissionais' : 'Cadastro de Profissão'}</ui:define>
+	<f:metadata>
+		<f:viewParam name="profissional"
+			value="#{cadastroProfissionalBean.profissional}" />
+		<f:viewAction action="#{cadastroProfissionalBean.inicializar()}" />
+	</f:metadata>
+	<ui:define name="content">
+		<h:form id="form">
+			<h1 class="aw-page-title">#{cadastroEspecieBean.editando ?
+				'Edição do Profissional' : 'Cadastro de Profissionais'}</h1>
+
+			<p:messages closable="true" id="msg" />
+
+			<p:toolbar>
+				<p:toolbarGroup>
+					<p:button value="Novo" icon="fa fa-newspaper-o"
+						outcome="/cadastros/cadastroProfissional" />
+					<p:commandButton value="Salvar" icon="fa fa-save" id="botaoSalvar"
+						action="#{cadastroProfissionalBean.salvar()}" update="@form" />
+				</p:toolbarGroup>
+				<p:toolbarGroup align="right">
+					<p:button value="Pesquisa" icon="fa fa-search" 
+					outcome="/cadastros/pesquisaProfissional"/>
+				</p:toolbarGroup>
+			</p:toolbar>
+			<div class="ui-fluid">
+				<p:tabView style="margin-top: 10px" id="tabView">
+					<p:tab title="Dados">
+						<p:panelGrid columns="2" layout="grid"
+							columnClasses="ui-grid-col-2, ui-grid-col-6"
+							styleClass="panelgrid-noborder" style="margin-top: 20px">
+
+							<p:outputLabel value="Nome" for="nome" />
+							<p:inputText id="nome"
+								value="#{cadastroProfissionalBean.profissional.nome}"
+								required="true" requiredMessage="Informe o nome" />
+
+							<p:outputLabel value="CPF" for="cpf" />
+							<p:inputMask mask="999.999.999-99" id="cpf"
+								value="#{cadastroProfissionalBean.profissional.cpf}" required="true"
+								requiredMessage="Informe o CPF"/>
+								
+							<p:outputLabel value="Data Nascimento" for="dataNascimento" />
+							<p:calendar id="dataNascimento" pattern="dd/MM/yyyy" mask="99/99/9999"
+							locale="pt" value="#{cadastroProfissionalBean.dataNascimento}" size="20" 
+							required="true" requiredMessage="Informe a data de nascimento!"/>
+
+							<p:outputLabel value="Profissão" for="profissao" />
+							<p:autoComplete id="profissao" dropdown="true"
+								value="#{cadastroProfissionalBean.profissional.profissao}"
+								completeMethod="#{cadastroProfissionalBean.completarProfissao}"
+								var="pro" itemLabel="#{pro.nome}" itemValue="#{pro}"
+								forceSelection="true" minQueryLength="2" maxResults="20" required="true" 
+								requiredMessage="Informe a profissão!"/>
+								
+							<p:outputLabel value="CRMV" for="crmv" />
+							<p:inputText id="crmv"
+								value="#{cadastroProfissionalBean.profissional.crmv}" />
+
+						</p:panelGrid>
+					</p:tab>
+					<p:tab title="Endereço">
+						<p:panelGrid columns="2" layout="grid"
+							columnClasses="ui-grid-col-1, ui-grid-col-6"
+							styleClass="panelgrid-noborder" style="margin-top: 20px">
+
+							<p:outputLabel value="Logradouro" for="logradouro" />
+							<p:inputText id="logradouro"
+								value="#{cadastroProfissionalBean.endereco.logradouro}"
+								required="true" requiredMessage="Informe o logradouro!" />
+							<p:outputLabel value="Número" for="numero" />
+							<p:inputText id="numero"
+								value="#{cadastroProfissionalBean.endereco.numero}"
+								required="true" requiredMessage="Informe o número!" />
+
+							<p:outputLabel value="Bairro" for="bairro" />
+							<p:inputText id="bairro"
+								value="#{cadastroProfissionalBean.endereco.bairro}"
+								required="true" requiredMessage="Informe o bairro!" />
+
+							<p:outputLabel value="Complemento" for="complemento" />
+							<p:inputText id="complemento"
+								value="#{cadastroProfissionalBean.endereco.complemento}" />
+
+							<p:outputLabel value="Cidade" for="cidade" />
+							<p:autoComplete id="cidade" dropdown="true"
+								value="#{cadastroProfissionalBean.endereco.cidade}"
+								completeMethod="#{cadastroProfissionalBean.completarCidade}"
+								var="cid" itemLabel="#{cid}" itemValue="#{cid}"
+								forceSelection="true" minQueryLength="2" maxResults="20" />
+
+						</p:panelGrid>
+					</p:tab>
+					<p:tab title="Contato">
+						<p:panelGrid columns="2" layout="grid"
+							columnClasses="ui-grid-col-1, ui-grid-col-6"
+							styleClass="panelgrid-noborder" style="margin-top: 20px">
+
+							<p:outputLabel value="Telefone" for="telefone" />
+							<p:inputMask mask="(99)9999-9999" id="telefone"
+								value="#{cadastroProfissionalBean.contato.telefone}"
+								required="true" requiredMessage="Informe o telefone!" />
+
+							<p:outputLabel value="Celular" for="celular" />
+							<p:inputMask mask="(99)99999-9999" id="celular"
+								value="#{cadastroProfissionalBean.contato.celular}" />
+
+							<p:outputLabel value="E-mail" for="email" />
+							<p:inputText id="email"
+								value="#{cadastroProfissionalBean.contato.email}" />
+
+						</p:panelGrid>
+					</p:tab>
+				</p:tabView>
+			</div>
+		</h:form>
+	</ui:define>
+</ui:composition>

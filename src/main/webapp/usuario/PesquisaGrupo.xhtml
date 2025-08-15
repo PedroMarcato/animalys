@@ -1,0 +1,67 @@
+<ui:composition template="/WEB-INF/template/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="titulo">Pesquisa de Grupos</ui:define>
+
+	<ui:define name="content">
+		<h:form id="formPesquisa">
+			<h1 class="aw-page-title">Pesquisa de Grupos</h1>
+
+			<p:toolbar style="margin-top: 20px">
+				<p:toolbarGroup>
+					<p:commandButton value="Pesquisar"
+						action="#{pesquisaGrupoBean.pesquisar}" icon="fa fa-search" update="@form" />
+				</p:toolbarGroup>
+				<p:toolbarGroup align="right">
+					<p:button value="Novo"
+						outcome="/usuario/CadastroGrupo" icon="fa fa-newspaper-o"/>
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<p:panelGrid columns="2" id="painel"
+				style="width: 100%; margin-top: 20px" layout="grid"
+				columnClasses="ui-grid-col-2, ui-grid-col-6"
+				styleClass="panelgrid-noborder">
+
+				<p:outputLabel value="Nome" for="nome" />
+				<p:inputText id="nome" size="30"
+					value="#{pesquisaGrupoBean.grupoFilter.nome}" />
+
+			</p:panelGrid>
+
+			<p:dataTable id="grupoTable" style="margin-top: 20px"
+				emptyMessage="Nenhum grupo encontrado" rows="20"
+				paginator="true" paginatorAlwaysVisible="false"
+				paginatorPosition="bottom"
+				value="#{pesquisaGrupoBean.gruposFiltrados}"
+				var="grupo">
+				<p:column headerText="ID" style="text-align: center; width: 100px">
+					<h:outputText value="#{grupo.idGrupo}" />
+				</p:column>
+				<p:column headerText="Nome"
+					style="text-align: center; width: 200px">
+					<h:outputText value="#{grupo.nome}" />
+				</p:column>
+				<p:column headerText="Descrição">
+					<h:outputText value="#{grupo.descricao}" />
+				</p:column>
+
+				<p:column headerText="Ações"
+					style="width: 120px; text-align: center">
+					<p:button icon="ui-icon-pencil" title="Editar"
+						outcome="/usuario/CadastroGrupo">
+						<f:param name="grupo" value="#{grupo.idGrupo}" />
+					
+					</p:button>
+				
+				</p:column>
+
+			</p:dataTable>
+
+		</h:form>
+	</ui:define>
+</ui:composition>

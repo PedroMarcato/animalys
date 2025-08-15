@@ -1,0 +1,52 @@
+<ui:composition template="/WEB-INF/template/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui">
+
+
+	<ui:define name="titulo">#{cadastroTipoAcertoBean.editando ? 'Edição de Tipo' : 'Cadastro de Tipo de Acerto'}</ui:define>
+	<f:metadata>
+		<f:viewParam name="tipoAcerto"
+			value="#{cadastroTipoAcertoBean.tipoAcerto}" />
+	</f:metadata>
+	<ui:define name="content">
+		<h:form id="form">
+			<h1 class="aw-page-title">#{cadastroTipoAcertoBean.editando ?
+				'Edição de Tipo' : 'Cadastro de Tipo de Acerto'}</h1>
+
+			<p:messages closable="true" id="msg" />
+
+			<p:toolbar>
+				<p:toolbarGroup>
+					<p:button value="Novo" icon="fa fa-newspaper-o"
+						outcome="/cadastros/cadastroTipoAcerto" />
+					<p:commandButton value="Salvar" icon="fa fa-save" id="botaoSalvar"
+						action="#{cadastroTipoAcertoBean.salvar()}" update="@form" />
+				</p:toolbarGroup>
+				<p:toolbarGroup align="right">
+					<p:button value="Pesquisa" icon="fa fa-search"
+						outcome="/cadastros/pesquisaTipoAcerto" />
+				</p:toolbarGroup>
+			</p:toolbar>
+			<div class="ui-fluid">
+				<p:panelGrid columns="2" layout="grid"
+					columnClasses="ui-grid-col-2, ui-grid-col-6"
+					styleClass="panelgrid-noborder" style="margin-top: 20px">
+
+					<p:outputLabel value="Descrição" for="descricao" />
+					<p:inputText id="descricao"
+						value="#{cadastroTipoAcertoBean.tipoAcerto.descricao}"
+						required="true" requiredMessage="Informe a descrição" />
+
+					<p:outputLabel value="Operação" for="operacao" />
+					<p:inputText id="operacao"
+						value="#{cadastroTipoAcertoBean.tipoAcerto.operacao}"
+						required="true" requiredMessage="Informe a operação aritimética!" />
+
+				</p:panelGrid>
+			</div>
+		</h:form>
+	</ui:define>
+</ui:composition>

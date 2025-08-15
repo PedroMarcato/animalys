@@ -1,0 +1,188 @@
+<ui:composition template="/WEB-INF/template/Layout.xhtml" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+
+	<f:metadata>
+		<f:viewAction action="#{pesquisaSolicitacoesBean.inicializar()}" />
+	</f:metadata>
+	<ui:define name="titulo">Pesquisa de Solicitações</ui:define>
+
+	<ui:define name="content">
+		<h:form id="formPesquisa">
+			<h1 class="aw-page-title">Pesquisa de Solicitações</h1>
+
+			<p:messages id="msg" closable="true" />
+			<p:toolbar>
+				<p:toolbarGroup>
+					<p:commandButton value="Pesquisar" icon="fa fa-search"
+						action="#{pesquisaSolicitacoesBean.pesquisar()}" update="@form" />
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<div class="ui-fluid">
+				<p:panelGrid columns="2" layout="grid" columnClasses="ui-grid-col-2, ui-grid-col-6"
+					styleClass="panelgrid-noborder" style="margin-top: 20px">
+
+					<p:outputLabel value="Modalidade" for="modalidade" />
+					<p:selectOneMenu id="modalidade"
+						value="#{pesquisaSolicitacoesBean.solicitacaoFilter.modalidadeSolicitante}">
+						<f:selectItem itemLabel="Selecione a modalidade" />
+						<f:selectItems value="#{pesquisaSolicitacoesBean.modalidades}" var="moda" itemValue="#{moda}"
+							itemLabel="#{moda.descricao}" />
+					</p:selectOneMenu>
+
+					<p:outputLabel value="Proprietário" for="proprietario" />
+					<p:inputText id="proprietario" value="#{pesquisaSolicitacoesBean.solicitacaoFilter.proprietario}" />
+
+					<p:outputLabel value="Data Solicitação" for="dataSolicitacao" />
+					<p:calendar id="dataSolicitacao" pattern="dd/MM/yyyy" mask="99/99/9999"
+						value="#{pesquisaSolicitacoesBean.solicitacaoFilter.dataSolicitacao}" />
+
+				</p:panelGrid>
+			</div>
+			<p:dataTable id="solicitacoesTable" style="margin-top: 20px" emptyMessage="Nenhuma solicitação encontrada"
+				rows="20" paginator="true" paginatorAlwaysVisible="false" paginatorPosition="bottom" reflow="true"
+				value="#{pesquisaSolicitacoesBean.solicitacoesCadastradas}" var="soli">
+				<p:column headerText="N°" style="width: 35px">
+					<h:outputText value="#{soli.idSolicitacao}" />
+				</p:column>
+				<p:column headerText="Data">
+					<h:outputText value="#{soli.data.time}">
+						<f:convertDateTime locale="pt_BR" pattern="dd/MM/yyyy HH:mm" />
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Proprietário">
+					<h:outputText value="#{soli.proprietario.nome}" />
+				</p:column>
+				<p:column headerText="Endereço">
+					<h:outputText value="#{soli.proprietario.endereco}" />
+				</p:column>
+				<p:column headerText="Contato">
+					<h:outputText value="#{soli.proprietario.contato}" />
+				</p:column>
+				<p:column headerText="Situação">
+					<h:outputText value="#{soli.status}" />
+				</p:column>
+				<p:column headerText="Ações" style="width: 120px; text-align: center">
+
+					<p:commandButton icon="fa fa-search" title="Visualizar Animais"
+						oncomplete="PF('animaisDialog').show()" process="@this" update="formPesquisa:animaisDialog"
+						action="#{pesquisaSolicitacoesBean.carregarAnimais()}">
+						<f:setPropertyActionListener target="#{pesquisaSolicitacoesBean.solicitacaoSelecionada}"
+							value="#{soli}" />
+					</p:commandButton>
+
+					<p:commandButton icon="fa fa-calendar" title="Agendar" oncomplete="PF('agendaDialog').show()"
+						process="@this" update="formAgenda:agendaDialog">
+						<f:setPropertyActionListener target="#{pesquisaSolicitacoesBean.solicitacaoSelecionada}"
+							value="#{soli}" />
+					</p:commandButton>
+
+					<p:commandButton icon="ui-icon-trash" title="Excluir" oncomplete="PF('confirmacaoExclusao').show()"
+						process="@this" update="formPesquisa:confirmacaoExclusaoDialog">
+						<f:setPropertyActionListener target="#{pesquisaSolicitacoesBean.solicitacaoSelecionada}"
+							value="#{soli}" />
+					</p:commandButton>
+
+				</p:column>
+			</p:dataTable>
+			<p:confirmDialog header="Excluir solicitação" message="Tem certeza que deseja excluir esta solicitação?"
+				widgetVar="confirmacaoExclusao" id="confirmacaoExclusaoDialog">
+				<p:button value="Não" icon="fa fa-close" onclick="PF('confirmacaoExclusao').hide(); return false;" />
+				<p:commandButton value="Sim" icon="fa fa-check" oncomplete="PF('confirmacaoExclusao').hide();"
+					action="#{pesquisaSolicitacoesBean.excluir()}" process="@this" update="@form" />
+			</p:confirmDialog>
+
+			<p:dialog header="Animais da Solicitação" widgetVar="animaisDialog" hideEffect="clip" id="animaisDialog"
+				width="800px">
+
+				<p:dataTable id="animaisTable" style="margin-top: 20px" emptyMessage="Nenhum animal encontrado"
+					rows="10" reflow="true" value="#{pesquisaSolicitacoesBean.animaisCarregados}" var="animal">
+
+					<p:column headerText="Nome" style="text-align: center">
+						<h:outputText value="#{animal.nome}" />
+					</p:column>
+					<p:column headerText="Espécie" style="width: 120px; text-align: center">
+						<h:outputText value="#{animal.raca.especie.nome}" />
+					</p:column>
+					<p:column headerText="Raça" style="text-align: center;">
+						<h:outputText value="#{animal.raca.nome}" />
+					</p:column>
+					<p:column headerText="Idade" style="width: 60px; text-align: center">
+						<h:outputText value="#{animal.idade}" />
+					</p:column>
+					<p:column headerText="Sexo" style="width: 60px; text-align: center">
+						<h:outputText value="#{animal.sexo}" />
+					</p:column>
+					<p:column headerText="Foto" style="width: 100px;">
+						<p:commandLink onclick="PF('imagemDialog').show();"
+							action="#{pesquisaSolicitacoesBean.selecionarImagem(animal.foto)}" process="@this"
+							update="imagemDialogContent">
+							<img src="/uploads/#{not empty animal.foto ? animal.foto : 'no_image.jpg'}" width="100"
+								alt="Foto de #{animal.nome}" style="cursor: pointer;" />
+						</p:commandLink>
+					</p:column>
+
+				</p:dataTable>
+
+			</p:dialog>
+		</h:form>
+		<h:form id="formAgenda">
+
+			<p:dialog header="Agendar visita" widgetVar="agendaDialog" id="agendaDialog" height="500">
+
+				<p:schedule id="scheduleLocale" value="#{pesquisaSolicitacoesBean.eventModel}" locale="pt"
+					timeZone="GMT-3" resizable="true" timeFormat="HH:mm" style="width: 800px">
+
+					<p:ajax event="dateSelect" listener="#{pesquisaSolicitacoesBean.onDateSelect}" update="eventDetails"
+						oncomplete="PF('eventDialog').show();" />
+
+					<p:ajax event="eventSelect" listener="#{pesquisaSolicitacoesBean.onEventSelect}"
+						update="eventDetails2" oncomplete="PF('eventDialog2').show();" />
+
+				</p:schedule>
+
+			</p:dialog>
+
+			<p:dialog widgetVar="eventDialog" header="Agendamendo da visita clínica" showEffect="clip"
+				hideEffect="clip">
+				<h:panelGrid id="eventDetails" columns="2">
+
+					<p:outputLabel for="from" value="Data:" />
+					<p:calendar id="from" mask="99/99/9999 99:99" value="#{pesquisaSolicitacoesBean.event.startDate}"
+						pattern="dd/MM/yyyy HH:mm" locale="pt" />
+
+					<p:commandButton value="Salvar" icon="fa fa-check" oncomplete="PF('eventDialog').hide();"
+						action="#{pesquisaSolicitacoesBean.salvarDataVisita()}"
+						update="@form, :formPesquisa:solicitacoesTable, :formPesquisa:msg" />
+				</h:panelGrid>
+			</p:dialog>
+
+			<p:dialog widgetVar="eventDialog2" header="Agendamendo da visita clínica" showEffect="clip"
+				hideEffect="clip">
+				<h:panelGrid id="eventDetails2" columns="2">
+
+					<p:outputLabel value="#{pesquisaSolicitacoesBean.solicitacaoSelecionada.proprietario.nome}" />
+
+					<p:outputLabel value="#{pesquisaSolicitacoesBean.solicitacaoSelecionada.dataAgendaVisita.time}">
+						<f:convertDateTime type="date" locale="pt" pattern="dd/MM/yyyy HH:mm" />
+					</p:outputLabel>
+
+				</h:panelGrid>
+			</p:dialog>
+		</h:form>
+
+		<p:dialog header="Visualização da Imagem" widgetVar="imagemDialog" hideEffect="fade" showEffect="fade"
+			id="imagemDialog" style="max-width: 700px; min-height: 400px;" modal="true" resizable="true">
+
+			<h:panelGroup id="imagemDialogContent">
+				<div style="text-align: center;">
+					<img src="/uploads/#{not empty pesquisaSolicitacoesBean.imagemSelecionada ? pesquisaSolicitacoesBean.imagemSelecionada : 'no_image.jpg'}"
+						style="max-width: 100%; max-height: 500px;" alt="Imagem ampliada" />
+				</div>
+			</h:panelGroup>
+
+		</p:dialog>
+
+	</ui:define>
+</ui:composition>

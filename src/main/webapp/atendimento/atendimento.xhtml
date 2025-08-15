@@ -1,0 +1,368 @@
+<ui:composition template="/WEB-INF/template/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui">
+
+	<f:metadata>
+		<f:viewParam name="solicitacao" value="#{atendimentoBean.solicitacao}" />
+		<f:viewAction action="#{atendimentoBean.inicializar()}" />
+	</f:metadata>
+	<ui:define name="titulo">Consulta Clínica</ui:define>
+
+	<ui:define name="content">
+		<h:form id="form">
+			<h1 class="aw-page-title">Consulta Clínica</h1>
+
+			<p:messages id="msg" closable="true" />
+
+			<h:panelGrid columns="4" id="painel1"
+				style="width: 100%; margin-top: 20px" columnClasses="rotulo, campo"
+				styleClass="panelgrid-noborder">
+				<h:panelGroup>
+					<p:outputLabel value="Proprietário: " style="font-weight: bold" />
+					<p:outputLabel
+						value="#{atendimentoBean.solicitacao.proprietario.nome}" />
+					<p:outputLabel value=" CPF: " style="font-weight: bold" />
+					<p:outputLabel
+						value="#{atendimentoBean.solicitacao.proprietario.cpf}" />
+
+				</h:panelGroup>
+			</h:panelGrid>
+			<p:tabView id="tabView" orientation="left">
+
+				<p:tab title="#{atendimentoBean.animaisDoProprietario.get(0).nome}">
+					<h:panelGroup id="panelBotao">
+						<p:commandButton value="Salvar" icon="fa fa-save" id="botaoSalvar"
+							action="#{atendimentoBean.salvarPrimeiroAnimal()}" update="@form"
+							rendered="#{!atendimentoBean.alterarAtendimento1}" />
+
+						<p:commandButton value="Alterar Atendimento"
+							icon="fa fa-pencil-square-o" id="botaoAlterar"
+							rendered="#{atendimentoBean.alterarAtendimento1}"
+							action="#{atendimentoBean.alterarAtendimento()}" update="@form" />
+					</h:panelGroup>
+					<p:tabView id="tabView1">
+
+						<p:tab title="Diagnóstico">
+
+							<p:panelGrid columns="1" id="painel" layout="grid"
+								columnClasses="ui-grid-col-12" styleClass="panelgrid-noborder">
+
+								<p:textEditor id="parecer" widgetVar="editor1"
+									value="#{atendimentoBean.atendimento.diagnostico}" height="300"
+									style="margin-bottom:10px" rendered="true" required="true"
+									requiredMessage="Informe o parecer!"
+									readonly="#{atendimentoBean.alterarAtendimento1}" />
+							</p:panelGrid>
+						</p:tab>
+
+						<p:tab title="Medicamentos">
+
+							<p:panelGrid columns="2" id="painelMedicamento" layout="grid"
+								columnClasses="ui-grid-col-2,ui-grid-col-10"
+								styleClass="panelgrid-noborder">
+
+								<p:outputLabel value="Medicamento" for="medicamento" />
+								<h:panelGroup>
+									<p:autoComplete id="medicamento" dropdown="true"
+										value="#{atendimentoBean.itemLoteSelecionado.lote}"
+										completeMethod="#{atendimentoBean.completarLote}" var="lote"
+										itemLabel="#{lote}" itemValue="#{lote}" forceSelection="true"
+										minQueryLength="2" maxResults="10"
+										readonly="#{atendimentoBean.alterarAtendimento1}">
+										<p:ajax update="labelEstoque" event="blur" />
+									</p:autoComplete>
+									<p:outputLabel
+										value="Estoque: #{atendimentoBean.itemLoteSelecionado.lote.quantidade}"
+										id="labelEstoque" style="margin-left: 10px;" />
+								</h:panelGroup>
+								<p:outputLabel value="Quantidade" />
+								<h:panelGroup>
+									<p:inputText value="#{atendimentoBean.quantidade}"
+										readonly="#{atendimentoBean.alterarAtendimento1}" />
+									<p:commandButton value="Adicionar" icon="fa fa-plus"
+										id="botaoAdicionar2"
+										action="#{atendimentoBean.adicionarLote()}" update="@form"
+										style="margin-left: 10px;"
+										disabled="#{atendimentoBean.alterarAtendimento1}" />
+								</h:panelGroup>
+							</p:panelGrid>
+
+							<p:dataTable id="itensTable" style="margin-top: 20px"
+								emptyMessage="Nenhum item adicionado!" rows="5" reflow="true"
+								value="#{atendimentoBean.itensLotes}" var="item">
+								<p:column headerText="Nome">
+									<h:outputText value="#{item.lote.produto.nome}" />
+								</p:column>
+								<p:column headerText="Lote">
+									<h:outputText value="#{item.lote.numeroLote}" />
+								</p:column>
+								<p:column headerText="Validade">
+									<h:outputText value="#{item.lote.validadeFormatada()}" />
+								</p:column>
+								<p:column headerText="QTD">
+									<h:outputText value="#{item.quantidade}" />
+								</p:column>
+								<p:column headerText="Ações"
+									style="width: 120px; text-align: center">
+									<p:commandButton icon="ui-icon-trash" title="Excluir"
+										oncomplete="PF('confirmacaoExclusao2').show()" process="@this"
+										update="form:tabView:tabView1:confirmacaoExclusaoDialog2"
+										disable="#{atendimentoBean.alterarAtendimento1}">
+										<f:setPropertyActionListener
+											target="#{atendimentoBean.itemLoteSelecionado}"
+											value="#{item}" />
+									</p:commandButton>
+								</p:column>
+							</p:dataTable>
+
+							<p:confirmDialog header="Remover Item"
+								message="Tem certeza que deseja remover este item?"
+								widgetVar="confirmacaoExclusao2" id="confirmacaoExclusaoDialog2">
+								<p:button value="Não" icon="fa fa-close"
+									onclick="PF('confirmacaoExclusao').hide(); return false;" />
+								<p:commandButton value="Sim" icon="fa fa-check"
+									oncomplete="PF('confirmacaoExclusao2').hide();"
+									action="#{atendimentoBean.removerProduto()}" process="@this"
+									update="itensTable" />
+							</p:confirmDialog>
+						</p:tab>
+						<p:tab title="Agendar Castração">
+							<p:panelGrid columns="2" id="painelAgenda" layout="grid"
+								columnClasses="ui-grid-col-4, ui-grid-col-8"
+								styleClass="panelgrid-noborder">
+								<p:outputLabel
+									value="Data para castrar o(a) #{atendimentoBean.animaisDoProprietario.get(0).nome}" />
+								<p:calendar id="dataCastracao" pattern="dd/MM/yyyy HH:mm"
+									mask="99/99/9999" locale="pt"
+									value="#{atendimentoBean.dataAgendaCastracao}"
+									disabled="#{atendimentoBean.alterarAtendimento1}" />
+							</p:panelGrid>
+
+							<p:schedule id="scheduleLocale"
+								value="#{atendimentoBean.eventModel}" locale="pt"
+								timeZone="GMT-3" resizable="true" timeFormat="HH:mm"
+								style="margin-top: 20px" />
+						</p:tab>
+
+						<p:tab title="Atendimentos anteriores"
+							rendered="#{atendimentoBean.temAtendimentoAnterior}">
+							<p:accordionPanel multiple="true" var="anterior"
+								value="#{atendimentoBean.atendimentosAnteriores}">
+								<p:tab title="#{anterior.pegaDataFormatada()}">
+									<h:panelGrid columns="2" cellpadding="10">
+										<p:outputLabel value="Diagnóstico:" />
+										<p:outputLabel value="#{anterior.diagnostico}" escape="false" />
+
+										<p:outputLabel value="Data para Castração" />
+										<p:outputLabel
+											value="#{anterior.animal.dataAgendaCastracao.time}">
+											<f:convertDateTime locale="pt" pattern="dd/MM/yyyy HH:mm"
+												type="date" />
+										</p:outputLabel>
+
+										<p:outputLabel value="Procedimentos" />
+										<p:dataTable id="procedimentosFeitos" style="margin-top: 20px"
+											emptyMessage="Nenhum procedimento adicionado!" rows="10"
+											reflow="true" value="#{anterior.procedimentos}" var="item">
+											<p:column>
+												<h:outputText value="#{item.nome}" />
+											</p:column>
+										</p:dataTable>
+
+										<p:outputLabel value="Medicamentos" />
+										<p:dataTable id="medicamentosFeitos" style="margin-top: 20px"
+											emptyMessage="Nenhum medicamento adicionado!" rows="10"
+											reflow="true" value="#{anterior.itemLoteAtendimento}"
+											var="item">
+											<p:column headerText="Medicamento">
+												<h:outputText value="#{item.lote.produto.nome}" />
+											</p:column>
+											<p:column headerText="Quantidade">
+												<h:outputText value="#{item.quantidade}" />
+											</p:column>
+											<p:column headerText="Vencimento">
+												<h:outputText value="#{item.lote.validadeFormatada()}" />
+											</p:column>
+										</p:dataTable>
+									</h:panelGrid>
+								</p:tab>
+							</p:accordionPanel>
+						</p:tab>
+					</p:tabView>
+				</p:tab>
+
+				<!-- AQUI COMEÇA O ATENDIMENTO DO SEGUNDO ANIMAL -->
+
+				<p:tab title="#{atendimentoBean.animaisDoProprietario.get(1).nome}"
+					rendered="#{atendimentoBean.temDoisAnimais}"
+					disabled="#{atendimentoBean.habilitarTab}">
+					<h:panelGroup>
+						<p:commandButton value="Salvar" icon="fa fa-save"
+							id="botaoSalvar2"
+							action="#{atendimentoBean.salvarSegundoAnimal()}" update="@form"
+							rendered="#{!atendimentoBean.alterarAtendimento2}" />
+
+						<p:commandButton value="Alterar Atendimento"
+							icon="fa fa-pencil-square-o" id="botaoAlterar2"
+							rendered="#{atendimentoBean.alterarAtendimento2}"
+							action="#{atendimentoBean.alterarBotao2()}" update="@form" />
+					</h:panelGroup>
+					<p:tabView id="tabView2">
+						<p:tab title="Diagnóstico">
+
+							<p:panelGrid columns="1" id="painel2" layout="grid"
+								columnClasses="ui-grid-col-12" styleClass="panelgrid-noborder">
+
+								<p:textEditor id="parecer2" widgetVar="editor2"
+									value="#{atendimentoBean.atendimento2.diagnostico}"
+									height="300" style="margin-bottom:10px" rendered="true"
+									readonly="#{atendimentoBean.alterarAtendimento2}" />
+
+							</p:panelGrid>
+						</p:tab>
+						<p:tab title="Medicamentos">
+
+							<p:panelGrid columns="2" id="painelMedicamento2" layout="grid"
+								columnClasses="ui-grid-col-2,ui-grid-col-10"
+								styleClass="panelgrid-noborder">
+
+								<p:outputLabel value="Medicamento" for="medicamento2" />
+								<h:panelGroup>
+									<p:autoComplete id="medicamento2" dropdown="true"
+										value="#{atendimentoBean.itemLoteSelecionado2.lote}"
+										completeMethod="#{atendimentoBean.completarLote}" var="lote"
+										itemLabel="#{lote}" itemValue="#{lote}" forceSelection="true"
+										minQueryLength="2" maxResults="10"
+										disabled="#{atendimentoBean.alterarAtendimento2}">
+										<p:ajax update="labelEstoque2" event="blur" />
+									</p:autoComplete>
+									<p:outputLabel
+										value="Estoque: #{atendimentoBean.itemLoteSelecionado2.lote.quantidade}"
+										id="labelEstoque2" style="margin-left: 10px;" />
+								</h:panelGroup>
+								<p:outputLabel value="Quantidade" />
+								<h:panelGroup>
+									<p:inputText value="#{atendimentoBean.quantidade2}"
+										disabled="#{atendimentoBean.alterarAtendimento2}" />
+									<p:commandButton value="Adicionar" icon="fa fa-plus"
+										id="botaoAdicionar3"
+										action="#{atendimentoBean.adicionarLote2()}" update="@form"
+										style="margin-left: 10px;"
+										disabled="#{atendimentoBean.alterarAtendimento2}" />
+								</h:panelGroup>
+							</p:panelGrid>
+
+							<p:dataTable id="itensTable2" style="margin-top: 20px"
+								emptyMessage="Nenhum item adicionado!" rows="5" reflow="true"
+								value="#{atendimentoBean.itensLotes2}" var="item">
+								<p:column headerText="Nome">
+									<h:outputText value="#{item.lote.produto.nome}" />
+								</p:column>
+								<p:column headerText="Lote">
+									<h:outputText value="#{item.lote.numeroLote}" />
+								</p:column>
+								<p:column headerText="Validade">
+									<h:outputText value="#{item.lote.validadeFormatada()}" />
+								</p:column>
+								<p:column headerText="QTD">
+									<h:outputText value="#{item.quantidade}" />
+								</p:column>
+								<p:column headerText="Ações"
+									style="width: 120px; text-align: center">
+									<p:commandButton icon="ui-icon-trash" title="Excluir"
+										oncomplete="PF('confirmacaoExclusao4').show()" process="@this"
+										update="form:tabView:tabView2:confirmacaoExclusaoDialog4"
+										disabled="#{atendimentoBean.alterarAtendimento2}">
+										<f:setPropertyActionListener
+											target="#{atendimentoBean.itemLoteSelecionado2}"
+											value="#{item}" />
+									</p:commandButton>
+								</p:column>
+							</p:dataTable>
+
+							<p:confirmDialog header="Remover Item"
+								message="Tem certeza que deseja remover este item?"
+								widgetVar="confirmacaoExclusao4" id="confirmacaoExclusaoDialog4">
+								<p:button value="Não" icon="fa fa-close"
+									onclick="PF('confirmacaoExclusao').hide(); return false;" />
+								<p:commandButton value="Sim" icon="fa fa-check"
+									oncomplete="PF('confirmacaoExclusao4').hide();"
+									action="#{atendimentoBean.removerProduto2()}" process="@this"
+									update="itensTable2" />
+							</p:confirmDialog>
+						</p:tab>
+						<p:tab title="Agendar Castração">
+							<p:panelGrid columns="2" id="painelAgenda2" layout="grid"
+								columnClasses="ui-grid-col-4, ui-grid-col-8"
+								styleClass="panelgrid-noborder">
+								<p:outputLabel value="Data para castrar o(a) #{animal.nome}" />
+								<p:calendar id="dataCastracao" pattern="dd/MM/yyyy HH:mm"
+									mask="99/99/9999" locale="pt"
+									value="#{atendimentoBean.dataAgendaCastracao2}"
+									disabled="#{atendimentoBean.alterarAtendimento2}" />
+							</p:panelGrid>
+							
+							<p:schedule id="scheduleLocale2"
+								value="#{atendimentoBean.eventModel}" locale="pt"
+								timeZone="GMT-3" resizable="true" timeFormat="HH:mm"
+								style="margin-top: 20px" />
+								
+						</p:tab>
+						<p:tab title="Atendimentos anteriores"
+							rendered="#{atendimentoBean.temAtendimentoAnterior2}">
+							<p:accordionPanel multiple="true" var="anterior"
+								value="#{atendimentoBean.atendimentosAnteriores2}">
+								<p:tab title="#{anterior.pegaDataFormatada()}">
+									<h:panelGrid columns="2" cellpadding="10">
+										<p:outputLabel value="Diagnóstico:" />
+										<p:outputLabel value="#{anterior.diagnostico}" escape="false" />
+
+										<p:outputLabel value="Data para Castração" />
+										<p:outputLabel
+											value="#{anterior.animal.dataAgendaCastracao.time}">
+											<f:convertDateTime locale="pt" pattern="dd/MM/yyyy HH:mm"
+												type="date" />
+										</p:outputLabel>
+
+										<p:outputLabel value="Procedimentos" />
+										<p:dataTable id="procedimentosFeitos2"
+											style="margin-top: 20px"
+											emptyMessage="Nenhum procedimento adicionado!" rows="5"
+											reflow="true" value="#{anterior.procedimentos}" var="item">
+											<p:column>
+												<h:outputText value="#{item.nome}" />
+											</p:column>
+
+										</p:dataTable>
+
+										<p:outputLabel value="Medicamentos" />
+										<p:dataTable id="medicamentosFeitos2" style="margin-top: 20px"
+											emptyMessage="Nenhum medicamento adicionado!" rows="10"
+											reflow="true" value="#{anterior.itemLoteAtendimento}"
+											var="item">
+											<p:column headerText="Medicamento">
+												<h:outputText value="#{item.lote.produto.nome}" />
+											</p:column>
+											<p:column headerText="Quantidade">
+												<h:outputText value="#{item.quantidade}" />
+											</p:column>
+											<p:column headerText="Vencimento">
+												<h:outputText value="#{item.lote.validadeFormatada()}" />
+											</p:column>
+
+										</p:dataTable>
+
+
+									</h:panelGrid>
+								</p:tab>
+							</p:accordionPanel>
+						</p:tab>
+					</p:tabView>
+				</p:tab>
+			</p:tabView>
+		</h:form>
+	</ui:define>
+</ui:composition>

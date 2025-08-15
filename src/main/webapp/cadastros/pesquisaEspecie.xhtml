@@ -1,0 +1,73 @@
+<ui:composition template="/WEB-INF/template/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="titulo">Pesquisa de Especies</ui:define>
+
+	<ui:define name="content">
+		<h:form id="formPesquisa">
+			<h1 class="aw-page-title">Pesquisa de Especies</h1>
+
+			<p:messages closable="true" />
+			<p:toolbar>
+				<p:toolbarGroup>
+					<p:commandButton value="Pesquisar" icon="fa fa-search"
+						action="#{pesquisaEspecieBean.pesquisar()}" update="@form" />
+				</p:toolbarGroup>
+				<p:toolbarGroup align="right">
+					<p:button value="Novo" icon="fa fa-newspaper-o"
+						outcome="/cadastros/cadastroEspecie" />
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<div class="ui-fluid">
+				<p:panelGrid columns="2" layout="grid"
+					columnClasses="ui-grid-col-2, ui-grid-col-6"
+					styleClass="panelgrid-noborder" style="margin-top: 20px">
+
+					<p:outputLabel value="Nome" for="nome" />
+					<p:inputText id="nome"
+						value="#{pesquisaEspecieBean.especieFilter.nome}" />
+
+				</p:panelGrid>
+			</div>
+			<p:dataTable id="especiesTable" style="margin-top: 20px"
+				emptyMessage="Nenhuma espécie encontrada" rows="20" paginator="true"
+				paginatorAlwaysVisible="false" paginatorPosition="bottom"
+				reflow="true" value="#{pesquisaEspecieBean.especiesFiltradas}"
+				var="especie">
+				<p:column headerText="Nome">
+					<h:outputText value="#{especie.nome}" />
+				</p:column>
+
+				<p:column headerText="Ações"
+					style="width: 120px; text-align: center">
+					<p:button icon="ui-icon-pencil" title="Editar"
+						outcome="/cadastros/cadastroEspecie">
+						<f:param name="especie" value="#{especie.idEspecie}" />
+					</p:button>
+					<p:commandButton icon="ui-icon-trash" title="Excluir"
+						oncomplete="PF('confirmacaoExclusao').show()" process="@this"
+						update="formPesquisa:confirmacaoExclusaoDialog">
+						<f:setPropertyActionListener
+							target="#{pesquisaEspecieBean.especieSelecionada}"
+							value="#{especie}" />
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+			<p:confirmDialog header="Excluir espécie"
+				message="Tem certeza que deseja excluir esta espécie?"
+				widgetVar="confirmacaoExclusao" id="confirmacaoExclusaoDialog">
+				<p:button value="Não" icon="fa fa-close"
+					onclick="PF('confirmacaoExclusao').hide(); return false;" />
+				<p:commandButton value="Sim" icon="fa fa-check"
+					oncomplete="PF('confirmacaoExclusao').hide();"
+					action="#{pesquisaEspecieBean.excluir()}" process="@this"
+					update="@form" />
+			</p:confirmDialog>
+		</h:form>
+	</ui:define>
+</ui:composition>

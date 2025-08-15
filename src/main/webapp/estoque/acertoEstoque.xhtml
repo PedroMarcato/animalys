@@ -1,0 +1,146 @@
+<ui:composition template="/WEB-INF/template/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="titulo">Acerto de Estoque</ui:define>
+	<f:metadata>
+		<f:viewAction action="#{acertoEstoqueBean.inicializar()}" />
+	</f:metadata>
+	<ui:define name="content">
+		<h:form id="formPesquisa">
+			<h1 class="aw-page-title">Acerto de Estoque</h1>
+
+			<p:messages closable="true" />
+			<p:toolbar>
+				<p:toolbarGroup>
+					<p:button value="Novo" icon="fa fa-newspaper-o"
+						outcome="/estoque/acertoEstoque" />
+					<p:commandButton value="Salvar" icon="fa fa-save"
+						action="#{acertoEstoqueBean.salvar()}" update="@form" />
+
+					<p:commandButton value="Novo Lote" id="btNovoLote"
+						icon="fa fa-save" oncomplete="PF('dlgLote').show();"
+						update="@form" disabled="#{!acertoEstoqueBean.acertoEstoque.tipoAcerto.iniciaEstoque}"
+						 action="#{acertoEstoqueBean.novoLote()}"/>
+				</p:toolbarGroup>
+				<p:toolbarGroup align="right">
+					<p:button value="Pesquisa" icon="fa fa-search"
+						outcome="/estoque/pesquisaAcertoEstoque" />
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<div class="ui-fluid">
+				<p:panelGrid columns="2" layout="grid"
+					columnClasses="ui-grid-col-1, ui-grid-col-4"
+					styleClass="panelgrid-noborder" style="margin-top: 20px">
+
+					<p:outputLabel value="Tipo Acerto" for="tipo" />
+					<p:selectOneMenu id="tipo"
+						value="#{acertoEstoqueBean.acertoEstoque.tipoAcerto}">
+						<f:selectItem itemLabel="Selecione o tipo de acerto!" />
+						<f:selectItems value="#{acertoEstoqueBean.tiposAcertosCarregados}"
+							var="tipo" itemValue="#{tipo}" itemLabel="#{tipo.descricao}" />
+						<p:ajax update="panelLabel, btNovoLote" />
+					</p:selectOneMenu>
+
+					<p:outputLabel value="Produto" for="produto" />
+					<p:selectOneMenu id="produto"
+						value="#{acertoEstoqueBean.produtoSelecionado}">
+						<f:selectItem itemLabel="Selecione o produto!" />
+						<f:selectItems value="#{acertoEstoqueBean.produtosCadastrados}"
+							var="produt" itemValue="#{produt}"
+							itemLabel="#{produt.nome} - #{produt.tipoApresentacao.descricao}" />
+						<p:ajax update="lote"
+							listener="#{acertoEstoqueBean.carregarLotes()}" />
+					</p:selectOneMenu>
+
+					<p:outputLabel value="Lote" for="lote" />
+					<p:selectOneMenu id="lote"
+						value="#{acertoEstoqueBean.loteSelecionado}">
+						<f:selectItem itemLabel="Selecione o lote!" />
+						<f:selectItems value="#{acertoEstoqueBean.lotesCarregados}"
+							var="lot" itemValue="#{lot}" itemLabel="#{lot}" />
+						<p:ajax update="qtdLote" />
+					</p:selectOneMenu>
+					<p:outputLabel value="Quantidade atual" for="qtdLote" />
+					<p:inputText
+						value="#{acertoEstoqueBean.loteSelecionado.quantidade}"
+						readonly="true" id="qtdLote" />
+					<h:panelGroup id="panelLabel">
+						<p:outputLabel value="Acrescentar :" for="novaQtd"
+							rendered="#{acertoEstoqueBean.acertoEstoque.tipoAcerto.operacao.equals('+')}" />
+						<p:outputLabel value="Diminuir :" for="novaQtd"
+							rendered="#{acertoEstoqueBean.acertoEstoque.tipoAcerto.operacao.equals('-')}" />
+					</h:panelGroup>
+					<p:inputText value="#{acertoEstoqueBean.novaQuantidade}"
+						id="novaQtd" />
+				</p:panelGrid>
+			</div>
+		</h:form>
+
+		<h:form id="formDialog">
+			<p:dialog header="Novo Lote" id="dlgLote" widgetVar="dlgLote"
+				modal="true" height="300">
+				<p:toolbar>
+					<p:toolbarGroup>
+						<p:commandButton value="Salvar"
+							action="#{acertoEstoqueBean.salvarLote()}"
+							update="@form" icon="fa fa-save"/>
+					</p:toolbarGroup>
+				</p:toolbar>
+				<p:panelGrid columns="4" layout="grid"
+					columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-2, ui-grid-col-4"
+					styleClass="panelgrid-noborder" style="margin-top: 20px">
+
+					<p:outputLabel value="Número Lote" />
+					<p:inputText
+						value="#{acertoEstoqueBean.loteSelecionado.numeroLote}" />
+
+					<p:outputLabel value="Valor Unt." for="preco" />
+					<p:inputText id="preco"
+						value="#{acertoEstoqueBean.loteSelecionado.preco}"
+						onkeypress="mascara(this, valor);" required="true"
+						requiredMessage="Informe o preço!">
+						<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+					</p:inputText>
+
+					<p:outputLabel value="Data Fabricação" />
+					<p:calendar value="#{acertoEstoqueBean.dataFabricacao}"
+						locale="pt_BR" pattern="dd/MM/yyyy" mask="99/99/9999" />
+
+					<p:outputLabel value="Validade" />
+					<p:calendar value="#{acertoEstoqueBean.dataVencimento}"
+						locale="pt_BR" pattern="dd/MM/yyyy" mask="99/99/9999" />
+
+				</p:panelGrid>
+
+			</p:dialog>
+		</h:form>
+		<script>
+            function mascara(o, f) {
+              v_obj = o;
+              v_fun = f;
+              setTimeout("execmascara()", 1);
+            }
+            function execmascara() {
+              v_obj.value = v_fun(v_obj.value);
+            }
+         function valor(v) {
+        v = v.replace(/\D/g, "");
+        v = v.replace(/[0-9]{15}/, "inválido");
+        v = v.replace(/(\d{1})(\d{11})$/, "$1.$2"); // coloca ponto antes dos
+        // Ãºltimos 11 digitos
+        v = v.replace(/(\d{1})(\d{8})$/, "$1.$2"); // coloca ponto antes dos
+        // Ãºltimos 8 digitos
+        v = v.replace(/(\d{1})(\d{5})$/, "$1.$2"); // coloca ponto antes dos
+        // Ãºltimos 5 digitos
+        v = v.replace(/(\d{1})(\d{1,2})$/, "$1,$2"); // coloca virgula antes dos
+        // Ãºltimos 2 digitos
+        return v;
+}
+                    </script>
+	</ui:define>
+</ui:composition>

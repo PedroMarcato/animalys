@@ -1,0 +1,334 @@
+<ui:composition template="/WEB-INF/template/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="titulo">Entrada de Produtos</ui:define>
+	<f:metadata>
+		<f:viewParam name="entrada" value="#{entradaProdutoBean.entradaProduto}" />
+		<f:viewAction action="#{entradaProdutoBean.inicializar()}" />
+	</f:metadata>
+	<ui:define name="content">
+		<h:form id="formPesquisa">
+			<h1 class="aw-page-title">Entrada de Produtos</h1>
+
+			<p:messages closable="true" id="msg"/>
+			<p:toolbar>
+				<p:toolbarGroup>
+					<p:button value="Novo" icon="fa fa-newspaper-o"
+						outcome="/estoque/entradaProdutos" />
+					<p:commandButton value="Salvar" icon="fa fa-save" id="botaoSalvar"
+						action="#{entradaProdutoBean.salvar()}" update="@form" />
+				</p:toolbarGroup>
+				<p:toolbarGroup align="right">
+					<p:button value="Pesquisa" icon="fa fa-search" 
+					outcome="/estoque/pesquisaEntradas"/>
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<div class="ui-fluid">
+				<p:panelGrid columns="2" layout="grid"
+					columnClasses="ui-grid-col-2, ui-grid-col-6"
+					styleClass="panelgrid-noborder" style="margin-top: 20px">
+
+					<p:outputLabel value="Fornecedor" for="fornecedor" />
+					<p:selectOneMenu id="fornecedor"
+						value="#{entradaProdutoBean.entradaProduto.fornecedor}"
+						required="true" requiredMessage="Informe o fornecedor!"
+						disabled="#{entradaProdutoBean.habilitaFornecedor}">
+						<f:selectItem itemLabel="Selecione o fornecedor!" />
+						<f:selectItems
+							value="#{entradaProdutoBean.fornecedoresCadastrados}" var="forne"
+							itemValue="#{forne}" itemLabel="#{forne}" />
+					</p:selectOneMenu>
+					
+					<p:outputLabel value="N° Nota Fiscal" for="notaFiscal" />
+					<p:inputNumber value="#{entradaProdutoBean.entradaProduto.numeroNota}"
+					 id="notaFiscal"/>
+
+					<p:outputLabel value="Produto" for="produto" />
+					<p:selectOneMenu id="produto"
+						value="#{entradaProdutoBean.itemEntrada.produto}">
+						<f:selectItem itemLabel="Selecione o produto!" />
+						<f:selectItems value="#{entradaProdutoBean.produtosCadastrados}"
+							var="produt" itemValue="#{produt}" itemLabel="#{produt.nome} - #{produt.tipoApresentacao.descricao}" />
+						<p:ajax update="panelGroupLote"
+							listener="#{entradaProdutoBean.carregaLotes()}" />
+					</p:selectOneMenu>
+
+					<p:outputLabel value="Lote" for="lote" />
+					<h:panelGroup id="panelGroupLote">
+						<p:selectOneMenu id="lote"
+							value="#{entradaProdutoBean.itemEntrada.lote}">
+							<f:selectItem itemLabel="Selecione o lote" />
+							<f:selectItems value="#{entradaProdutoBean.lotesCadastrados}"
+								var="lote" itemValue="#{lote}" itemLabel="#{lote}" />
+							<p:ajax update="panelLote"
+								listener="#{entradaProdutoBean.carregaDadosLote()}" />
+						</p:selectOneMenu>
+
+						<p:commandButton icon="fa fa-plus" value="Novo Lote" id="botaoNovo"
+							process="@this" update="formDialog:dlgLote"
+							oncomplete="PF('dlgLote').show();"
+							action="#{entradaProdutoBean.novoLote()}" title="Novo Lote" />
+					</h:panelGroup>
+				</p:panelGrid>
+				<p:panelGrid columns="6" layout="grid" id="panelLote"
+					columnClasses="ui-grid-col-1, ui-grid-col-2, ui-grid-col-1, ui-grid-col-2, ui-grid-col-1, 
+						ui-grid-col-2, ui-grid-col-1, ui-grid-col-2"
+					styleClass="panelgrid-noborder" style="margin-top: 20px">
+
+					<p:outputLabel value="Número Lote" for="numLote" />
+					<p:inputText value="#{entradaProdutoBean.lote.numeroLote}" id="numLote"
+					 readonly="#{entradaProdutoBean.readOnly}"/>
+
+					<p:outputLabel value="Data Fabricação" for="fabricacao"/>
+					<p:calendar value="#{entradaProdutoBean.lote.fabricacao.time}"
+						locale="pt_BR" pattern="dd/MM/yyyy" mask="99/99/9999" id="fabricacao"
+						 readonly="#{entradaProdutoBean.readOnly}"/>
+
+					<p:outputLabel value="Valor Unt." for="preco"/>
+					<p:outputLabel value="#{entradaProdutoBean.lote.preco}" id="preco" 
+					 readonly="#{entradaProdutoBean.readOnly}"  >
+					 <f:convertNumber type="currency" locale="pt_BR"/>
+<!-- 					 <f:convertNumber maxFractionDigits="2" minFractionDigits="2" /> -->
+<!-- 							<f:convertNumber pattern="#,##0.00" /> -->
+						
+					</p:outputLabel>
+
+					<p:outputLabel value="Validade" for="validade"/>
+					<p:calendar value="#{entradaProdutoBean.lote.validade.time}" id="validade"
+						locale="pr_BR" pattern="dd/MM/yyyy" mask="99/99/9999" 
+						readonly="#{entradaProdutoBean.readOnly}" />
+
+					<p:outputLabel value="Quantidade" for="quantidade"/>
+					<p:inputText value="#{entradaProdutoBean.itemEntrada.quantidade}"
+					 id="quantidade"/>
+
+					<p:outputLabel />
+					<p:commandButton icon="fa fa-plus" value="Adicionar"
+						update="itensTable, validade, quantidade, preco, fabricacao, numLote, msg, lote, produto"
+						action="#{entradaProdutoBean.adicionarItem()}"
+						title="Adicionar Item" />
+						
+						
+						
+
+				</p:panelGrid>
+				
+	
+			</div>
+			<p:dataTable id="itensTable" style="margin-top: 20px"
+				emptyMessage="Nenhum item encontrado" rows="20" paginator="true"
+				paginatorAlwaysVisible="false" paginatorPosition="bottom"
+				reflow="true" value="#{entradaProdutoBean.itensAdicionados}"
+				var="item">
+				<p:column headerText="Produto">
+					<h:outputText value="#{item.produto.nome} / #{item.produto.marca.nome}" />
+				</p:column>
+				<p:column headerText="Lote">
+					<h:outputText value="#{item.lote.numeroLote}" />
+				</p:column>
+				<p:column headerText="Validade">
+					<h:outputText value="#{item.lote.validade.time}">
+						<f:convertDateTime locale="pt_BR" pattern="dd/MM/yyyy" />
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Qtd">
+					<h:outputText value="#{item.quantidade}" />
+				</p:column>
+				<p:column headerText="SubTotal">
+					<h:outputText value="#{item.subTotal}">
+						<f:convertNumber type="currency" locale="pt_BR"/>
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="Ações"
+					style="width: 120px; text-align: center">
+					<p:commandButton icon="ui-icon-trash" title="Excluir"
+						oncomplete="PF('confirmacaoExclusao').show()" process="@this"
+						update="formPesquisa:confirmacaoExclusaoDialog">
+						<f:setPropertyActionListener
+							target="#{entradaProdutoBean.itemEntrada}" value="#{item}" />
+					</p:commandButton>
+				</p:column>
+				
+				 <f:facet name="footer">
+				 		<p:outputLabel value="#{entradaProdutoBean.valorTotal}">
+				 			<f:convertNumber currencySymbol="R$" type="currency"/>
+				 		</p:outputLabel>
+    			</f:facet>
+			</p:dataTable>
+			<p:confirmDialog header="Remover item"
+				message="Tem certeza que deseja remover este item?"
+				widgetVar="confirmacaoExclusao" id="confirmacaoExclusaoDialog">
+				<p:button value="Não" icon="fa fa-close"
+					onclick="PF('confirmacaoExclusao').hide(); return false;" />
+				<p:commandButton value="Sim" icon="fa fa-check"
+					oncomplete="PF('confirmacaoExclusao').hide();"
+					action="#{entradaProdutoBean.removerItem()}" process="@this"
+					update="@form" />
+			</p:confirmDialog>
+		</h:form>
+
+		<h:form id="formDialog">
+			<p:dialog header="Novo Lote" id="dlgLote" widgetVar="dlgLote"
+				modal="true" height="300">
+				<p:toolbar>
+					<p:toolbarGroup>
+						<p:commandButton value="Salvar"  onclick="formataValor();"  
+							action="#{entradaProdutoBean.salvarLote()}"
+							update="@form, formPesquisa:panelLote, formPesquisa:msg" />
+					</p:toolbarGroup>
+				</p:toolbar>
+				<p:panelGrid columns="4" layout="grid"
+					columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-2, ui-grid-col-4"
+					styleClass="panelgrid-noborder" style="margin-top: 20px">
+
+					<p:outputLabel value="Número Lote" />
+					<p:inputText value="#{entradaProdutoBean.novoLote.numeroLote}" />
+					
+					<p:outputLabel value="Valor Unt." for="preco" />
+					<p:inputText id="preco" value="#{entradaProdutoBean.novoLote.preco}"  onkeypress="mascara(this, valor);" styleClass="moeda">
+                        <f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+<!--                            <f:convertNumber pattern="#,##0.00" /> -->
+					</p:inputText>
+
+
+					
+					<p:outputLabel value="Data Fabricação" />
+					<p:calendar value="#{entradaProdutoBean.dataFabricacao}"
+						locale="pt_BR" pattern="dd/MM/yyyy" mask="99/99/9999" />
+
+					<p:outputLabel value="Validade" />
+					<p:calendar value="#{entradaProdutoBean.dataValidade}"
+						locale="pt_BR" pattern="dd/MM/yyyy" mask="99/99/9999" />
+
+				</p:panelGrid>
+					<h:outputScript>
+						function configurarMoeda() {
+							$(".moeda").maskMoney({ decimal: ",", thousands: ".", allowZero: true });
+						}
+						
+						$(document).ready(function() {
+							configurarMoeda();
+						});
+                    	</h:outputScript>
+			</p:dialog>
+			
+		</h:form>
+		
+		<!-- 					<p:outputLabel value="Valor Unt." for="preco" /> -->
+<!-- 					<p:inputText id="preco" -->
+<!-- 						value="#{entradaProdutoBean.novoLote.preco}" -->
+<!-- 						onkeypress="mascara(this, valor);" required="true" -->
+<!-- 						requiredMessage="Informe o preço!"> -->
+<!-- 						<f:convertNumber maxFractionDigits="2" minFractionDigits="2" /> -->
+<!-- 					</p:inputText> -->
+      
+		<script>
+		
+		function configurarMoeda() {
+			$(".moeda").maskMoney({ decimal: ",", thousands: ".", allowZero: true });
+		}
+		
+		$(document).ready(function() {
+			configurarMoeda();
+		});
+		
+		 function formataValor() {
+			// alert('Teste');
+			 var form = document.getElementById('formDialog:preco').value;
+		         console.log('valor'+form);
+	             form = form.replace('.','');
+		         form = form.replace(',','.');
+			 document.getElementById('formDialog:preco').value = form;
+			 console.log('valor Formatado'+ document.getElementById('formDialog:preco').value);
+		   //  document.getElementById('formPesquisa:preco').value = '1555.89';
+           }
+		
+            function mascara(o, f) {
+              v_obj = o;
+              v_fun = f;
+              setTimeout("execmascara()", 1);
+              
+            }
+            function execmascara() {
+              v_obj.value = v_fun(v_obj.value);
+            }
+		         function valor(v) {
+		        v = v.replace(/\D/g, "");
+		        v = v.replace(/[0-9]{15}/, "inválido");
+		        v = v.replace(/(\d{1})(\d{11})$/, "$1.$2"); // coloca ponto antes dos
+		        // Ãºltimos 11 digitos
+		        v = v.replace(/(\d{1})(\d{8})$/, "$1.$2"); // coloca ponto antes dos
+		        // Ãºltimos 8 digitos
+		        v = v.replace(/(\d{1})(\d{5})$/, "$1.$2"); // coloca ponto antes dos
+		        // Ãºltimos 5 digitos
+		        v = v.replace(/(\d{1})(\d{1,2})$/, "$1,$2"); // coloca virgula antes dos
+		        // Ãºltimos 2 digitos
+		        
+// 		        var form = v;
+//  		         console.log('valor'+form);
+// 		         form = form.replace('.','');
+//   		         form = form.replace(',','.');
+//   		         console.log('valor'+form);
+//   		         document.getElementById('formDialog:preco').value = form;
+//   		         document.getElementById('formPesquisa:preco').value = form;
+//   		         console.log('formDialog:preco........................'+document.getElementById('formDialog:preco').value);
+//   		         console.log('formPesquisa:preco........................'+document.getElementById('formPesquisa:preco').value);
+  		      // alert(input);
+		        return v;
+        }
+		         
+		         
+		         
+		       
+		        	
+		        
+
+		      
+		         
+		        
+		         
+		         
+		         
+		         
+		         
+		         
+		         function formatarMoeda() {
+		        	  var elemento = document.getElementById('preco');
+		        	  var valor = elemento.value;
+		        	  
+		        	  valor = valor + '';
+		        	  valor = parseInt(valor.replace(/[\D]+/g,''));
+		        	  valor = valor + '';
+		        	  valor = valor.replace(/([0-9]{2})$/g, ",$1");
+
+		        	  if (valor.length > 6) {
+		        	    valor = valor.replace(/([0-9]{3}),([0-9]{2}$)/g, ".$1,$2");
+		        	  }
+
+		        	  elemento.value = valor;
+		        	}
+		         
+		         
+		         
+		         
+		         
+		         
+		         
+		         
+		         
+		         
+		         
+		         
+		         
+		         
+		         
+		         
+                    </script>
+	</ui:define>
+</ui:composition>

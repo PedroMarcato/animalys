@@ -1,0 +1,87 @@
+<ui:composition template="/WEB-INF/template/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="titulo">Pesquisa de acerto de estoque</ui:define>
+	<f:metadata>
+		<f:viewAction action="#{pesquisaAcertoEstoqueBean.inicializar()}" />
+	</f:metadata>
+	<ui:define name="content">
+		<h:form id="formPesquisa">
+			<h1 class="aw-page-title">Pesquisa de acerto de estoque</h1>
+
+			<p:messages closable="true" />
+			<p:toolbar>
+				<p:toolbarGroup>
+					<p:commandButton value="Pesquisar" icon="fa fa-search"
+						action="#{pesquisaAcertoEstoqueBean.pesquisar()}" update="@form" />
+				</p:toolbarGroup>
+				<p:toolbarGroup align="right">
+					<p:button value="Novo" icon="fa fa-newspaper-o"
+						outcome="/estoque/acertoEstoque" />
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<div class="ui-fluid">
+				<p:panelGrid columns="2" layout="grid"
+					columnClasses="ui-grid-col-2, ui-grid-col-6"
+					styleClass="panelgrid-noborder" style="margin-top: 20px">
+
+					<p:outputLabel value="Tipo Acerto" for="tipo" />
+					<p:selectOneMenu id="tipo"
+						value="#{pesquisaAcertoEstoqueBean.acertoFilter.tipoAcerto}">
+						<f:selectItem itemLabel="Selecione o tipo de acerto!" />
+						<f:selectItems value="#{pesquisaAcertoEstoqueBean.tiposAcertosCadastrados}"
+							var="tipo" itemValue="#{tipo}" itemLabel="#{tipo.descricao}" />
+					</p:selectOneMenu>
+				</p:panelGrid>
+			</div>
+			<p:dataTable id="acertosTable" style="margin-top: 20px"
+				emptyMessage="Nenhum acerto de estoque encontrado!" rows="20"
+				paginator="true" paginatorAlwaysVisible="false"
+				paginatorPosition="bottom" reflow="true"
+				value="#{pesquisaAcertoEstoqueBean.acertosEstoquesFiltrados}" var="acert">
+				<p:column headerText="Date">
+					<h:outputText value="#{acert.data.time}">
+						<f:convertDateTime locale="pt_BR" pattern="dd/MM/yyyy HH:mm" type="date"/>
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Produto">
+					<h:outputText value="#{acert.lote.produto.nome}" />
+				</p:column>
+				<p:column headerText="Lote">
+					<h:outputText value="#{acert.lote}" />
+				</p:column>
+				<p:column headerText="QTD Anterior">
+					<h:outputText value="#{acert.qtdAnterior}" />
+				</p:column>
+				<p:column headerText="QTD Nova">
+					<h:outputText value="#{acert.qtdNova}" />
+				</p:column>
+				<p:column headerText="Ações"
+					style="width: 120px; text-align: center">
+					<p:commandButton icon="ui-icon-trash" title="Excluir"
+						oncomplete="PF('confirmacaoExclusao').show()" process="@this"
+						update="formPesquisa:confirmacaoExclusaoDialog">
+						<f:setPropertyActionListener
+							target="#{pesquisaAcertoEstoqueBean.acertoEstoqueSelecionado}"
+							value="#{acert}" />
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+			<p:confirmDialog header="Excluir o acerto de estoque?"
+				message="Tem certeza que deseja excluir este acerto de estoque?"
+				widgetVar="confirmacaoExclusao" id="confirmacaoExclusaoDialog">
+				<p:button value="Não" icon="fa fa-close"
+					onclick="PF('confirmacaoExclusao').hide(); return false;" />
+				<p:commandButton value="Sim" icon="fa fa-check"
+					oncomplete="PF('confirmacaoExclusao').hide();"
+					action="#{pesquisaAcertoEstoqueBean.excluir()}" process="@this"
+					update="@form" />
+			</p:confirmDialog>
+		</h:form>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,195 @@
+<ui:composition template="/WEB-INF/template/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="titulo">Castrações Agendadas</ui:define>
+
+	<f:metadata>
+		<f:viewAction action="#{pesquisaCastracoesAgendadasBean.inicializar}" />
+	</f:metadata>
+
+	<ui:define name="content">
+		<h:form id="formPesquisa">
+			<h1 class="aw-page-title">Castrações Agendadas</h1>
+
+			<p:messages id="msg" closable="true" />
+			<p:toolbar>
+				<p:toolbarGroup>
+					<p:commandButton value="Pesquisar" icon="fa fa-search"
+						action="#{pesquisaCastracoesAgendadasBean.buscar()}"
+						update="@form" />
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<div class="ui-fluid">
+				<p:panelGrid columns="2" layout="grid"
+					columnClasses="ui-grid-col-2, ui-grid-col-6"
+					styleClass="panelgrid-noborder" style="margin-top: 20px">
+
+					<p:outputLabel value="Proprietário" for="proprietario" />
+					<p:inputText id="proprietario"
+						value="#{pesquisaCastracoesAgendadasBean.animalFilter.nomeProprietario}" />
+
+					<p:outputLabel value="Nome animal" for="nomeAnimal" />
+					<p:inputText id="nomeAnimal"
+						value="#{pesquisaCastracoesAgendadasBean.animalFilter.nome}" />
+
+					<p:outputLabel value="Data Início" for="dataInicio" />
+
+					<h:panelGroup>
+						<p:calendar id="dataInicio" pattern="dd/MM/yyyy" mask="99/99/9999"
+							value="#{pesquisaCastracoesAgendadasBean.animalFilter.dataInicio}"
+							locale="pt" size="30" />
+
+						<p:outputLabel value="Data Final" for="dataFinal"
+							style="margin-left: 10px; margin-right: 10px;" />
+						<p:calendar id="dataFinal" pattern="dd/MM/yyyy" mask="99/99/9999"
+							value="#{pesquisaCastracoesAgendadasBean.animalFilter.datafim}"
+							locale="pt" size="30" />
+					</h:panelGroup>
+
+
+				</p:panelGrid>
+			</div>
+			<p:dataTable id="animaisTable" style="margin-top: 20px"
+				emptyMessage="Nenhum animal encontrado" rows="20" paginator="true"
+				paginatorAlwaysVisible="false" paginatorPosition="bottom"
+				reflow="true"
+				value="#{pesquisaCastracoesAgendadasBean.animaisFiltrados}"
+				var="animal">
+				<p:column headerText="Agenda Castração">
+					<h:outputText value="#{animal.dataAgendaCastracao.time}">
+						<f:convertDateTime locale="pt_BR" pattern="dd/MM/yyyy HH:mm" />
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Nome animal">
+					<h:outputText value="#{animal.nome}" />
+				</p:column>
+				<p:column headerText="Proprietário">
+					<h:outputText value="#{animal.proprietario.nome}" />
+				</p:column>
+				<p:column headerText="Contato">
+					<h:outputText value="#{animal.proprietario.contato}" />
+				</p:column>
+				<p:column headerText="Situação">
+					<h:outputText value="#{animal.status.descricao}" />
+				</p:column>
+				<p:column headerText="Ações"
+					style="width: 130px; text-align: center">
+
+					<p:button icon="fa fa-external-link" title="Atender"
+						outcome="/atendimento/atendimentoCastracao">
+						<f:param name="animal" value="#{animal.idAnimal}" />
+					</p:button>
+			
+					<p:commandButton icon="fa fa-calendar" title="Reagendar"
+						oncomplete="PF('agendaDialog').show()" process="@this"
+						update="formAgenda:agendaDialog">
+						<f:setPropertyActionListener
+							target="#{pesquisaCastracoesAgendadasBean.animalSelecionado}"
+							value="#{animal}" />
+					</p:commandButton>
+
+					<p:commandButton icon="fa fa-close" title="Cancelar"
+						oncomplete="PF('confirmacaoExclusao').show()" process="@this"
+						update=":formPesquisa:confirmacaoExclusaoDialog">
+						<f:setPropertyActionListener
+							target="#{pesquisaCastracoesAgendadasBean.animalSelecionado}"
+							value="#{animal}" />
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+
+			<p:confirmDialog header="Cancelar castração"
+				message="Tem certeza que deseja cancelar esta castração?"
+				widgetVar="confirmacaoExclusao" id="confirmacaoExclusaoDialog">
+
+				<p:panelGrid columns="2" layout="grid"
+					columnClasses="ui-grid-col-2, ui-grid-col-6"
+					styleClass="panelgrid-noborder">
+
+					<h:outputText value="Motivo" />
+					<p:inputTextarea
+						value="#{pesquisaCastracoesAgendadasBean.animalSelecionado.motivoCancelamentoCastracao}" />
+
+				</p:panelGrid>
+
+				<p:button value="Não" icon="fa fa-close"
+					onclick="PF('confirmacaoExclusao').hide(); return false;" />
+				<p:commandButton value="Sim" icon="fa fa-check"
+					oncomplete="PF('confirmacaoExclusao').hide();"
+					action="#{pesquisaCastracoesAgendadasBean.cancelar}"
+					process="@this" ajax="false" />
+			</p:confirmDialog>
+		</h:form>
+
+		<h:form id="formAgenda">
+
+			<p:dialog header="Agendar visita" widgetVar="agendaDialog"
+				id="agendaDialog" height="500">
+
+				<p:schedule id="scheduleLocale"
+					value="#{pesquisaCastracoesAgendadasBean.eventModel}" locale="pt"
+					timeZone="GMT-3" resizable="true" timeFormat="HH:mm"
+					style="width: 800px">
+
+					<p:ajax event="dateSelect"
+						listener="#{pesquisaCastracoesAgendadasBean.onDateSelect}"
+						update="eventDetails" oncomplete="PF('eventDialog').show();" />
+
+					<p:ajax event="eventSelect"
+						listener="#{pesquisaCastracoesAgendadasBean.onEventSelect}"
+						update="eventDetails2" oncomplete="PF('eventDialog2').show();" />
+
+				</p:schedule>
+
+			</p:dialog>
+
+			<p:dialog widgetVar="eventDialog"
+				header="Nova data para a castração" showEffect="clip"
+				hideEffect="clip">
+				<h:panelGrid id="eventDetails" columns="2">
+
+					<p:outputLabel for="from" value="Data:" />
+					<p:calendar id="from" mask="99/99/9999 99:99"
+						value="#{pesquisaCastracoesAgendadasBean.event.startDate}"
+						pattern="dd/MM/yyyy HH:mm" locale="pt" />
+
+					<p:commandButton value="Salvar" icon="fa fa-check"
+						oncomplete="PF('eventDialog').hide();"
+						action="#{pesquisaCastracoesAgendadasBean.salvarDataAgendaCastracao()}"
+						update="@form, :formPesquisa:animaisTable, :formPesquisa:msg" />
+				</h:panelGrid>
+			</p:dialog>
+
+			<p:dialog widgetVar="eventDialog2"
+				header="Agendamendo de castrações" showEffect="clip"
+				hideEffect="clip">
+				<h:panelGrid id="eventDetails2" columns="2">
+				
+					<p:outputLabel value="Proprietário:" style="font-weight: bold"/>
+
+					<p:outputLabel
+						value="#{pesquisaCastracoesAgendadasBean.animalSelecionado.proprietario.nome}" />
+					
+					<p:outputLabel value="Animal:" style="font-weight: bold"/>	
+					<p:outputLabel
+						value="#{pesquisaCastracoesAgendadasBean.animalSelecionado.nome}" />
+
+					<p:outputLabel value="Data para castração:" style="font-weight: bold"/>
+					<p:outputLabel
+						value="#{pesquisaCastracoesAgendadasBean.animalSelecionado.dataAgendaCastracao.time}">
+						<f:convertDateTime type="date" locale="pt"
+							pattern="dd/MM/yyyy HH:mm" />
+					</p:outputLabel>
+
+				</h:panelGrid>
+			</p:dialog>
+		</h:form>
+
+
+	</ui:define>
+</ui:composition>

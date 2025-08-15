@@ -1,0 +1,77 @@
+<ui:composition template="/WEB-INF/template/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="titulo">Pesquisa de Tipos de Acertos de Estoque</ui:define>
+
+	<ui:define name="content">
+		<h:form id="formPesquisa">
+			<h1 class="aw-page-title">Pesquisa de Tipos de Acertos de
+				Estoque</h1>
+
+			<p:messages closable="true" />
+			<p:toolbar>
+				<p:toolbarGroup>
+					<p:commandButton value="Pesquisar" icon="fa fa-search"
+						action="#{pesquisaTipoAcertoBean.pesquisar()}" update="@form" />
+				</p:toolbarGroup>
+				<p:toolbarGroup align="right">
+					<p:button value="Novo" icon="fa fa-newspaper-o"
+						outcome="/cadastros/cadastroTipoAcerto" />
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<div class="ui-fluid">
+				<p:panelGrid columns="2" layout="grid"
+					columnClasses="ui-grid-col-2, ui-grid-col-6"
+					styleClass="panelgrid-noborder" style="margin-top: 20px">
+
+					<p:outputLabel value="Nome" for="nome" />
+					<p:inputText id="nome"
+						value="#{pesquisaTipoAcertoBean.tipoAcertoFilter.descricao}" />
+
+				</p:panelGrid>
+			</div>
+			<p:dataTable id="tiposTable" style="margin-top: 20px"
+				emptyMessage="Nenhum tipo de acerto foi encontrado" rows="20"
+				paginator="true" paginatorAlwaysVisible="false"
+				paginatorPosition="bottom" reflow="true"
+				value="#{pesquisaTipoAcertoBean.tiposAcertosFiltrados}" var="tipo">
+				<p:column headerText="Descrição">
+					<h:outputText value="#{tipo.descricao}" />
+				</p:column>
+				<p:column headerText="Operação">
+					<h:outputText value="#{tipo.operacao}" />
+				</p:column>
+
+				<p:column headerText="Ações"
+					style="width: 120px; text-align: center">
+					<p:button icon="ui-icon-pencil" title="Editar"
+						outcome="/cadastros/cadastroTipoAcerto">
+						<f:param name="tipoAcerto" value="#{tipo.idTipoAcerto}" />
+					</p:button>
+					<p:commandButton icon="ui-icon-trash" title="Excluir"
+						oncomplete="PF('confirmacaoExclusao').show()" process="@this"
+						update="formPesquisa:confirmacaoExclusaoDialog">
+						<f:setPropertyActionListener
+							target="#{pesquisaTipoAcertoBean.tipoAcertoSelecionado}"
+							value="#{tipo}" />
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+			<p:confirmDialog header="Excluir tipo de acerto"
+				message="Tem certeza que deseja excluir este tipo?"
+				widgetVar="confirmacaoExclusao" id="confirmacaoExclusaoDialog">
+				<p:button value="Não" icon="fa fa-close"
+					onclick="PF('confirmacaoExclusao').hide(); return false;" />
+				<p:commandButton value="Sim" icon="fa fa-check"
+					oncomplete="PF('confirmacaoExclusao').hide();"
+					action="#{pesquisaTipoAcertoBean.excluir()}" process="@this"
+					update="@form" />
+			</p:confirmDialog>
+		</h:form>
+	</ui:define>
+</ui:composition>

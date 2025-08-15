@@ -1,0 +1,98 @@
+<ui:composition template="/WEB-INF/template/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="titulo">Pesquisa de Produtos</ui:define>
+	<f:metadata>
+		<f:viewAction action="#{pesquisaProdutoBean.inicializar()}" />
+	</f:metadata>
+	<ui:define name="content">
+		<h:form id="formPesquisa">
+			<h1 class="aw-page-title">Pesquisa de Produtos</h1>
+
+			<p:messages closable="true" />
+			<p:toolbar>
+				<p:toolbarGroup>
+					<p:commandButton value="Pesquisar" icon="fa fa-search"
+						action="#{pesquisaProdutoBean.pesquisar()}" update="@form" />
+				</p:toolbarGroup>
+				<p:toolbarGroup align="right">
+					<p:button value="Novo" icon="fa fa-newspaper-o"
+						outcome="/cadastros/cadastroProduto" />
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<div class="ui-fluid">
+				<p:panelGrid columns="2" layout="grid"
+					columnClasses="ui-grid-col-2, ui-grid-col-6"
+					styleClass="panelgrid-noborder" style="margin-top: 20px">
+
+					<p:outputLabel value="Marca" for="marca" />
+					<p:selectOneMenu id="marca"
+						value="#{pesquisaProdutoBean.produtoFilter.marca}">
+						<f:selectItem itemLabel="Selecione a marca!" />
+						<f:selectItems value="#{pesquisaProdutoBean.marcasCadastradas}"
+							var="marca" itemValue="#{marca}" itemLabel="#{marca.nome}" />
+					</p:selectOneMenu>
+
+					<p:outputLabel value="Tipo Produto" for="tipoProduto" />
+					<p:selectOneMenu id="tipoProduto"
+						value="#{pesquisaProdutoBean.produtoFilter.tipoProduto}">
+						<f:selectItem itemLabel="Selecione o tipo de produto" />
+						<f:selectItems
+							value="#{pesquisaProdutoBean.tiposProdutosCadastrados}"
+							var="tipo" itemValue="#{tipo}" itemLabel="#{tipo.descricao}" />
+					</p:selectOneMenu>
+
+					<p:outputLabel value="Nome" for="nome" />
+					<p:inputText id="nome"
+						value="#{pesquisaProdutoBean.produtoFilter.nome}" />
+
+				</p:panelGrid>
+			</div>
+			<p:dataTable id="produtosTable" style="margin-top: 20px"
+				emptyMessage="Nenhum produto encontrado" rows="20" paginator="true"
+				paginatorAlwaysVisible="false" paginatorPosition="bottom"
+				reflow="true" value="#{pesquisaProdutoBean.produtosFiltrados}"
+				var="prod">
+				<p:column headerText="Nome">
+					<h:outputText value="#{prod.nome}" />
+				</p:column>
+				<p:column headerText="Tipo">
+					<h:outputText value="#{prod.tipoProduto.descricao}" />
+				</p:column>
+				<p:column headerText="Marca">
+					<h:outputText value="#{prod.marca.nome}" />
+				</p:column>
+
+				<p:column headerText="Ações"
+					style="width: 120px; text-align: center">
+					<p:button icon="ui-icon-pencil" title="Editar"
+						outcome="/cadastros/cadastroProduto">
+						<f:param name="produto" value="#{prod.idProduto}" />
+					</p:button>
+					<p:commandButton icon="ui-icon-trash" title="Excluir"
+						oncomplete="PF('confirmacaoExclusao').show()" process="@this"
+						update="formPesquisa:confirmacaoExclusaoDialog">
+						<f:setPropertyActionListener
+							target="#{pesquisaProdutoBean.produtoSelecionado}"
+							value="#{prod}" />
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+			<p:confirmDialog header="Excluir produto"
+				message="Tem certeza que deseja excluir este produto?"
+				widgetVar="confirmacaoExclusao" id="confirmacaoExclusaoDialog">
+				<p:button value="Não" icon="fa fa-close"
+					onclick="PF('confirmacaoExclusao').hide(); return false;" />
+				<p:commandButton value="Sim" icon="fa fa-check"
+					oncomplete="PF('confirmacaoExclusao').hide();"
+					action="#{pesquisaProdutoBean.excluir()}" process="@this"
+					update="@form" />
+			</p:confirmDialog>
+		</h:form>
+	</ui:define>
+</ui:composition>

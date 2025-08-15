@@ -1,0 +1,113 @@
+<ui:composition template="/WEB-INF/template/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui">
+
+
+	<ui:define name="titulo">#{cadastroFornecedorBean.editando ? 'Edição de Fornecedor' : 'Cadastro de Fornecedores'}</ui:define>
+	<f:metadata>
+		<f:viewParam name="fornecedor"
+			value="#{cadastroFornecedorBean.fornecedor}" />
+			<f:viewAction action="#{cadastroFornecedorBean.inicializar()}" />
+	</f:metadata>
+	<ui:define name="content">
+		<h:form id="form">
+			<h1 class="aw-page-title">#{cadastroFornecedorBean.editando ?
+				'Edição do Fornecedor' : 'Cadastro de Fornecedores'}</h1>
+
+			<p:messages closable="true" id="msg" />
+
+			<p:toolbar>
+				<p:toolbarGroup>
+					<p:button value="Novo" icon="fa fa-newspaper-o"
+						outcome="/cadastros/cadastroFornecedor" />
+					<p:commandButton value="Salvar" icon="fa fa-save" id="botaoSalvar"
+						action="#{cadastroFornecedorBean.salvar()}" update="@form" />
+				</p:toolbarGroup>
+				<p:toolbarGroup align="right">
+					<p:button value="Pesquisa" icon="fa fa-search" 
+					outcome="/cadastros/pesquisaFornecedor"/>
+				</p:toolbarGroup>
+			</p:toolbar>
+			<div class="ui-fluid">
+				<p:tabView style="margin-top: 10px" id="tabView">
+					<p:tab title="Dados">
+						<p:panelGrid columns="2" layout="grid"
+							columnClasses="ui-grid-col-2, ui-grid-col-6"
+							styleClass="panelgrid-noborder" style="margin-top: 20px">
+
+							<p:outputLabel value="Nome" for="nome" />
+							<p:inputText id="nome"
+								value="#{cadastroFornecedorBean.fornecedor.nomeFantasia}"
+								required="true" requiredMessage="Informe o nome fantasia" />
+								
+								<p:outputLabel value="Razão Social" for="razao" />
+							<p:inputText id="razao"
+								value="#{cadastroFornecedorBean.fornecedor.razaoSocial}"
+								required="true" requiredMessage="Informe a razão social" />
+
+							<p:outputLabel value="CNPJ" for="cnpj" />
+							<p:inputMask mask="99.999.999/9999-99" id="cnpj"
+								value="#{cadastroFornecedorBean.fornecedor.cnpj}" />
+
+						</p:panelGrid>
+					</p:tab>
+					<p:tab title="Endereço">
+						<p:panelGrid columns="2" layout="grid"
+							columnClasses="ui-grid-col-1, ui-grid-col-6"
+							styleClass="panelgrid-noborder" style="margin-top: 20px">
+
+							<p:outputLabel value="Logradouro" for="logradouro" />
+							<p:inputText id="logradouro"
+								value="#{cadastroFornecedorBean.endereco.logradouro}"
+								required="true" requiredMessage="Informe o logradouro!" />
+							<p:outputLabel value="Número" for="numero" />
+							<p:inputText id="numero"
+								value="#{cadastroFornecedorBean.endereco.numero}"
+								required="true" requiredMessage="Informe o número!" />
+
+							<p:outputLabel value="Bairro" for="bairro" />
+							<p:inputText id="bairro"
+								value="#{cadastroFornecedorBean.endereco.bairro}"
+								required="true" requiredMessage="Informe o bairro!" />
+
+							<p:outputLabel value="Complemento" for="complemento" />
+							<p:inputText id="complemento"
+								value="#{cadastroFornecedorBean.endereco.complemento}" />
+
+							<p:outputLabel value="Cidade" for="cidade" />
+							<p:autoComplete id="cidade" dropdown="true"
+								value="#{cadastroFornecedorBean.endereco.cidade}"
+								completeMethod="#{cadastroFornecedorBean.completarCidade}"
+								var="cid" itemLabel="#{cid}" itemValue="#{cid}"
+								forceSelection="true" minQueryLength="2" maxResults="20" />
+
+						</p:panelGrid>
+					</p:tab>
+					<p:tab title="Contato">
+						<p:panelGrid columns="2" layout="grid"
+							columnClasses="ui-grid-col-1, ui-grid-col-6"
+							styleClass="panelgrid-noborder" style="margin-top: 20px">
+
+							<p:outputLabel value="Telefone" for="telefone" />
+							<p:inputMask mask="(99)9999-9999" id="telefone"
+								value="#{cadastroFornecedorBean.contato.telefone}"
+								required="true" requiredMessage="Informe o telefone!" />
+
+							<p:outputLabel value="Celular" for="celular" />
+							<p:inputMask mask="(99)99999-9999" id="celular"
+								value="#{cadastroFornecedorBean.contato.celular}" />
+
+							<p:outputLabel value="E-mail" for="email" />
+							<p:inputText id="email"
+								value="#{cadastroFornecedorBean.contato.email}" />
+
+						</p:panelGrid>
+					</p:tab>
+				</p:tabView>
+			</div>
+		</h:form>
+	</ui:define>
+</ui:composition>

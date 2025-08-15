@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<h:outputStylesheet library="webjars" name="font-awesome/4.7.0/css/font-awesome.min.css" />
+	<h:outputStylesheet name="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+
+
+
+	<h:outputScript target="body" library="primefaces"
+		name="jquery/jquery.js" />
+	<h:outputScript target="body" library="js" name="app.js" />
+	<h:outputScript library="js" name="jquery.maskMoney.js" />
+
+	<h:outputStylesheet library="css" name="custom.css" />
+	<h:outputStylesheet library="css" name="layout.css" />
+	<h:outputStylesheet library="css" name="components.css" />
+    
+
+	<!-- onsuccess é usado para recarregar o plugin Jquery, pois se recarrega o form ele perde as configurações -->
+   
+	<f:facet name="first">
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+	</f:facet>
+
+	<title>Animalys</title>
+
+
+</h:head>
+
+<h:body>
+
+	<header class="aw-topbar">
+		<h:link outcome="/DashBoard">
+			<h:graphicImage library="images" name="ANIMALYS.png" />
+
+		</h:link>
+
+		<a href="#" class="aw-toggle  js-toggle"><i class="fa  fa-bars"></i></a>
+
+		<span
+			style="float: right; height: 30px; line-height: 30px; margin-right: 30px; margin-top: 20px; color: white">
+			Usuário - #{seguranca.nomeUsuario} </span>
+
+	</header>
+
+	<aside class="aw-sidebar  js-sidebar">
+
+		<h:form id="form2">
+
+			<div class="ui-g" style="margin-top: 10px; margin-left: 10px">
+
+				<p:menu toggleable="true" style="width: 210px">
+
+					<p:submenu label="Cadastros">
+						<p:menuitem value="Cadastro" icon="fa fa-paw"
+							outcome="/cadastros/cadastroAnimalInt" />
+						<p:menuitem value="Espécie" outcome="/cadastros/pesquisaEspecie"
+							icon="fa fa-weibo" />
+						<p:menuitem value="Fornecedor"
+							outcome="/cadastros/pesquisaFornecedor" icon="fa fa-truck" />
+						<p:menuitem value="Marca" outcome="/cadastros/pesquisaMarca"
+							icon="fa fa-trello" />
+						<p:menuitem value="Profissional"
+							outcome="/cadastros/pesquisaProfissional" icon="fa fa-user-plus" />
+						<p:menuitem value="Procedimento"
+							outcome="/cadastros/pesquisaProcedimento" icon="fa fa-drupal" />
+						<p:menuitem value="Produto" outcome="/cadastros/pesquisaProduto"
+							icon="fa fa-steam" />
+						<p:menuitem value="Raça" outcome="/cadastros/pesquisaRaca"
+							icon="fa fa-weixin" />
+						<p:menuitem value="Tipo Produto"
+							outcome="/cadastros/pesquisaTipoProduto" icon="fa fa-meanpath" />
+						<p:menuitem value="Tipo Acerto"
+							outcome="/cadastros/pesquisaTipoAcerto" icon="fa fa-empire" />
+					</p:submenu>
+
+					<p:submenu label="Estoque">
+						<p:menuitem value="Acerto de Estoque" icon="fa fa-cart-plus"
+							outcome="/estoque/pesquisaAcertoEstoque" />
+						<p:menuitem value="Entrada" outcome="/estoque/entradaProdutos"
+							icon="fa fa-cart-plus" />
+
+					</p:submenu>
+
+					<p:submenu label="Atendimento">
+						<p:menuitem value="Solicitações"
+							outcome="/solicitacoes/pesquisaSolicitacoes"
+							icon="fa fa-chevron-circle-right" />
+						<p:menuitem value="Consultas Agendadas"
+							outcome="/solicitacoes/pesquisaVisitasAgendadas"
+							icon="fa fa-calendar" />
+							<p:menuitem value="Consultas Realizadas"
+							outcome="/atendimento/consultasRealizadas"
+							icon="fa fa-file" />
+						<p:menuitem value="Castrações Agendadas" icon="fa fa-briefcase"
+							outcome="/solicitacoes/pesquisaCastracoesAgendadas" />
+						<p:menuitem value="Castrações Realizadas" icon="fa fa-cut"
+							outcome="/solicitacoes/pesquisaCastracoesRealizadas" />
+					</p:submenu>
+					
+					<p:submenu label="Relatórios">
+						<p:menuitem value="Castrações Realizadas"
+							outcome="/relatorios/animaisCastrados"
+							icon="fa fa-chevron-circle-right" />
+							
+						<p:menuitem value="Ficha Clínica"
+    						outcome="/relatorios/historicoClientes"
+    						icon="fa fa-book" />
+					</p:submenu>
+
+					<p:submenu label="Sistema">
+						<p:menuitem value="Grupo" icon="fa fa-users"
+							outcome="/usuario/PesquisaGrupo.xhtml" />
+						<p:menuitem value="Usuário" icon="fa fa-user"
+							outcome="/usuario/PesquisaUsuario.xhtml" />
+						<p:menuitem value="Sair" icon="fa fa-arrow-left"
+							url="/animalys/logout" />
+					</p:submenu>
+				</p:menu>
+
+			</div>
+		</h:form>
+
+	</aside>
+
+	<section class="aw-content  js-content">
+		<ui:insert name="content" />
+	</section>
+
+	<style type="text/css">
+.blue {
+	background: #7dc6ec !important;
+}
+
+.red {
+	background: #ff6a6f !important;
+}
+</style>
+	<script type="text/javascript">
+			function configurarMoeda() {
+				$(".moeda").maskMoney({ decimal: ",", thousands: ".", allowZero: true });
+			}
+			
+			$(document).ready(function() {
+				configurarMoeda();
+			});
+
+			PrimeFaces.locales['pt'] = {
+	                closeText: 'Fechar',
+	                prevText: 'Anterior',
+	                nextText: 'Próximo',
+	                currentText: 'Começo',
+	                monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+	                monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+	                dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+	                dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'],
+	                dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'],
+	                weekHeader: 'Semana',
+	                firstDay: 0,
+	                isRTL: false,
+	                showMonthAfterYear: false,
+	                yearSuffix: '',
+	                timeOnlyTitle: 'Só Horas',
+	                timeText: 'Tempo',
+	                hourText: 'Hora',
+	                minuteText: 'Minuto',
+	                secondText: 'Segundo',
+	                ampm: false,
+	                month: 'Mês',
+	                week: 'Semana',
+	                day: 'Dia',
+	                allDayText: 'Todo o Dia'
+	            };
+
+
+
+		</script>
+</h:body>
+<div style="text-align: center; padding-top: 20px;">
+	<footer> By SETI - Diretoria de Projetos, Desenvolvimento e
+		Inovação - Animalys - V. 1.0 </footer>
+
+</div>
+</html>

@@ -1,0 +1,55 @@
+<ui:composition template="/WEB-INF/template/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui">
+
+
+	<ui:define name="titulo">#{cadastroRacaBean.editando ? 'Edição de Raça' : 'Cadastro de Raça'}</ui:define>
+	<f:metadata>
+		<f:viewParam name="raca" value="#{cadastroRacaBean.raca}" />
+		<f:viewAction action="#{cadastroRacaBean.inicializar()}" />
+	</f:metadata>
+	<ui:define name="content">
+		<h:form id="form">
+			<h1 class="aw-page-title">#{cadastroRacaBean.editando ? 'Edição
+				de Raça' : 'Cadastro de Raça'}</h1>
+
+			<p:messages closable="true" id="msg" />
+
+			<p:toolbar>
+				<p:toolbarGroup>
+					<p:button value="Novo" icon="fa fa-newspaper-o"
+						outcome="/cadastros/cadastroRaca" />
+					<p:commandButton value="Salvar" icon="fa fa-save" id="botaoSalvar"
+						action="#{cadastroRacaBean.salvar()}" update="@form" />
+				</p:toolbarGroup>
+				<p:toolbarGroup align="right">
+					<p:button value="Pesquisa" icon="fa fa-search"
+						outcome="/cadastros/pesquisaRaca" />
+				</p:toolbarGroup>
+			</p:toolbar>
+			<div class="ui-fluid">
+				<p:panelGrid columns="2" layout="grid"
+					columnClasses="ui-grid-col-2, ui-grid-col-6"
+					styleClass="panelgrid-noborder" style="margin-top: 20px">
+
+					<p:outputLabel value="Espécie" for="especie" />
+					<p:selectOneMenu id="especie"
+						value="#{cadastroRacaBean.raca.especie}" required="true"
+						requiredMessage="Informe a espécie da raça!">
+						<f:selectItem itemLabel="Selecione a espécie!" />
+						<f:selectItems value="#{cadastroRacaBean.especiesCadastradas}"
+							var="esp" itemValue="#{esp}" itemLabel="#{esp.nome}" />
+					</p:selectOneMenu>
+
+					<p:outputLabel value="Nome" for="nome" />
+					<p:inputText id="nome" value="#{cadastroRacaBean.raca.nome}"
+						required="true" requiredMessage="Informe o nome" />
+
+				</p:panelGrid>
+			</div>
+		</h:form>
+	</ui:define>
+</ui:composition>

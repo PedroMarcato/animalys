@@ -1,0 +1,86 @@
+<ui:composition template="/WEB-INF/template/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="titulo">Pesquisa de Raças</ui:define>
+	<f:metadata>
+		<f:viewAction action="#{pesquisaRacaBean.inicializar()}" />
+	</f:metadata>
+	<ui:define name="content">
+		<h:form id="formPesquisa">
+			<h1 class="aw-page-title">Pesquisa de Raças</h1>
+
+			<p:messages closable="true" />
+			<p:toolbar>
+				<p:toolbarGroup>
+					<p:commandButton value="Pesquisar" icon="fa fa-search"
+						action="#{pesquisaRacaBean.pesquisar()}" update="@form" />
+				</p:toolbarGroup>
+				<p:toolbarGroup align="right">
+					<p:button value="Novo" icon="fa fa-newspaper-o"
+						outcome="/cadastros/cadastroRaca" />
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<div class="ui-fluid">
+				<p:panelGrid columns="2" layout="grid"
+					columnClasses="ui-grid-col-2, ui-grid-col-6"
+					styleClass="panelgrid-noborder" style="margin-top: 20px">
+					
+					<p:outputLabel value="Espécie" for="especie" />
+					<p:selectOneMenu id="especie"
+						value="#{pesquisaRacaBean.racaFilter.especie}">
+						<f:selectItem itemLabel="Selecione a espécie!" />
+						<f:selectItems value="#{pesquisaRacaBean.especiesCadastradas}"
+							var="esp" itemValue="#{esp}" itemLabel="#{esp.nome}" />
+					</p:selectOneMenu>
+
+					<p:outputLabel value="Nome" for="nome" />
+					<p:inputText id="nome"
+						value="#{pesquisaRacaBean.racaFilter.nome}" />
+
+				</p:panelGrid>
+			</div>
+			<p:dataTable id="especiesTable" style="margin-top: 20px"
+				emptyMessage="Nenhuma raça encontrada" rows="20" paginator="true"
+				paginatorAlwaysVisible="false" paginatorPosition="bottom"
+				reflow="true" value="#{pesquisaRacaBean.racasFiltradas}"
+				var="raca">
+				<p:column headerText="Nome">
+					<h:outputText value="#{raca.nome}" />
+				</p:column>
+				<p:column headerText="Espécie">
+					<h:outputText value="#{raca.especie.nome}" />
+				</p:column>
+
+				<p:column headerText="Ações"
+					style="width: 120px; text-align: center">
+					<p:button icon="ui-icon-pencil" title="Editar"
+						outcome="/cadastros/cadastroRaca">
+						<f:param name="raca" value="#{raca.idRaca}" />
+					</p:button>
+					<p:commandButton icon="ui-icon-trash" title="Excluir"
+						oncomplete="PF('confirmacaoExclusao').show()" process="@this"
+						update="formPesquisa:confirmacaoExclusaoDialog">
+						<f:setPropertyActionListener
+							target="#{pesquisaRacaBean.racaSelecionada}"
+							value="#{raca}" />
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+			<p:confirmDialog header="Excluir raça"
+				message="Tem certeza que deseja excluir esta raça?"
+				widgetVar="confirmacaoExclusao" id="confirmacaoExclusaoDialog">
+				<p:button value="Não" icon="fa fa-close"
+					onclick="PF('confirmacaoExclusao').hide(); return false;" />
+				<p:commandButton value="Sim" icon="fa fa-check"
+					oncomplete="PF('confirmacaoExclusao').hide();"
+					action="#{pesquisaRacaBean.excluir()}" process="@this"
+					update="@form" />
+			</p:confirmDialog>
+		</h:form>
+	</ui:define>
+</ui:composition>

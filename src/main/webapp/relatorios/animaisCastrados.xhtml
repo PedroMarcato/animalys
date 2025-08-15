@@ -1,0 +1,56 @@
+<ui:composition template="/WEB-INF/template/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="titulo">Animais Castrados</ui:define>
+
+	<f:metadata>
+		<f:viewAction action="#{pesquisaVisitasAgendadas.inicializar}" />
+	</f:metadata>
+
+	<ui:define name="content">
+		<h:form id="formPesquisa">
+			<h1 class="aw-page-title">Animais Castrados</h1>
+
+			<p:messages id="msg" closable="true" />
+			<p:toolbar>
+				<p:toolbarGroup>
+					<p:commandButton value="Gerar" icon="fa fa-file-pdf-o"
+						action="#{relatorioCastracaoBean.gerarRelatorio()}" update="@form" ajax="false" 
+						onclick="this.form.target='_blank'"/>
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<div class="ui-fluid">
+				<p:panelGrid columns="2" layout="grid"
+					columnClasses="ui-grid-col-2, ui-grid-col-6"
+					styleClass="panelgrid-noborder" style="margin-top: 20px">
+
+					<p:outputLabel value="Proprietário" for="proprietario" />
+					<p:inputText id="proprietario"
+						value="#{relatorioCastracaoBean.animalFilter.nomeProprietario}" />
+						
+					<p:outputLabel value="Data castração" />
+					<h:panelGroup>
+						<p:outputLabel value="Inicial" for="dataInicio"
+							style="margin-right: 10px" />
+						<p:calendar id="dataInicio" locale="pt"
+							value="#{relatorioCastracaoBean.animalFilter.dataInicioCastracao}"
+							pattern="dd/MM/yyyy" mask="99/99/9999" size="15" />
+
+						<p:outputLabel value="Final" for="dataFinal"
+							style="margin-left: 10px; margin-right: 10px;" />
+						<p:calendar id="dataFinal" locale="pt"
+							value="#{relatorioCastracaoBean.animalFilter.dataFimCastracao}"
+							pattern="dd/MM/yyyy" mask="99/99/9999" size="15" />
+					</h:panelGroup>
+				</p:panelGrid>
+			</div>
+
+		</h:form>
+
+	</ui:define>
+</ui:composition>

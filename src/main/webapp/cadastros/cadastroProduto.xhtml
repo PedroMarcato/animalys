@@ -1,0 +1,97 @@
+<ui:composition template="/WEB-INF/template/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui">
+
+
+	<ui:define name="titulo">#{cadastroProdutoBean.editando ? 'Edição de Produto' : 'Cadastro de Produtos'}</ui:define>
+	<f:metadata>
+		<f:viewParam name="produto" value="#{cadastroProdutoBean.produto}" />
+		<f:viewAction action="#{cadastroProdutoBean.inicializar()}" />
+	</f:metadata>
+	<ui:define name="content">
+		<h:form id="form">
+			<h1 class="aw-page-title">#{cadastroProdutoBean.editando ?
+				'Edição de Produto' : 'Cadastro de Produtos'}</h1>
+
+			<p:messages closable="true" id="msg" />
+
+			<p:toolbar>
+				<p:toolbarGroup>
+					<p:button value="Novo" icon="fa fa-newspaper-o"
+						outcome="/cadastros/cadastroProduto" />
+					<p:commandButton value="Salvar" icon="fa fa-save" id="botaoSalvar"
+						action="#{cadastroProdutoBean.salvar()}" update="@form" />
+				</p:toolbarGroup>
+				<p:toolbarGroup align="right">
+					<p:button value="Pesquisa" icon="fa fa-search"
+						outcome="/cadastros/pesquisaProduto" />
+				</p:toolbarGroup>
+			</p:toolbar>
+			<div class="ui-fluid">
+				<p:panelGrid columns="2" layout="grid"
+					columnClasses="ui-grid-col-2, ui-grid-col-6"
+					styleClass="panelgrid-noborder" style="margin-top: 20px">
+
+					<p:outputLabel value="Marca" for="marca" />
+					<h:panelGroup>
+						<p:autoComplete id="marca" dropdown="true"
+							value="#{cadastroProdutoBean.produto.marca}"
+							completeMethod="#{cadastroProdutoBean.completarMarca}" var="mar"
+							itemLabel="#{mar.nome}" itemValue="#{mar}" forceSelection="true"
+							minQueryLength="2" maxResults="20" />
+						<p:commandButton oncomplete="PF('dlgMarca').show();"
+							update=":formMarca:novaMarca" icon="fa fa-plus" />
+					</h:panelGroup>
+
+					<p:outputLabel value="Tipo Produto" for="tipo" />
+					<p:selectOneMenu id="tipo"
+						value="#{cadastroProdutoBean.produto.tipoProduto}" required="true"
+						requiredMessage="Informe o tipo do produto!">
+						<f:selectItem itemLabel="Selecione o tipo!" />
+						<f:selectItems
+							value="#{cadastroProdutoBean.tiposProdutosCadastrados}"
+							var="tipo" itemValue="#{tipo}" itemLabel="#{tipo.descricao}" />
+					</p:selectOneMenu>
+
+					<p:outputLabel value="Tipo Apresentação" for="tipoAp" />
+					<p:selectOneMenu id="tipoAp"
+						value="#{cadastroProdutoBean.produto.tipoApresentacao}"
+						required="true" requiredMessage="Informe o tipo de apresentação!">
+						<f:selectItem itemLabel="Selecione o tipo!" />
+						<f:selectItems value="#{cadastroProdutoBean.tiposApresentacao}"
+							var="tipoAp" itemValue="#{tipoAp}"
+							itemLabel="#{tipoAp.descricao}" />
+					</p:selectOneMenu>
+
+					<p:outputLabel value="Nome" for="nome" />
+					<p:inputText id="nome" value="#{cadastroProdutoBean.produto.nome}"
+						required="true" requiredMessage="Informe o nome" />
+
+				</p:panelGrid>
+			</div>
+		</h:form>
+		<h:form id="formMarca">
+			<div class="ui-fluid">
+				<p:dialog header="Cadastrar nova marca" widgetVar="dlgMarca"
+					modal="true" height="200" width="500" id="novaMarca">
+					<p:panelGrid columns="3" layout="grid"
+						columnClasses="ui-grid-col-3, ui-grid-col-6, ui-grid-col-3"
+						styleClass="panelgrid-noborder" style="margin-top: 20px">
+
+						<p:outputLabel value="Nome" for="nome" />
+						<p:inputText id="nome"
+							value="#{cadastroProdutoBean.novaMarca.nome}" required="true"
+							requiredMessage="Informe a nome da marca!" />
+
+						<p:commandButton value="Salvar" icon="fa fa-save" id="botaoSalvar"
+							action="#{cadastroProdutoBean.salvarMarca()}" update="@form" />
+					</p:panelGrid>
+				</p:dialog>
+			</div>
+		</h:form>
+
+	</ui:define>
+</ui:composition>

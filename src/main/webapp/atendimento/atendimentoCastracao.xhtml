@@ -1,0 +1,261 @@
+<ui:composition template="/WEB-INF/template/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui">
+
+	<f:metadata>
+		<f:viewParam name="animal" value="#{atendimentoCastracaoBean.animal}" />
+		<f:viewAction action="#{atendimentoCastracaoBean.inicializar()}" />
+	</f:metadata>
+	<ui:define name="titulo">Castração</ui:define>
+
+	<ui:define name="content">
+		<h:form id="form">
+			<h1 class="aw-page-title">Castração</h1>
+
+			<p:messages id="msg" closable="true" />
+
+			<p:toolbar>
+				<p:toolbarGroup>
+					<p:commandButton value="Salvar" icon="fa fa-save" id="botaoSalvar"
+						action="#{atendimentoCastracaoBean.salvar()}" update="@form" />
+				</p:toolbarGroup>
+				<p:toolbarGroup align="right">
+					<p:button value="Pesquisa" icon="fa fa-search"
+						 outcome="/solicitacoes/pesquisaCastracoesAgendadas"/>
+
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<h:panelGrid columns="1" id="painel1"
+				style="width: 100%; margin-top: 20px" columnClasses="rotulo, campo"
+				styleClass="panelgrid-noborder">
+				<h:panelGroup id="panelProprietario">
+					<p:outputLabel value="Proprietário: " style="font-weight: bold" />
+					<p:outputLabel
+						value="#{atendimentoCastracaoBean.animal.proprietario.nome}" />
+					<p:outputLabel value=" CPF: " style="font-weight: bold" />
+					<p:outputLabel
+						value="#{atendimentoCastracaoBean.animal.proprietario.cpf}" />
+				</h:panelGroup>
+				<p:outputLabel />
+				<h:panelGroup id="panelAnimal">
+					<p:outputLabel value=" Espécie: " style="font-weight: bold" />
+					<p:outputLabel
+						value="#{atendimentoCastracaoBean.animal.raca.especie.nome}" />
+
+					<p:outputLabel value=" Raça: " style="font-weight: bold" />
+					<p:outputLabel value="#{atendimentoCastracaoBean.animal.raca.nome}" />
+
+					<p:outputLabel value=" Nome: " style="font-weight: bold" />
+					<p:outputLabel value="#{atendimentoCastracaoBean.animal.nome}" />
+				</h:panelGroup>
+
+			</h:panelGrid>
+
+			<p:tabView id="tabView1">
+
+				<p:tab title="Diagnóstico">
+
+					<p:panelGrid columns="1" id="painel" layout="grid"
+						columnClasses="ui-grid-col-12" styleClass="panelgrid-noborder">
+
+						<p:textEditor id="parecer" widgetVar="editor1"
+							value="#{atendimentoCastracaoBean.atendimento.diagnostico}"
+							height="300" style="margin-bottom:10px" rendered="true"
+							required="true" requiredMessage="Informe o diagnóstico!"
+							readonly="#{atendimentoCastracaoBean.alterarAtendimento1}" />
+
+					</p:panelGrid>
+				</p:tab>
+				<p:tab id="tabProcedimento" title="Procedimentos">
+
+					<p:panelGrid columns="2" id="painelProcedimento" layout="grid"
+						columnClasses="ui-grid-col-2, ui-grid-col-10"
+						styleClass="panelgrid-noborder">
+
+						<p:outputLabel value="Procedimento" for="procedimento" />
+						<h:panelGroup id="procedimentoPanel">
+							<p:autoComplete id="procedimento" dropdown="true"
+								value="#{atendimentoCastracaoBean.procedimentoSelecionado}"
+								completeMethod="#{atendimentoCastracaoBean.completarProcedimento}"
+								var="pro" itemLabel="#{pro.nome}" itemValue="#{pro}"
+								forceSelection="true" minQueryLength="2" maxResults="10"
+								readonly="#{atendimentoCastracaoBean.alterarAtendimento1}" />
+
+							<p:commandButton value="Adicionar" icon="fa fa-plus"
+								id="botaoAdicionar"
+								action="#{atendimentoCastracaoBean.adicionarProcedimento()}"
+								update="procedimentosTable, procedimento"
+								style="margin-left: 10px;"
+								disabled="#{atendimentoCastracaoBean.alterarAtendimento1}" />
+						</h:panelGroup>
+					</p:panelGrid>
+
+					<p:dataTable id="procedimentosTable" style="margin-top: 20px"
+						emptyMessage="Nenhum procedimento adicionado!" rows="5"
+						reflow="true"
+						value="#{atendimentoCastracaoBean.procedimentosSelecionados}"
+						var="proce">
+						<p:column headerText="ID">
+							<h:outputText value="#{proce.idProcedimento}" />
+						</p:column>
+						<p:column headerText="Nome">
+							<h:outputText value="#{proce.nome}" />
+						</p:column>
+						<p:column headerText="Ações"
+							style="width: 120px; text-align: center">
+							<p:commandButton icon="ui-icon-trash" title="Excluir"
+								oncomplete="PF('confirmacaoExclusao').show()" process="@this"
+								update="form:tabView1:confirmacaoExclusaoDialog"
+								disable="#{atendimentoCastracaoBean.alterarAtendimento1}">
+								<f:setPropertyActionListener
+									target="#{atendimentoCastracaoBean.procedimentoSelecionado}"
+									value="#{proce}" />
+							</p:commandButton>
+						</p:column>
+					</p:dataTable>
+
+					<p:confirmDialog header="Remover Procedimento"
+						message="Tem certeza que deseja remover este procedimento?"
+						widgetVar="confirmacaoExclusao" id="confirmacaoExclusaoDialog">
+						<p:button value="Não" icon="fa fa-close"
+							onclick="PF('confirmacaoExclusao').hide(); return false;" />
+						<p:commandButton value="Sim" icon="fa fa-check"
+							oncomplete="PF('confirmacaoExclusao').hide();"
+							action="#{atendimentoCastracaoBean.removerProcedimento()}"
+							process="@this" update="procedimentosTable" />
+					</p:confirmDialog>
+				</p:tab>
+				<p:tab title="Medicamentos">
+
+					<p:panelGrid columns="2" id="painelMedicamento" layout="grid"
+						columnClasses="ui-grid-col-2,ui-grid-col-10"
+						styleClass="panelgrid-noborder">
+
+						<p:outputLabel value="Medicamento" for="medicamento" />
+						<h:panelGroup>
+							<p:autoComplete id="medicamento" dropdown="true"
+								value="#{atendimentoCastracaoBean.itemLoteSelecionado.lote}"
+								completeMethod="#{atendimentoCastracaoBean.completarLote}"
+								var="lote" itemLabel="#{lote}" itemValue="#{lote}"
+								forceSelection="true" minQueryLength="2" maxResults="10"
+								readonly="#{atendimentoCastracaoBean.alterarAtendimento1}">
+								<p:ajax update="labelEstoque" event="blur" />
+							</p:autoComplete>
+							<p:outputLabel
+								value="Estoque: #{atendimentoCastracaoBean.itemLoteSelecionado.lote.quantidade}"
+								id="labelEstoque" style="margin-left: 10px;" />
+						</h:panelGroup>
+						<p:outputLabel value="Quantidade" />
+						<h:panelGroup>
+							<p:inputText value="#{atendimentoCastracaoBean.quantidade}"
+								readonly="#{atendimentoCastracaoBean.alterarAtendimento1}" />
+							<p:commandButton value="Adicionar" icon="fa fa-plus"
+								id="botaoAdicionar2"
+								action="#{atendimentoCastracaoBean.adicionarLote()}"
+								update="@form" style="margin-left: 10px;"
+								disabled="#{atendimentoCastracaoBean.alterarAtendimento1}" />
+						</h:panelGroup>
+					</p:panelGrid>
+
+					<p:dataTable id="itensTable" style="margin-top: 20px"
+						emptyMessage="Nenhum item adicionado!" rows="5" reflow="true"
+						value="#{atendimentoCastracaoBean.itensLotes}" var="item">
+						<p:column headerText="Nome">
+							<h:outputText value="#{item.lote.produto.nome}" />
+						</p:column>
+						<p:column headerText="Lote">
+							<h:outputText value="#{item.lote.numeroLote}" />
+						</p:column>
+						<p:column headerText="Validade">
+							<h:outputText value="#{item.lote.validadeFormatada}" />
+						</p:column>
+						<p:column headerText="QTD">
+							<h:outputText value="#{item.quantidade}" />
+						</p:column>
+						<p:column headerText="Ações"
+							style="width: 120px; text-align: center">
+							<p:commandButton icon="ui-icon-trash" title="Excluir"
+								oncomplete="PF('confirmacaoExclusao2').show()" process="@this"
+								update="form:tabView1:confirmacaoExclusaoDialog2"
+								disable="#{atendimentoCastracaoBean.alterarAtendimento1}">
+								<f:setPropertyActionListener
+									target="#{atendimentoCastracaoBean.itemLoteSelecionado}"
+									value="#{item}" />
+							</p:commandButton>
+						</p:column>
+					</p:dataTable>
+
+					<p:confirmDialog header="Remover Item"
+						message="Tem certeza que deseja remover este item?"
+						widgetVar="confirmacaoExclusao2" id="confirmacaoExclusaoDialog2">
+						<p:button value="Não" icon="fa fa-close"
+							onclick="PF('confirmacaoExclusao').hide(); return false;" />
+						<p:commandButton value="Sim" icon="fa fa-check"
+							oncomplete="PF('confirmacaoExclusao2').hide();"
+							action="#{atendimentoCastracaoBean.removerProduto()}"
+							process="@this" update="itensTable" />
+					</p:confirmDialog>
+				</p:tab>
+
+				<p:tab title="Microchip">
+
+					<p:panelGrid columns="2" id="painelMicro" layout="grid"
+						columnClasses="ui-grid-col-2, ui-grid-col-2"
+						styleClass="panelgrid-noborder">
+
+						<p:outputLabel value="Informe o Nº do microchip:" for="microchip" />
+
+						<p:inputText id="microchip"
+							value="#{atendimentoCastracaoBean.animal.numeroMicrochip}" />
+
+
+					</p:panelGrid>
+				</p:tab>
+
+				<p:tab title="Atendimentos anteriores"
+					rendered="#{atendimentoCastracaoBean.temAtendimentoAnterior}">
+					<p:accordionPanel var="anterior"
+						value="#{atendimentoCastracaoBean.atendimentosAnteriores}">
+						<p:tab
+							title="#{anterior.dataAtendimentoFormatada} - #{anterior.profissional.nome}">
+							<h:panelGrid columns="2" cellpadding="10">
+								<p:outputLabel value="Diagnóstico:" />
+								<p:outputLabel value="#{anterior.diagnostico}" escape="false" />
+
+								<p:outputLabel value="Data para Castração" />
+								<p:outputLabel
+									value="#{anterior.animal.dataAgendaCastracao.time}">
+									<f:convertDateTime locale="pt" pattern="dd/MM/yyyy HH:mm"
+										type="date" />
+								</p:outputLabel>
+
+								<p:outputLabel value="Medicamentos" />
+								<p:dataTable id="medicamentosFeitos" style="margin-top: 20px"
+									emptyMessage="Nenhum medicamento adicionado!" rows="10"
+									reflow="true" value="#{anterior.itemLoteAtendimento}"
+									var="item">
+									<p:column headerText="Medicamento">
+										<h:outputText value="#{item.lote.produto.nome}" />
+									</p:column>
+									<p:column headerText="Quantidade">
+										<h:outputText value="#{item.quantidade}" />
+									</p:column>
+									<p:column headerText="Vencimento">
+										<h:outputText value="#{item.lote.validadeFormatada}" />
+									</p:column>
+
+								</p:dataTable>
+
+							</h:panelGrid>
+						</p:tab>
+					</p:accordionPanel>
+				</p:tab>
+			</p:tabView>
+
+		</h:form>
+	</ui:define>
+</ui:composition>

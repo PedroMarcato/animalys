@@ -1,0 +1,87 @@
+<ui:composition template="/WEB-INF/template/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui">
+
+	<ui:define name="titulo">#{usuarioBean.editando ? 'Edição de Usuário' : 'Cadastro de Usuário'}</ui:define>
+	<f:metadata>
+		<f:viewParam name="usuario" value="#{usuarioBean.usuario}" />
+		<f:viewAction action="#{usuarioBean.inicializar}" />
+	</f:metadata>
+
+	<ui:define name="content">
+		<h:form id="frm" autocomplete="off">
+			<p:focus context="frm" />
+
+			<h1 class="aw-page-title">#{usuarioBean.editando ? 'Edição de
+				usuário' : 'Novo usuário'}</h1>
+
+			<p:messages closable="true" autoUpdate="true" />
+
+			<p:toolbar style="margin-top: 20px">
+				<p:toolbarGroup>
+					<p:button value="Novo" outcome="/usuario/CadastroUsuario"
+						icon="fa fa-newspaper-o" />
+					<p:commandButton value="Salvar" id="botaoSalvar"
+						action="#{usuarioBean.salvar}" icon="fa fa-save" update="@form"
+						validateClient="false" />
+				</p:toolbarGroup>
+				<p:toolbarGroup align="right">
+					<p:button value="Pesquisa" icon="fa fa-search"
+						outcome="/usuario/PesquisaUsuario" />
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<p:panelGrid columns="2" id="painel"
+				style="width: 100%; margin-top: 20px" layout="grid"
+				columnClasses="ui-grid-col-2, ui-grid-col-6"
+				styleClass="panelgrid-noborder">
+				<p:outputLabel value="Nome" for="nome" />
+				<p:inputText id="nome" size="60" maxlength="80"
+					value="#{usuarioBean.usuario.nome}" required="true"
+					requiredMessage="Informe o nome!" />
+
+				<p:outputLabel value="Usuário" for="usuario" />
+				<p:inputText id="usuario" size="60"
+					value="#{usuarioBean.usuario.nomeUsuario}"
+					autocomplete="new-password" required="true"
+					requiredMessage="Informe o usuário!" />
+
+				<p:outputLabel value="Senha" for="senha" />
+				<p:password id="senha" size="30" maxlength="20"
+					match="confirmaSenha" value="#{usuarioBean.senha}"
+					autocomplete="new-password" feedback="true"
+					promptLabel="Informe a senha" goodLabel="Boa" strongLabel="Ótima"
+					weakLabel="Fraca" />
+
+				<p:outputLabel value="Confirme a senha" />
+				<p:password id="confirmaSenha" size="30" maxlength="20"
+					value="#{usuarioBean.senha}" autocomplete="new-password" />
+
+				<p:outputLabel value="Profissional" for="profissional" />
+				<p:autoComplete id="profissional" size="40" dropdown="true"
+					value="#{usuarioBean.usuario.profissional}"
+					completeMethod="#{usuarioBean.completarProfissional}" var="pessoa"
+					itemLabel="#{pessoa.nome}" itemValue="#{pessoa}"
+					forceSelection="true" minQueryLength="3" maxResults="10" />
+			</p:panelGrid>
+
+			<p:spacer height="15px" />
+
+			<p:tabView>
+				<p:tab title="Grupos">
+					<p:pickList value="#{usuarioBean.listaGrupos}" var="grupo"
+						itemValue="#{grupo}" itemLabel="#{grupo.nome}"
+						showSourceFilter="true" showTargetFilter="true"
+						showCheckbox="true" filterMatchMode="contains"
+						converter="grupoConverter" responsive="true">
+						<f:facet name="sourceCaption">Grupos disponíveis</f:facet>
+						<f:facet name="targetCaption">Grupos do usuário</f:facet>
+					</p:pickList>
+				</p:tab>
+			</p:tabView>
+		</h:form>
+	</ui:define>
+</ui:composition>

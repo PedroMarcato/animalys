@@ -1,0 +1,99 @@
+<ui:composition template="/WEB-INF/template/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="titulo">Castrações Realizadas</ui:define>
+
+	<f:metadata>
+		<f:viewAction action="#{pesquisaCastracoesRealizadas.inicializar}" />
+	</f:metadata>
+
+	<ui:define name="content">
+		<h:form id="formPesquisa">
+			<h1 class="aw-page-title">Castrações Realizadas</h1>
+
+			<p:messages id="msg" closable="true" />
+			<p:toolbar>
+				<p:toolbarGroup>
+					<p:commandButton value="Pesquisar" icon="fa fa-search"
+						action="#{pesquisaCastracoesRealizadas.pesquisar()}"
+						update="@form" />
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<div class="ui-fluid">
+				<p:panelGrid columns="2" layout="grid"
+					columnClasses="ui-grid-col-2, ui-grid-col-6"
+					styleClass="panelgrid-noborder" style="margin-top: 20px">
+
+					<p:outputLabel value="Proprietário" for="proprietario" />
+					<p:inputText id="proprietario"
+						value="#{pesquisaCastracoesRealizadas.animalFilter.nomeProprietario}" />
+
+					<p:outputLabel value="Nome animal" for="nomeAnimal" />
+					<p:inputText id="nomeAnimal"
+						value="#{pesquisaCastracoesRealizadas.animalFilter.nome}" />
+
+					<p:outputLabel value="Data Início" for="dataInicio" />
+
+					<h:panelGroup>
+						<p:calendar id="dataInicio" pattern="dd/MM/yyyy" mask="99/99/9999"
+							value="#{pesquisaCastracoesRealizadas.animalFilter.dataInicio}"
+							locale="pt" size="30" />
+
+						<p:outputLabel value="Data Final" for="dataFinal"
+							style="margin-left: 10px; margin-right: 10px;" />
+						<p:calendar id="dataFinal" pattern="dd/MM/yyyy" mask="99/99/9999"
+							value="#{pesquisaCastracoesRealizadas.animalFilter.datafim}"
+							locale="pt" size="30" />
+					</h:panelGroup>
+
+
+				</p:panelGrid>
+			</div>
+			<p:dataTable id="animaisTable" style="margin-top: 20px"
+				emptyMessage="Nenhum animal encontrado" rows="20" paginator="true"
+				paginatorAlwaysVisible="false" paginatorPosition="bottom"
+				reflow="true"
+				value="#{pesquisaCastracoesRealizadas.animaisFiltrados}"
+				var="animal">
+				<p:column headerText="Data Castração">
+					<h:outputText value="#{animal.dataCastracao.time}">
+						<f:convertDateTime locale="pt_BR" pattern="dd/MM/yyyy HH:mm" />
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Nome animal">
+					<h:outputText value="#{animal.nome}" />
+				</p:column>
+				<p:column headerText="Proprietário">
+					<h:outputText value="#{animal.proprietario.nome}" />
+				</p:column>
+				<p:column headerText="Endereço">
+					<h:outputText value="#{animal.proprietario.endereco}" />
+				</p:column>
+				<p:column headerText="Contato">
+					<h:outputText value="#{animal.proprietario.contato}" />
+				</p:column>
+				<p:column headerText="Situação">
+					<h:outputText value="#{animal.status.descricao}" />
+				</p:column>
+				<p:column headerText="Ações"
+					style="width: 100px; text-align: center">
+
+					<p:commandButton icon="fa fa-file-pdf-o" title="Imprimir Carteira animal"
+						process="@this"
+						action="#{pesquisaCastracoesRealizadas.gerarCarteirinha()}"
+						ajax="false" onclick="this.form.target='_blank'">
+						<f:setPropertyActionListener
+							target="#{pesquisaCastracoesRealizadas.animalSelecionado}"
+							value="#{animal}" />
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+		</h:form>
+
+	</ui:define>
+</ui:composition>

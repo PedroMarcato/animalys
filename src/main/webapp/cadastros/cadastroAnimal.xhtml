@@ -1,0 +1,292 @@
+<ui:composition template="/WEB-INF/template/LayoutExterno.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui">
+
+	<f:metadata>
+
+		<f:viewAction action="#{cadastroAnimalBean.inicializar()}" />
+	</f:metadata>
+	<ui:define name="titulo">Cadastro de animais!</ui:define>
+
+	<ui:define name="content">
+		<h:form id="form">
+			<h1 class="aw-page-title">Cadastro de animais para castração</h1>
+
+			<p:messages closable="true" id="msgs" />
+
+			<div class="ui-fluid">
+
+				<h1 style="padding-left: 25px">Informações do responsável pelo
+					animal</h1>
+
+				<h1 style="padding-left: 25px">Dados Pessoais</h1>
+
+				<p:panelGrid columns="4" id="painel" layout="grid"
+					columnClasses="ui-grid-col-1, ui-grid-col-4, ui-grid-col-1, ui-grid-col-4"
+					styleClass="panelgrid-noborder"
+					style="margin-top: 20px; margin-left: 20px;">
+
+					<p:outputLabel value="Modalidade" for="modalidade" style="font-weight: bold;"/>
+					<p:selectOneMenu id="modalidade" 
+						value="#{cadastroAnimalBean.solicitacao.modalidade}"
+						required="true"
+						requiredMessage="Informe a modalidade do cadastro!">
+						<f:selectItem itemLabel="Selecione a modalidade" />
+						<f:selectItems value="#{cadastroAnimalBean.modalidadesSolicitante}" var="moda" itemValue="#{moda}" itemLabel="#{moda.descricao}" />
+						<p:ajax update="panelLink" />
+					</p:selectOneMenu>
+
+					<p:outputLabel />
+					<p:outputLabel />
+
+					<p:outputLabel value="CPF" for="cpf" style="font-weight: bold;" />
+					<p:inputMask id="cpf" mask="999.999.999-99"
+						value="#{cadastroAnimalBean.cpf}" required="true"
+						requiredMessage="Informe o CPF"
+						disabled="#{!cadastroAnimalBean.habilitaCampos}">
+						<p:ajax listener="#{cadastroAnimalBean.buscaCadastroPeloCPF()}"
+							update="rg, nome, dataNascimento, nis, logradouro, numero, bairro, complemento, 
+							telefone, celular, email" event="blur" />
+					</p:inputMask>
+
+					<p:outputLabel value="RG" for="rg" style="font-weight: bold;" />
+					<p:inputText id="rg" value="#{cadastroAnimalBean.proprietario.rg}"
+						required="true" requiredMessage="Informe o RG"
+						disabled="#{cadastroAnimalBean.habilitaCampos}" />
+
+					<p:outputLabel value="Nome" for="nome" style="font-weight: bold;" />
+					<p:inputText id="nome"
+						value="#{cadastroAnimalBean.proprietario.nome}" required="true"
+						requiredMessage="Informe o nome"
+						readonly="#{inscricaoBean.habilitarEdicao}"
+						disabled="#{cadastroAnimalBean.habilitaCampos}" />
+
+					<p:outputLabel value="Data Nascimento" for="dataNascimento"
+						style="font-weight: bold;" />
+					<p:calendar id="dataNascimento" mask="99/99/9999" locale="pt"
+						pattern="dd/MM/yyyy" value="#{cadastroAnimalBean.dataNascimento}"
+						required="true" requiredMessage="Informe a data de nascimento"
+						disabled="#{cadastroAnimalBean.habilitaCampos}" />
+
+					<p:outputLabel value="NIS" for="nis"
+						title="Número de Identificação Social" style="font-weight: bold;" />
+					<p:inputText id="nis"
+						value="#{cadastroAnimalBean.proprietario.nis}"
+						disabled="#{cadastroAnimalBean.habilitaCampos}"
+						placeholder="Número de Identificação Social (Se houver)" />
+				</p:panelGrid>
+
+				<h1 style="padding-left: 25px">Endereço</h1>
+
+				<p:panelGrid columns="4" id="painelEndereco" layout="grid"
+					columnClasses="ui-grid-col-1, ui-grid-col-4, ui-grid-col-1, ui-grid-col-4"
+					styleClass="panelgrid-noborder"
+					style="margin-top: 20px; margin-left: 20px;">
+
+					<p:outputLabel value="Logradouro" for="logradouro"
+						style="font-weight: bold;" />
+					<p:inputText id="logradouro" placeholder="Ex: Rua Monjoli"
+						value="#{cadastroAnimalBean.endereco.logradouro}" required="true"
+						requiredMessage="Informe o logradouro"
+						disabled="#{cadastroAnimalBean.habilitaCampos}" />
+
+					<p:outputLabel value="Número" for="numero"
+						style="font-weight: bold;" />
+					<p:inputText id="numero"
+						value="#{cadastroAnimalBean.endereco.numero}" required="true"
+						requiredMessage="Informe o número" placeholder="Ex: 50 ou S/N"
+						disabled="#{cadastroAnimalBean.habilitaCampos}" />
+
+					<p:outputLabel value="Bairro" for="bairro"
+						style="font-weight: bold;" />
+					<p:inputText id="bairro"
+						value="#{cadastroAnimalBean.endereco.bairro}" required="true"
+						requiredMessage="Informe o bairro" placeholder="Ex: Centro"
+						disabled="#{cadastroAnimalBean.habilitaCampos}" />
+
+					<p:outputLabel value="Complemento" for="complemento"
+						style="font-weight: bold;" />
+					<p:inputText id="complemento"
+						value="#{cadastroAnimalBean.endereco.complemento}"
+						placeholder="Ex: Casa, Apartamento 01..."
+						disabled="#{cadastroAnimalBean.habilitaCampos}" />
+
+				</p:panelGrid>
+
+
+				<h1 style="padding-left: 25px">Contato</h1>
+
+				<p:panelGrid columns="4" id="painelContato" layout="grid"
+					columnClasses="ui-grid-col-1, ui-grid-col-4, ui-grid-col-1, ui-grid-col-4"
+					styleClass="panelgrid-noborder"
+					style="margin-top: 20px; margin-left: 20px;">
+
+					<p:outputLabel value="Telefone Fixo" for="telefone"
+						style="font-weight: bold;" />
+					<p:inputMask id="telefone" mask="(99)9999-9999"
+						value="#{cadastroAnimalBean.contato.telefone}"
+						disabled="#{cadastroAnimalBean.habilitaCampos}" />
+
+					<p:outputLabel value="Celular" for="celular"
+						style="font-weight: bold;" />
+					<p:inputMask id="celular" mask="(99)99999-9999"
+						value="#{cadastroAnimalBean.contato.celular}"
+						disabled="#{cadastroAnimalBean.habilitaCampos}" />
+
+					<p:outputLabel value="E-mail" for="email"
+						style="font-weight: bold;" />
+					<p:inputText id="email" value="#{cadastroAnimalBean.contato.email}"
+						disabled="#{cadastroAnimalBean.habilitaCampos}" />
+
+				</p:panelGrid>
+				<div class="setores"></div>
+				<h1 style="padding-left: 25px">Clique no link abaixo para
+					cadastrar o(s) animal(is)</h1>
+				<h3>
+				<h:panelGroup id="panelLink">
+				 <p:outputPanel rendered="#{not empty cadastroAnimalBean.solicitacao.modalidade}">
+				 
+					<p:commandLink id="linkAnexo" oncomplete="PF('dlg').show()" update="formAnexo:dlg" value="Clique aqui para adicionar!"
+						style="margin-left: 20px;" />
+						
+				   </p:outputPanel>	
+				  </h:panelGroup>	
+				</h3>
+				<p:tabView style="margin-top: 10px" id="tabView">
+					<p:tab title="Animais">
+
+						<p:dataTable emptyMessage="Nenhum animal cadastrado!"
+							style="margin-top: 10px" id="animalTable"
+							value="#{cadastroAnimalBean.animaisAdicionados}" var="animal">
+							<p:column headerText="Nome">
+								<h:outputText value="#{animal.nome}" />
+							</p:column>
+							<p:column headerText="Raça">
+								<h:outputText value="#{animal.raca.nome}" />
+							</p:column>
+							<p:column headerText="Idade">
+								<h:outputText value="#{animal.idade}" />
+							</p:column>
+							<p:column>
+
+								<p:commandButton icon="ui-icon-trash" title="Remover item"
+									oncomplete="PF('confirmacaoExclusao').show()" process="@this"
+									update="form:confirmacaoExclusaoDialog" style="width: 80px">
+									<f:setPropertyActionListener
+										target="#{cadastroAnimalBean.animalSelecionado}"
+										value="#{animal}" />
+								</p:commandButton>
+							</p:column>
+						</p:dataTable>
+					</p:tab>
+				</p:tabView>
+				<p:confirmDialog header="Remover animal"
+					message="Tem certeza que deseja remover este animal?"
+					widgetVar="confirmacaoExclusao" id="confirmacaoExclusaoDialog">
+					<p:button value="Não" icon="fa fa-close"
+						onclick="PF('confirmacaoExclusao').hide(); return false;" />
+					<p:commandButton value="Sim" icon="fa fa-check"
+						oncomplete="PF('confirmacaoExclusao').hide();"
+						action="#{cadastroAnimalBean.removerAnimal()}" process="@this"
+						update="tabView:animalTable" />
+				</p:confirmDialog>
+
+			</div>
+			<div class="chamada">
+				<div class="chamada_acao">
+					<p:commandButton value="Enviar Solicitação" icon="fa fa-send"
+						id="botaoSalvar" action="#{cadastroAnimalBean.salvar()}"
+						update="@form" ajax="false"/>
+				</div>
+			</div>
+
+		</h:form>
+		
+
+		<h:form id="formAnexo">
+
+			<p:dialog header="Adicionar Animal" widgetVar="dlg" modal="true"
+				resizable="false" responsive="true" id="dlg" width="70%">
+
+				<div class="ui-fluid">
+					<p:messages autoUpdate="false" />
+					<p:panelGrid columns="4" id="painelCurriculo" layout="grid"
+						columnClasses="ui-grid-col-1, ui-grid-col-4, ui-grid-col-1, ui-grid-col-4, ui-grid-col-1"
+						styleClass="panelgrid-noborder"
+						style="margin-top: 20px; margin-left: 20px;">
+
+						<p:outputLabel value="Espécie" for="especie" />
+						<p:selectOneMenu id="especie"
+							value="#{cadastroAnimalBean.especieSelecionada}" required="true"
+							requiredMessage="Informe a espécie do animal!">
+							<f:selectItem itemLabel="Selecione a espécie" />
+							<f:selectItems value="#{cadastroAnimalBean.especiesCadastradas}"
+								var="esp" itemValue="#{esp}" itemLabel="#{esp.nome}" />
+							<p:ajax update="raca"
+								listener="#{cadastroAnimalBean.carregaRacasPorEspecie()}" />
+						</p:selectOneMenu>
+
+						<p:outputLabel value="Raça" for="raca" />
+						<p:selectOneMenu id="raca"
+							value="#{cadastroAnimalBean.animal.raca}" required="true"
+							requiredMessage="Informe a raça do animal!">
+							<f:selectItem itemLabel="Selecione a raça" />
+							<f:selectItems value="#{cadastroAnimalBean.racasCadastradas}"
+								var="raca" itemValue="#{raca}" itemLabel="#{raca.nome}" />
+						</p:selectOneMenu>
+
+						<p:outputLabel value="Nome" for="nome" />
+						<p:inputText id="nome" value="#{cadastroAnimalBean.animal.nome}"
+							required="true" requiredMessage="Informe o nome" />
+
+						<p:outputLabel value="Idade" for="idade" />
+						<p:inputText id="idade" value="#{cadastroAnimalBean.animal.idade}"
+							required="true" requiredMessage="Informe a idade" />
+
+						<p:outputLabel value="Sexo" for="sexo" />
+						<p:selectOneMenu id="sexo"
+							value="#{cadastroAnimalBean.animal.sexo}" required="true"
+							requiredMessage="Informe o sexo do animal!">
+							<f:selectItem itemLabel="Selecione a sexo" />
+							<f:selectItems value="#{cadastroAnimalBean.sexos}" var="sexo"
+								itemValue="#{sexo}" itemLabel="#{sexo.descricao}" />
+						</p:selectOneMenu>
+
+					</p:panelGrid>
+					
+
+				</div>
+
+				<p:commandButton value="Salvar" icon="fa fa-send" ajax="false"
+					actionListener="#{cadastroAnimalBean.adicionarAnimal()}"
+					update="form:animalTable" process="@this"
+					oncomplete="PF('dlg').hide()">
+				</p:commandButton>
+				
+			</p:dialog>
+
+
+		</h:form>
+
+		<h:form id="formRelatorio">
+
+			<p:dialog header="Deseja gerar o comprovante da solicitação?"
+				widgetVar="dlgSucesso" modal="true">
+
+				<p:commandButton value="Sim" icon="fa fa-check"
+					oncomplete="PF('dlgSucesso').hide()" id="dlgSucesso"
+					onclick="this.form.target='_blank'"
+					action="#{cadastroAnimalBean.geraComprovante()}" update="@form"
+					ajax="false" />
+
+				<p:commandButton value="Não" icon="fa fa-times"
+					oncomplete="PF('dlgSucesso').hide()" />
+			</p:dialog>
+
+		</h:form>
+
+	</ui:define>
+</ui:composition>

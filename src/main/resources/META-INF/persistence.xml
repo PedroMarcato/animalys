@@ -1,63 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
-	<persistence-unit name="animalys">
-		<class>br.gov.pr.guaira.animalys.entity.Animal</class>
-		<class>br.gov.pr.guaira.animalys.entity.Atendimento</class>
-		<class>br.gov.pr.guaira.animalys.entity.Contato</class>
-		<class>br.gov.pr.guaira.animalys.entity.Endereco</class>
-		<class>br.gov.pr.guaira.animalys.entity.Especie</class>
-		<class>br.gov.pr.guaira.animalys.entity.Proprietario</class>
-		<class>br.gov.pr.guaira.animalys.entity.Raca</class>
-		<class>br.gov.pr.guaira.animalys.entity.Profissional</class>
-		<class>br.gov.pr.guaira.animalys.entity.Profissao</class>
-		<class>br.gov.pr.guaira.animalys.entity.Estado</class>
-		<class>br.gov.pr.guaira.animalys.entity.Cidade</class>
-		<class>br.gov.pr.guaira.animalys.entity.Marca</class>
-		<class>br.gov.pr.guaira.animalys.entity.TipoProduto</class>
-		<class>br.gov.pr.guaira.animalys.entity.Procedimento</class>
-		<class>br.gov.pr.guaira.animalys.entity.MedicacaoPosCirurgia</class>
-		<class>br.gov.pr.guaira.animalys.entity.Fornecedor</class>
-		<class>br.gov.pr.guaira.animalys.entity.Lote</class>
-		<class>br.gov.pr.guaira.animalys.entity.Solicitacao</class>
-		<class>br.gov.pr.guaira.animalys.entity.Produto</class>
-		<class>br.gov.pr.guaira.animalys.entity.EntradaProduto</class>
-		<class>br.gov.pr.guaira.animalys.entity.ItemEntrada</class>
-		<class>br.gov.pr.guaira.animalys.entity.ItemLoteAtendimento</class>
-		<class>br.gov.pr.guaira.animalys.entity.Grupo</class>
-		<class>br.gov.pr.guaira.animalys.entity.Permissao</class>
-		<class>br.gov.pr.guaira.animalys.entity.Usuario</class>
-		<class>br.gov.pr.guaira.animalys.entity.AcertoEstoque</class>
-		<class>br.gov.pr.guaira.animalys.entity.TipoAcerto</class>
-		<class>br.gov.pr.guaira.animalys.entity.Animal2</class>
-		<class>br.gov.pr.guaira.animalys.entity.HistoricoAnimal</class>
-		<class>br.gov.pr.guaira.animalys.entity.Cliente</class>
-		<class>br.gov.pr.guaira.animalys.entity.FotoAnimal</class>
-		
-		
-		
-	
-	<properties>
-			<property name="hibernate.event.merge.entity_copy_observer" value="allow"/>
-			<property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect" />
-			<property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver" />
-			<property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/animalys" />
-			<property name="javax.persistence.jdbc.password" value="otavio08" />
-			<property name="javax.persistence.jdbc.user" value="postgres" />
-			
-		 	<!-- <property name="hibernate.hbm2ddl.auto" value="update" />   -->
-			<property name="hibernate.show_sql" value="true" />
-			<property name="hibernate.format_sql" value="true" />
+<persistence version="2.1"
+             xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
 
-			<property name="hibernate.connection.provider_class"
-				value="org.hibernate.connection.C3P0ConnectionProvider" />
+    <persistence-unit name="animalys" transaction-type="RESOURCE_LOCAL">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 
-			<property name="hibernate.c3p0.max_size" value="20" />
-			<property name="hibernate.c3p0.min_size" value="2" />
-			<property name="hibernate.c3p0.acquire_increment" value="1" />
-			<property name="hibernate.c3p0.idle_test_period" value="600" />
-			<property name="hibernate.c3p0.max_statements" value="20" />
-			<property name="hibernate.c3p0.timeout" value="300" />
-		</properties>
-	
-	</persistence-unit>
+        <class>br.gov.pr.guaira.animalys.entity.Animal</class>
+        <class>br.gov.pr.guaira.animalys.entity.Atendimento</class>
+        <class>br.gov.pr.guaira.animalys.entity.Contato</class>
+        <class>br.gov.pr.guaira.animalys.entity.Endereco</class>
+        <class>br.gov.pr.guaira.animalys.entity.Especie</class>
+        <class>br.gov.pr.guaira.animalys.entity.Proprietario</class>
+        <class>br.gov.pr.guaira.animalys.entity.Raca</class>
+        <class>br.gov.pr.guaira.animalys.entity.Profissional</class>
+        <class>br.gov.pr.guaira.animalys.entity.Profissao</class>
+        <class>br.gov.pr.guaira.animalys.entity.Estado</class>
+        <class>br.gov.pr.guaira.animalys.entity.Cidade</class>
+        <class>br.gov.pr.guaira.animalys.entity.Marca</class>
+        <class>br.gov.pr.guaira.animalys.entity.TipoProduto</class>
+        <class>br.gov.pr.guaira.animalys.entity.Procedimento</class>
+        <class>br.gov.pr.guaira.animalys.entity.MedicacaoPosCirurgia</class>
+        <class>br.gov.pr.guaira.animalys.entity.Fornecedor</class>
+        <class>br.gov.pr.guaira.animalys.entity.Lote</class>
+        <class>br.gov.pr.guaira.animalys.entity.Solicitacao</class>
+        <class>br.gov.pr.guaira.animalys.entity.Produto</class>
+        <class>br.gov.pr.guaira.animalys.entity.EntradaProduto</class>
+        <class>br.gov.pr.guaira.animalys.entity.ItemEntrada</class>
+        <class>br.gov.pr.guaira.animalys.entity.ItemLoteAtendimento</class>
+        <class>br.gov.pr.guaira.animalys.entity.Grupo</class>
+        <class>br.gov.pr.guaira.animalys.entity.Permissao</class>
+        <class>br.gov.pr.guaira.animalys.entity.Usuario</class>
+        <class>br.gov.pr.guaira.animalys.entity.AcertoEstoque</class>
+        <class>br.gov.pr.guaira.animalys.entity.TipoAcerto</class>
+        <class>br.gov.pr.guaira.animalys.entity.Animal2</class>
+        <class>br.gov.pr.guaira.animalys.entity.HistoricoAnimal</class>
+        <class>br.gov.pr.guaira.animalys.entity.Cliente</class>
+        <class>br.gov.pr.guaira.animalys.entity.FotoAnimal</class>
+
+        <properties>
+            <property name="hibernate.event.merge.entity_copy_observer" value="allow"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
+            <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/animalys"/>
+            <property name="javax.persistence.jdbc.user" value="postgres"/>
+            <property name="javax.persistence.jdbc.password" value="otavio08"/>
+
+            <!-- Hibernate config -->
+            <!-- <property name="hibernate.hbm2ddl.auto" value="update"/> -->
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true"/>
+
+            <!-- Pool de conexões C3P0 -->
+            <property name="hibernate.connection.provider_class" value="org.hibernate.connection.C3P0ConnectionProvider"/>
+            <property name="hibernate.c3p0.max_size" value="20"/>
+            <property name="hibernate.c3p0.min_size" value="2"/>
+            <property name="hibernate.c3p0.acquire_increment" value="1"/>
+            <property name="hibernate.c3p0.idle_test_period" value="600"/>
+            <property name="hibernate.c3p0.max_statements" value="20"/>
+            <property name="hibernate.c3p0.timeout" value="300"/>
+        </properties>
+    </persistence-unit>
 </persistence>

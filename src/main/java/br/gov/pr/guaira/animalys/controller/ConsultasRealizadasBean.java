@@ -1,18 +1,18 @@
 package br.gov.pr.guaira.animalys.controller;
 
 import br.gov.pr.guaira.animalys.dto.ConsultaRealizada;
+import br.gov.pr.guaira.animalys.entity.ConsultaFiltro;
 import br.gov.pr.guaira.animalys.service.ConsultaRealizadaService;
-
 import javax.annotation.PostConstruct;
-import javax.faces.view.ViewScoped;
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.io.Serializable;
 import java.util.List;
 
 @Named
-@ViewScoped
-public class ConsultasRealizadasBean implements Serializable {
+@RequestScoped
+public class ConsultasRealizadasBean {
+    private ConsultaFiltro filtro = new ConsultaFiltro();
 
     @Inject
     private ConsultaRealizadaService service;
@@ -21,14 +21,27 @@ public class ConsultasRealizadasBean implements Serializable {
 
     @PostConstruct
     public void init() {
-        consultas = service.buscarFinalizadas();
+        consultas = service.listar();
     }
 
     public List<ConsultaRealizada> getConsultas() {
         return consultas;
     }
 
-    public String novaConsulta() {
-        return "/atendimento/newatendimento.xhtml?faces-redirect=true";
+    public void pesquisar() {
+        consultas = service.buscarComFiltro(filtro);
+    }
+
+    public void setFiltro(ConsultaFiltro filtro) {
+        this.filtro = filtro;
+    }
+
+    public ConsultaFiltro getFiltro() {
+        return filtro;
+    }
+
+    public void limparFiltro() {
+        filtro = new ConsultaFiltro();
+        consultas = service.listar();
     }
 }

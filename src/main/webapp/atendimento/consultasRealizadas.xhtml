@@ -1,51 +1,115 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:p="http://primefaces.org/ui">
+<ui:composition template="/WEB-INF/template/Layout.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui">
 
-<h:head>
-    <title>Consultas Realizadas</title>
-</h:head>
-<h:body>
-<h:form id="formConsultas">
-    <p:toolbar>
-        <p:toolbarGroup>
-            <p:commandButton value="Nova Consulta" icon="pi pi-plus"
-                             action="#{consultasRealizadasBean.novaConsulta}" />
-        </p:toolbarGroup>
-    </p:toolbar>
+    <ui:define name="titulo">Consultas Realizadas</ui:define>
 
-    <p:dataTable value="#{consultasRealizadasBean.consultas}" var="c" paginator="true" rows="10" responsiveLayout="scroll">
+    <f:metadata>
+        <f:viewAction action="#{consultasRealizadasBean.init}" />
+    </f:metadata>
 
-        <p:column headerText="ID Animal">
-            <h:outputText value="#{c.idAnimal}" />
-        </p:column>
+    <ui:define name="content">
+        <h:form id="formConsultas">
+            <h1 class="aw-page-title">Consultas Realizadas</h1>
 
-        <p:column headerText="Animal">
-            <h:outputText value="#{c.nomeAnimal}" />
-        </p:column>
+            <p:messages id="msg" closable="true" />
 
-        <p:column headerText="Proprietário">
-            <h:outputText value="#{c.nomeProprietario}" />
-        </p:column>
+            <!-- Toolbar com botão de pesquisa -->
+            <p:toolbar>
+                <p:toolbarGroup>
+                    <p:commandButton value="Pesquisar" icon="fa fa-search"
+                        action="#{consultasRealizadasBean.pesquisar}"
+                        update="consultasTable msg" />
+                </p:toolbarGroup>
+            </p:toolbar>
 
-        <p:column headerText="Endereço">
-            <h:outputText value="#{c.enderecoProprietario}" />
-        </p:column>
+            <!-- Campos de pesquisa -->
+            <div class="ui-fluid">
+                <p:panelGrid columns="2" layout="grid"
+                    columnClasses="ui-grid-col-2, ui-grid-col-6"
+                    styleClass="panelgrid-noborder" style="margin-top: 20px">
 
-        <p:column headerText="Telefone">
-            <h:outputText value="#{c.contatoProprietario}" />
-        </p:column>
+                    <p:outputLabel value="Proprietário" for="proprietario" />
+                    <p:inputText id="proprietario"
+                        value="#{consultasRealizadasBean.filtro.nomeProprietario}" />
 
-        <p:column headerText="Data da Consulta">
-            <h:outputText value="#{c.dataConsulta}">
-                <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
-            </h:outputText>
-        </p:column>
+                    <p:outputLabel value="Nome animal" for="nomeAnimal" />
+                    <p:inputText id="nomeAnimal"
+                        value="#{consultasRealizadasBean.filtro.nomeAnimal}" />
 
-    </p:dataTable>
-</h:form>
-</h:body>
-</html>
+                    <p:outputLabel value="Data Início" for="dataInicio" />
+                    <h:panelGroup>
+                        <p:calendar id="dataInicio" pattern="dd/MM/yyyy" mask="99/99/9999"
+                            value="#{consultasRealizadasBean.filtro.dataInicio}"
+                            locale="pt" size="30" />
+                        <p:outputLabel value="Data Final" for="dataFinal"
+                            style="margin-left: 10px; margin-right: 10px;" />
+                        <p:calendar id="dataFinal" pattern="dd/MM/yyyy" mask="99/99/9999"
+                            value="#{consultasRealizadasBean.filtro.dataFim}"
+                            locale="pt" size="30" />
+                    </h:panelGroup>
+
+                </p:panelGrid>
+            </div>
+
+            <!-- Tabela -->
+            <p:dataTable id="consultasTable" style="margin-top: 20px"
+                emptyMessage="Nenhuma consulta encontrada" rows="20" paginator="true"
+                paginatorAlwaysVisible="false" paginatorPosition="bottom"
+                reflow="true"
+                value="#{consultasRealizadasBean.consultas}"
+                var="consulta">
+
+                <p:column headerText="N°" style="width: 45px;">
+                    <div><h:outputText value="#{consulta.idAnimal}" /></div>
+                </p:column>
+
+                <p:column headerText="Data Consulta">
+                    <div><h:outputText value="#{consulta.dataConsultaDate}">
+                        <f:convertDateTime pattern="dd/MM/yyyy HH:mm" locale="pt_BR"/>
+                    </h:outputText></div>
+                </p:column>
+
+                <p:column headerText="Nome animal">
+                    <div><h:outputText value="#{consulta.nomeAnimal}" /></div>
+                </p:column>
+
+                <p:column headerText="Proprietário">
+                    <div><h:outputText value="#{consulta.nomeProprietario}" /></div>
+                </p:column>
+
+                <p:column headerText="Endereço">
+                    <div><h:outputText value="#{consulta.enderecoProprietario}" /></div>
+                </p:column>
+
+                <p:column headerText="Contato">
+                    <div><h:outputText value="#{consulta.contatoProprietario}" /></div>
+                </p:column>
+
+                <p:column headerText="Situação">
+                    <div><h:outputText value="#{consulta.status}" /></div>
+                </p:column>
+
+                <p:column headerText="Ação" style="width: 70px;">
+                    
+                    <h:link title="Visualizar Animal" styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-left"
+                        style="padding: .3em;">
+                        <f:param name="" value="" />
+                        <i style="margin: 0 5px;" class="fa fa-search"></i>
+                    </h:link>
+
+                    <h:link title="Nova Consulta" styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-left"
+                        style="padding: .3em;">
+                        <f:param name="" value="" />
+                        <i style="margin: 0 5px;" class="fa fa-refresh"></i>
+                    </h:link>
+
+                </p:column>
+
+            </p:dataTable>
+        </h:form>
+    </ui:define>
+</ui:composition>

@@ -4,4 +4,14 @@
 	<Manager pathname="" />
 	<Resource name="BeanManager" auth="Container"
 		type="javax.enterprise.inject.spi.BeanManager" factory="org.jboss.weld.resources.ManagerObjectFactory" />
+		
+		<Resource name="jdbc/animalysDS"
+              auth="Container"
+              type="javax.sql.DataSource"
+              maxTotal="20"
+              maxIdle="10"
+              driverClassName="org.postgresql.Driver"
+              url="jdbc:postgresql://localhost:5432/animalys"
+              username="postigres"
+              password="otavio08"/>
 </Context>

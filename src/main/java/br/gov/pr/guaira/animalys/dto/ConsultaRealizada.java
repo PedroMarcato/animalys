@@ -1,26 +1,31 @@
 package br.gov.pr.guaira.animalys.dto;
 
+import java.util.Calendar;
 import java.util.Date;
+
+import br.gov.pr.guaira.animalys.entity.Status;
 
 public class ConsultaRealizada {
 
-    private Integer idAnimal;
+    private int idAnimal;
     private String nomeAnimal;
     private String nomeProprietario;
+    private Calendar dataConsulta;
     private String enderecoProprietario;
     private String contatoProprietario;
-    private Date dataConsulta;
+    private Status status;
 
-    public ConsultaRealizada(Integer idAnimal, String nomeAnimal, String nomeProprietario, String enderecoProprietario, String contatoProprietario, Date dataConsulta) {
+    public ConsultaRealizada(int idAnimal, String nomeAnimal, String nomeProprietario, Calendar dataConsulta, String enderecoProprietario, String contatoProprietario, Status status) {
         this.idAnimal = idAnimal;
         this.nomeAnimal = nomeAnimal;
         this.nomeProprietario = nomeProprietario;
-        this.enderecoProprietario = enderecoProprietario;
-        this.contatoProprietario = contatoProprietario;
         this.dataConsulta = dataConsulta;
+        this.enderecoProprietario = enderecoProprietario;
+        this.contatoProprietario = (contatoProprietario != null) ? contatoProprietario : "Sem Registro";
+        this.status = status;
     }
 
-    public Integer getIdAnimal() {
+    public int getIdAnimal() {
         return idAnimal;
     }
 
@@ -60,11 +65,24 @@ public class ConsultaRealizada {
         this.contatoProprietario = contatoProprietario;
     }
 
-    public Date getDataConsulta() {
+    public Calendar getDataConsulta() {
         return dataConsulta;
     }
 
-    public void setDataConsulta(Date dataConsulta) {
+    public Date getDataConsultaDate() {
+        return dataConsulta != null ? dataConsulta.getTime() : null;
+    }
+
+
+    public void setDataConsulta(Calendar dataConsulta) {
         this.dataConsulta = dataConsulta;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 }

@@ -7,8 +7,11 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import br.gov.pr.guaira.animalys.entity.Status;
 
 @ApplicationScoped
 public class ConsultaRealizadaDAO {
@@ -18,24 +21,28 @@ public class ConsultaRealizadaDAO {
 
     public List<ConsultaRealizada> listarConsultasRealizadas() {
         String jpql = "SELECT new br.gov.pr.guaira.animalys.dto.ConsultaRealizada(" +
-                "a.idAnimal, " + // int
-                "a.nome, " + // String
-                "p.nome, " + // String
-                "at.data, " + // Calendar
-                "e.logradouro, " + // String
-                "c.celular, " + // String
-                "s.status, " + // Status
-                "at, " + // <-- Adicionado: o objeto Atendimento completo
-                "a.foto) " + // <-- Adicionado: o caminho da foto do animal
+                "a.idAnimal, " +
+                "a.nome, " +
+                "p.nome, " +
+                "at.data, " +
+                "e.logradouro, " +
+                "c.celular, " +
+                "s.status, " +
+                "at, " +
+                "a.foto) " +
                 "FROM Atendimento at " +
                 "JOIN at.animal a " +
                 "JOIN a.proprietario p " +
                 "LEFT JOIN p.endereco e " +
                 "LEFT JOIN p.contato c " +
                 "JOIN at.solicitacao s " +
+                "WHERE s.status IN (:statusList) " +  // <-- alterado
+                "AND at.procedimentos IS EMPTY " +
                 "ORDER BY at.data DESC";
 
-        return em.createQuery(jpql, ConsultaRealizada.class).getResultList();
+        return em.createQuery(jpql, ConsultaRealizada.class)
+                .setParameter("statusList", Arrays.asList(Status.FINALIZADO, Status.AGENDADOCASTRACAO))
+                .getResultList();
     }
 
     public List<ConsultaRealizada> buscarComFiltro(ConsultaFiltro filtro) {
@@ -56,7 +63,8 @@ public class ConsultaRealizadaDAO {
                         "LEFT JOIN p.endereco e " +
                         "LEFT JOIN p.contato c " +
                         "JOIN at.solicitacao s " +
-                        "WHERE 1=1");
+                        "WHERE s.status IN (:statusList) " + // <-- alterado
+                        "AND at.procedimentos IS EMPTY");
 
         if (filtro.getNomeProprietario() != null && !filtro.getNomeProprietario().trim().isEmpty()) {
             jpql.append(" AND LOWER(p.nome) LIKE LOWER(CONCAT('%', :nomeProprietario, '%'))");
@@ -76,7 +84,8 @@ public class ConsultaRealizadaDAO {
 
         jpql.append(" ORDER BY at.data DESC");
 
-        TypedQuery<ConsultaRealizada> query = em.createQuery(jpql.toString(), ConsultaRealizada.class);
+        TypedQuery<ConsultaRealizada> query = em.createQuery(jpql.toString(), ConsultaRealizada.class)
+                .setParameter("statusList", Arrays.asList(Status.FINALIZADO, Status.AGENDADOCASTRACAO));
 
         if (filtro.getNomeProprietario() != null && !filtro.getNomeProprietario().trim().isEmpty()) {
             query.setParameter("nomeProprietario", filtro.getNomeProprietario());

@@ -1,6 +1,7 @@
 package br.gov.pr.guaira.animalys.service;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -18,4 +19,8 @@ public class AnimalService implements Serializable{
 	public Animal salvar(Animal animal) {
 		return animais.guardar(animal);
 	}
+
+	public List<Animal> buscarPorSolicitacao(Integer idSolicitacao) {
+        return animais.porSolicitacao(idSolicitacao);
+    }
 }

@@ -38,6 +38,17 @@ public class Animais implements Serializable {
 		return manager.merge(animal);
 	}
 
+	public List<Animal> porSolicitacao(Integer idSolicitacao) {
+    String jpql = "SELECT a " +
+                  "FROM Atendimento at " +
+                  "JOIN at.animal a " +
+                  "WHERE at.solicitacao.idSolicitacao = :id";
+    return manager.createQuery(jpql, Animal.class)
+                  .setParameter("id", idSolicitacao)
+                  .getResultList();
+}
+
+
 	@Transactional
 	public void remover(Animal animal) throws NegocioException {
 		try {
@@ -291,4 +302,5 @@ public class Animais implements Serializable {
 		TypedQuery<Animal> query = manager.createQuery(criteriaQuery);
 		return query.getSingleResult();
 	}
+
 }

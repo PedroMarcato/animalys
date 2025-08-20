@@ -196,14 +196,14 @@ public class PesquisaVisitasAgendadas implements Serializable {
 
 				this.solicitacaoSelecionada = this.solicitacaoService.salvar(this.solicitacaoSelecionada);
 				FacesUtil.addInfoMessage(
-						"SolicitaÁ„o n∞: " + this.solicitacaoSelecionada.getIdSolicitacao() + " agendada com sucesso!");
+						"Solicita√ß√£o n¬∞: " + this.solicitacaoSelecionada.getIdSolicitacao() + " agendada com sucesso!");
 				limpar();
 				this.inicializar();
 			} catch (NegocioException e) {
 				e.printStackTrace();
 			}
 		} else {
-			FacesUtil.addErrorMessage("A data informada È inv·lida!");
+			FacesUtil.addErrorMessage("A data informada √© inv√°lida!");
 		}
 	}
 
@@ -220,12 +220,12 @@ public class PesquisaVisitasAgendadas implements Serializable {
 			this.solicitacaoService.salvar(this.solicitacaoSelecionada);
 
 			FacesUtil.addInfoMessage(
-					"SolicitaÁ„o " + this.solicitacaoSelecionada.getIdSolicitacao() + " cancelada com sucesso!");
+					"Solicita√ß√£o " + this.solicitacaoSelecionada.getIdSolicitacao() + " cancelada com sucesso!");
 			this.pesquisar();
 			limpar();
 		} catch (NegocioException e) {
 			e.printStackTrace();
-			FacesUtil.addErrorMessage("Esta solicitaÁ„o n„o pode ser excluÌda!");
+			FacesUtil.addErrorMessage("Esta solicita√ß√£o n√£o pode ser exclu√≠da!");
 		}
 	}
 

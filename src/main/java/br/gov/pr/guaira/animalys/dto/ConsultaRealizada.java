@@ -3,6 +3,7 @@ package br.gov.pr.guaira.animalys.dto;
 import java.util.Calendar;
 import java.util.Date;
 
+import br.gov.pr.guaira.animalys.entity.Atendimento;
 import br.gov.pr.guaira.animalys.entity.Status;
 
 public class ConsultaRealizada {
@@ -14,8 +15,14 @@ public class ConsultaRealizada {
     private String enderecoProprietario;
     private String contatoProprietario;
     private Status status;
+    private Atendimento atendimento;
+    private String caminhoFotoAnimal;
 
-    public ConsultaRealizada(int idAnimal, String nomeAnimal, String nomeProprietario, Calendar dataConsulta, String enderecoProprietario, String contatoProprietario, Status status) {
+    // ... (construtor existente)
+
+    public ConsultaRealizada(int idAnimal, String nomeAnimal, String nomeProprietario, Calendar dataConsulta,
+            String enderecoProprietario, String contatoProprietario, Status status, Atendimento atendimento,
+            String caminhoFotoAnimal) {
         this.idAnimal = idAnimal;
         this.nomeAnimal = nomeAnimal;
         this.nomeProprietario = nomeProprietario;
@@ -23,6 +30,8 @@ public class ConsultaRealizada {
         this.enderecoProprietario = enderecoProprietario;
         this.contatoProprietario = (contatoProprietario != null) ? contatoProprietario : "Sem Registro";
         this.status = status;
+        this.atendimento = atendimento; // <-- Adicionado
+        this.caminhoFotoAnimal = caminhoFotoAnimal; // <-- Adicionado
     }
 
     public int getIdAnimal() {
@@ -73,7 +82,6 @@ public class ConsultaRealizada {
         return dataConsulta != null ? dataConsulta.getTime() : null;
     }
 
-
     public void setDataConsulta(Calendar dataConsulta) {
         this.dataConsulta = dataConsulta;
     }
@@ -85,4 +93,21 @@ public class ConsultaRealizada {
     public void setStatus(Status status) {
         this.status = status;
     }
+
+    public Atendimento getAtendimento() {
+        return atendimento;
+    }
+
+    public void setAtendimento(Atendimento atendimento) {
+        this.atendimento = atendimento;
+    }
+
+    public String getCaminhoFotoAnimal() {
+        return caminhoFotoAnimal;
+    }
+
+    public void setCaminhoFotoAnimal(String caminhoFotoAnimal) {
+        this.caminhoFotoAnimal = caminhoFotoAnimal;
+    }
+
 }

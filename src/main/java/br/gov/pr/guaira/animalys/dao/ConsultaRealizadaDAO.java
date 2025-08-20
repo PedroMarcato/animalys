@@ -18,42 +18,45 @@ public class ConsultaRealizadaDAO {
 
     public List<ConsultaRealizada> listarConsultasRealizadas() {
         String jpql = "SELECT new br.gov.pr.guaira.animalys.dto.ConsultaRealizada(" +
-              "a.idAnimal, " +        // int
-              "a.nome, " +            // String
-              "p.nome, " +            // String
-              "at.data, " +           // Calendar
-              "e.logradouro, " +      // String
-              "c.celular, " +        // String
-              "s.status) " +          // Status
-              "FROM Atendimento at " +
-              "JOIN at.animal a " +
-              "JOIN a.proprietario p " +
-              "LEFT JOIN p.endereco e " +
-              "LEFT JOIN p.contato c " +
-              "JOIN at.solicitacao s " +
-              "ORDER BY at.data DESC";
+                "a.idAnimal, " + // int
+                "a.nome, " + // String
+                "p.nome, " + // String
+                "at.data, " + // Calendar
+                "e.logradouro, " + // String
+                "c.celular, " + // String
+                "s.status, " + // Status
+                "at, " + // <-- Adicionado: o objeto Atendimento completo
+                "a.foto) " + // <-- Adicionado: o caminho da foto do animal
+                "FROM Atendimento at " +
+                "JOIN at.animal a " +
+                "JOIN a.proprietario p " +
+                "LEFT JOIN p.endereco e " +
+                "LEFT JOIN p.contato c " +
+                "JOIN at.solicitacao s " +
+                "ORDER BY at.data DESC";
 
         return em.createQuery(jpql, ConsultaRealizada.class).getResultList();
     }
 
     public List<ConsultaRealizada> buscarComFiltro(ConsultaFiltro filtro) {
         StringBuilder jpql = new StringBuilder(
-            "SELECT new br.gov.pr.guaira.animalys.dto.ConsultaRealizada(" +
-            "a.idAnimal, " +
-            "a.nome, " +
-            "p.nome, " +
-            "at.data, " +
-            "e.logradouro, " +
-            "c.celular, " +
-            "s.status) " +
-            "FROM Atendimento at " +
-            "JOIN at.animal a " +
-            "JOIN a.proprietario p " +
-            "LEFT JOIN p.endereco e " +
-            "LEFT JOIN p.contato c " +
-            "JOIN at.solicitacao s " +
-            "WHERE 1=1"
-        );
+                "SELECT new br.gov.pr.guaira.animalys.dto.ConsultaRealizada(" +
+                        "a.idAnimal, " +
+                        "a.nome, " +
+                        "p.nome, " +
+                        "at.data, " +
+                        "e.logradouro, " +
+                        "c.celular, " +
+                        "s.status, " +
+                        "at, " +
+                        "a.foto) " +
+                        "FROM Atendimento at " +
+                        "JOIN at.animal a " +
+                        "JOIN a.proprietario p " +
+                        "LEFT JOIN p.endereco e " +
+                        "LEFT JOIN p.contato c " +
+                        "JOIN at.solicitacao s " +
+                        "WHERE 1=1");
 
         if (filtro.getNomeProprietario() != null && !filtro.getNomeProprietario().trim().isEmpty()) {
             jpql.append(" AND LOWER(p.nome) LIKE LOWER(CONCAT('%', :nomeProprietario, '%'))");

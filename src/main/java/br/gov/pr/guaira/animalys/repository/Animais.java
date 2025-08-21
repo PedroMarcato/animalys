@@ -39,15 +39,14 @@ public class Animais implements Serializable {
 	}
 
 	public List<Animal> porSolicitacao(Integer idSolicitacao) {
-    String jpql = "SELECT a " +
-                  "FROM Atendimento at " +
-                  "JOIN at.animal a " +
-                  "WHERE at.solicitacao.idSolicitacao = :id";
-    return manager.createQuery(jpql, Animal.class)
-                  .setParameter("id", idSolicitacao)
-                  .getResultList();
-}
-
+		String jpql = "SELECT a " +
+				"FROM Atendimento at " +
+				"JOIN at.animal a " +
+				"WHERE at.solicitacao.idSolicitacao = :id";
+		return manager.createQuery(jpql, Animal.class)
+				.setParameter("id", idSolicitacao)
+				.getResultList();
+	}
 
 	@Transactional
 	public void remover(Animal animal) throws NegocioException {
@@ -226,19 +225,16 @@ public class Animais implements Serializable {
 				.setParameter("proprietario", proprietario).getResultList();
 	}
 
-	@SuppressWarnings("unchecked")
 	public List<Animal> animaisPorSolicitacao(Integer solicitacao) {
-		return this.manager.createNativeQuery(
-				"SELECT a.idAnimal, a.nome, a.numeroMicrochip, a.peso, a.idade, a.castrado, a.dataAgendaCastracao, a.dataCastracao, "
-						+
-						"a.motivoCancelamentoCastracao, a.dataEntrada, a.dataSaida, a.desmifurgado, a.visitado, a.proprietario, a.raca, "
-						+
-						"a.status, a.qualVacina, a.vacinado, a.sexo, a.foto, a.especie " + // ✅ adicionei a.especie aqui
-						"FROM animal.animal a " +
-						"INNER JOIN animal.raca r ON r.idraca = a.raca " +
-						"INNER JOIN animal.especie e ON e.idespecie = r.especie " +
-						"INNER JOIN atendimento.solicitacao_animal sa ON sa.animal = a.idanimal AND sa.solicitacao = :solicitacao",
-				Animal.class).setParameter("solicitacao", solicitacao).getResultList();
+		String jpql = "SELECT a FROM Atendimento at " + // 1. Seleciona a entidade, não colunas
+				"JOIN at.animal a " + // 2. Navega pelas associações
+				"JOIN FETCH a.raca r " + // 3. JOIN FETCH para carregar junto
+				"JOIN FETCH r.especie e " +
+				"WHERE at.solicitacao.idSolicitacao = :solicitacao";
+
+		return this.manager.createQuery(jpql, Animal.class)
+				.setParameter("solicitacao", solicitacao)
+				.getResultList();
 	}
 
 	public List<Animal> animaisPorProprietario(Proprietario proprietario, Status status) {

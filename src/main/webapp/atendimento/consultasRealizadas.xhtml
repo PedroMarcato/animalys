@@ -151,7 +151,7 @@
                     </p:column>
                     <p:column headerText="Foto" style="width: 100px;">
                         <p:commandLink onclick="PF('imagemDialog').show();"
-                            action="#{pesquisaSolicitacoesBean.selecionarImagem(animal.foto)}" process="@this"
+                            action="#{consultasRealizadasBean.selecionarImagem(animal.foto)}" process="@this"
                             update="imagemDialogContent">
                             <img src="/uploads/#{not empty animal.foto ? animal.foto : 'no_image.jpg'}" width="100"
                                 alt="Foto de #{animal.nome}" style="cursor: pointer;" />
@@ -168,7 +168,7 @@
 
             <h:panelGroup id="imagemDialogContent">
                 <div style="text-align: center;">
-                    <img src="/uploads/#{not empty pesquisaSolicitacoesBean.imagemSelecionada ? pesquisaSolicitacoesBean.imagemSelecionada : 'no_image.jpg'}"
+                    <img src="/uploads/#{not empty consultasRealizadasBean.imagemSelecionada ? consultasRealizadasBean.imagemSelecionada : 'no_image.jpg'}"
                         style="max-width: 100%; max-height: 500px;" alt="Imagem ampliada" />
                 </div>
             </h:panelGroup>

@@ -33,14 +33,23 @@
                     <p:outputLabel value="Nome animal" for="nomeAnimal" />
                     <p:inputText id="nomeAnimal" value="#{consultasRealizadasBean.filtro.nomeAnimal}" />
 
-                    <p:outputLabel value="Data Início" for="dataInicio" />
+                    <p:outputLabel value="Período" for="dataInicio" />
                     <h:panelGroup>
-                        <p:calendar id="dataInicio" pattern="dd/MM/yyyy" mask="99/99/9999"
-                            value="#{consultasRealizadasBean.filtro.dataInicio}" locale="pt" size="30" />
+                        <p:outputLabel for="dataInicio" value="Data Inicial" style="margin-right: 10px;" />
+                        <p:calendar id="dataInicio" pattern="dd/MM/yyyy" mask="true"
+                            value="#{consultasRealizadasBean.filtro.dataInicio}" locale="pt_BR" size="30"
+                            timeZone="America/Sao_Paulo">
+                            <f:convertDateTime type="calendar" pattern="dd/MM/yyyy" timeZone="America/Sao_Paulo" />
+                        </p:calendar>
+
                         <p:outputLabel value="Data Final" for="dataFinal"
                             style="margin-left: 10px; margin-right: 10px;" />
-                        <p:calendar id="dataFinal" pattern="dd/MM/yyyy" mask="99/99/9999"
-                            value="#{consultasRealizadasBean.filtro.dataFim}" locale="pt" size="30" />
+
+                        <p:calendar id="dataFinal" pattern="dd/MM/yyyy" mask="true"
+                            value="#{consultasRealizadasBean.filtro.dataFim}" locale="pt_BR" size="30"
+                            timeZone="America/Sao_Paulo">
+                            <f:convertDateTime type="calendar" pattern="dd/MM/yyyy" timeZone="America/Sao_Paulo" />
+                        </p:calendar>
                     </h:panelGroup>
 
                 </p:panelGrid>
@@ -141,8 +150,7 @@
                         <h:outputText value="#{animal.sexo}" />
                     </p:column>
                     <p:column headerText="Foto" style="width: 100px;">
-                        <p:commandLink 
-                            onclick="PF('imagemDialog').show();"
+                        <p:commandLink onclick="PF('imagemDialog').show();"
                             action="#{pesquisaSolicitacoesBean.selecionarImagem(animal.foto)}" process="@this"
                             update="imagemDialogContent">
                             <img src="/uploads/#{not empty animal.foto ? animal.foto : 'no_image.jpg'}" width="100"

@@ -9,7 +9,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
 import java.util.Arrays;
-import java.util.Date;
+import java.util.Calendar; // <-- Importe Calendar para usá-lo
 import java.util.List;
 import br.gov.pr.guaira.animalys.entity.Status;
 
@@ -36,7 +36,7 @@ public class ConsultaRealizadaDAO {
                 "LEFT JOIN p.endereco e " +
                 "LEFT JOIN p.contato c " +
                 "JOIN at.solicitacao s " +
-                "WHERE s.status IN (:statusList) " + // <-- alterado
+                "WHERE s.status IN (:statusList) " +
                 "AND at.procedimentos IS EMPTY " +
                 "ORDER BY at.data DESC";
 
@@ -63,7 +63,7 @@ public class ConsultaRealizadaDAO {
                         "LEFT JOIN p.endereco e " +
                         "LEFT JOIN p.contato c " +
                         "JOIN at.solicitacao s " +
-                        "WHERE s.status IN (:statusList) " + // <-- alterado
+                        "WHERE s.status IN (:statusList) " +
                         "AND at.procedimentos IS EMPTY");
 
         if (filtro.getNomeProprietario() != null && !filtro.getNomeProprietario().trim().isEmpty()) {
@@ -96,13 +96,19 @@ public class ConsultaRealizadaDAO {
         }
 
         if (filtro.getDataInicio() != null) {
-            query.setParameter("dataInicio", filtro.getDataInicio());
+            // CORREÇÃO 1: Converte o Calendar para Date antes de passar como parâmetro.
+            query.setParameter("dataInicio", filtro.getDataInicio().getTime());
         }
 
         if (filtro.getDataFim() != null) {
-            // Ajuste para incluir o dia inteiro
-            Date dataFim = new Date(filtro.getDataFim().getTime() + (1000 * 60 * 60 * 24) - 1);
-            query.setParameter("dataFim", dataFim);
+            // CORREÇÃO 2: Ajusta a data final usando Calendar e depois converte para Date.
+            Calendar dataFimAjustada = filtro.getDataFim();
+            dataFimAjustada.set(Calendar.HOUR_OF_DAY, 23);
+            dataFimAjustada.set(Calendar.MINUTE, 59);
+            dataFimAjustada.set(Calendar.SECOND, 59);
+            dataFimAjustada.set(Calendar.MILLISECOND, 999);
+            
+            query.setParameter("dataFim", dataFimAjustada.getTime());
         }
 
         return query.getResultList();

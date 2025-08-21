@@ -102,6 +102,7 @@ public class ConsultasRealizadasBean implements Serializable {
     private String imagemSelecionada;
 
     public void selecionarImagem(String fotoPath) {
+        System.out.println("Caminho da foto recebido: " + fotoPath);
         this.imagemSelecionada = fotoPath;
     }
 

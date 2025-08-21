@@ -36,7 +36,7 @@ public class ConsultaRealizadaDAO {
                 "LEFT JOIN p.endereco e " +
                 "LEFT JOIN p.contato c " +
                 "JOIN at.solicitacao s " +
-                "WHERE s.status IN (:statusList) " +  // <-- alterado
+                "WHERE s.status IN (:statusList) " + // <-- alterado
                 "AND at.procedimentos IS EMPTY " +
                 "ORDER BY at.data DESC";
 

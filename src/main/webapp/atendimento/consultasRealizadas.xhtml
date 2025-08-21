@@ -104,9 +104,6 @@
                             value="#{consulta.atendimento}" />
                     </p:commandButton>
 
-
-
-
                     <h:link title="Nova Consulta"
                         styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-left"
                         style="padding: .3em;">
@@ -120,7 +117,55 @@
 
         </h:form>
 
-        <ui:include src="/resources/fragmentos/AnimaisDialog.xhtml" />
+        <!-- Dialog Animais -->
+        <h:form id="formAnimaisDialog">
+            <p:dialog header="Animais da Consulta" widgetVar="animaisDialog" hideEffect="clip" id="animaisDialog"
+                width="800px">
+
+                <p:dataTable id="animaisTable" style="margin-top: 20px" emptyMessage="Nenhum animal encontrado"
+                    rows="10" reflow="true" value="#{consultasRealizadasBean.animaisCarregados}" var="animal">
+
+                    <p:column headerText="Nome">
+                        <h:outputText value="#{animal.nome}" />
+                    </p:column>
+                    <p:column headerText="Espécie" style="width: 120px">
+                        <h:outputText value="#{animal.raca.especie.nome}" />
+                    </p:column>
+                    <p:column headerText="Raça">
+                        <h:outputText value="#{animal.raca.nome}" />
+                    </p:column>
+                    <p:column headerText="Idade" style="width: 60px">
+                        <h:outputText value="#{animal.idade}" />
+                    </p:column>
+                    <p:column headerText="Sexo" style="width: 60px">
+                        <h:outputText value="#{animal.sexo}" />
+                    </p:column>
+                    <p:column headerText="Foto" style="width: 100px;">
+                        <p:commandLink 
+                            onclick="PF('imagemDialog').show();"
+                            action="#{pesquisaSolicitacoesBean.selecionarImagem(animal.foto)}" process="@this"
+                            update="imagemDialogContent">
+                            <img src="/uploads/#{not empty animal.foto ? animal.foto : 'no_image.jpg'}" width="100"
+                                alt="Foto de #{animal.nome}" style="cursor: pointer;" />
+                        </p:commandLink>
+                    </p:column>
+                </p:dataTable>
+
+            </p:dialog>
+        </h:form>
+
+        <!-- Dialog de Visualização da Foto -->
+        <p:dialog header="Imagem Ampliada" widgetVar="imagemDialog" hideEffect="fade" showEffect="fade"
+            id="imagemDialog" style="max-width: 700px; min-height: 400px;" modal="true" resizable="true">
+
+            <h:panelGroup id="imagemDialogContent">
+                <div style="text-align: center;">
+                    <img src="/uploads/#{not empty pesquisaSolicitacoesBean.imagemSelecionada ? pesquisaSolicitacoesBean.imagemSelecionada : 'no_image.jpg'}"
+                        style="max-width: 100%; max-height: 500px;" alt="Imagem ampliada" />
+                </div>
+            </h:panelGroup>
+
+        </p:dialog>
 
     </ui:define>
 </ui:composition>

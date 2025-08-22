@@ -208,7 +208,7 @@ public class PesquisaVisitasAgendadas implements Serializable {
 	}
 
 	public void carregarAnimais() {
-		this.animaisCarregados = this.animais.animaisPorSolicitacao(this.solicitacaoSelecionada.getIdSolicitacao());
+		this.animaisCarregados = this.animais.animaisDaSolicitacao(this.solicitacaoSelecionada.getIdSolicitacao());
 	}
 
 	public void cancelar() {

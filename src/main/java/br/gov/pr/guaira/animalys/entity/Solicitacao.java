@@ -148,8 +148,7 @@ public class Solicitacao implements Serializable{
 	}
 	@Override
 	public String toString() {
-		return "Solicitacao [idSolicitacao=" + idSolicitacao + ", data=" + data + ", animais=" + animais
-				+ ", proprietario=" + proprietario + "]";
+		return "Solicitacao{id=" + idSolicitacao + "}";
 	}
 
 	

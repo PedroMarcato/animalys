@@ -139,7 +139,9 @@ public class PesquisaSolicitacoesBean implements Serializable {
 	}
 
 	public void carregarAnimais() {
-		this.animaisCarregados = this.animais.animaisPorSolicitacao(this.solicitacaoSelecionada.getIdSolicitacao());
+	    Solicitacao soli = solicitacaoSelecionada;
+	    System.out.println("solicitacaoSelecionada.getIdSolicitacao(): " + (soli != null ? soli.getIdSolicitacao() : null));
+	    this.animaisCarregados = this.animais.animaisDaSolicitacao(this.solicitacaoSelecionada.getIdSolicitacao());
 	}
 
 	public void onEventSelect(SelectEvent selectEvent) {

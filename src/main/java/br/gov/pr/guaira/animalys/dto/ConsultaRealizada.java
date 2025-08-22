@@ -17,12 +17,13 @@ public class ConsultaRealizada {
     private Status status;
     private Atendimento atendimento;
     private String caminhoFotoAnimal;
+    private Integer idSolicitacao; // <-- Adicionado
 
     // ... (construtor existente)
 
     public ConsultaRealizada(int idAnimal, String nomeAnimal, String nomeProprietario, Calendar dataConsulta,
             String enderecoProprietario, String contatoProprietario, Status status, Atendimento atendimento,
-            String caminhoFotoAnimal) {
+            String caminhoFotoAnimal, Integer idSolicitacao) {
         this.idAnimal = idAnimal;
         this.nomeAnimal = nomeAnimal;
         this.nomeProprietario = nomeProprietario;
@@ -32,6 +33,7 @@ public class ConsultaRealizada {
         this.status = status;
         this.atendimento = atendimento; // <-- Adicionado
         this.caminhoFotoAnimal = caminhoFotoAnimal; // <-- Adicionado
+        this.idSolicitacao = idSolicitacao;
     }
 
     public int getIdAnimal() {
@@ -108,6 +110,14 @@ public class ConsultaRealizada {
 
     public void setCaminhoFotoAnimal(String caminhoFotoAnimal) {
         this.caminhoFotoAnimal = caminhoFotoAnimal;
+    }
+
+    public Integer getIdSolicitacao() { // <-- Adicionado
+        return idSolicitacao;
+    }
+
+    public void setIdSolicitacao(Integer idSolicitacao) { // <-- Adicionado
+        this.idSolicitacao = idSolicitacao;
     }
 
 }

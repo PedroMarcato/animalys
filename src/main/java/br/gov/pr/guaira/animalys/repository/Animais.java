@@ -39,7 +39,7 @@ public class Animais implements Serializable {
 	}
 
 	public List<Animal> porSolicitacao(Integer idSolicitacao) {
-		String jpql = "SELECT a " +
+		String jpql = "SELECT DISTINCT a " +
 				"FROM Atendimento at " +
 				"JOIN at.animal a " +
 				"WHERE at.solicitacao.idSolicitacao = :id";
@@ -226,10 +226,11 @@ public class Animais implements Serializable {
 	}
 
 	public List<Animal> animaisPorSolicitacao(Integer solicitacao) {
-		String jpql = "SELECT a FROM Atendimento at " + // 1. Seleciona a entidade, não colunas
-				"JOIN at.animal a " + // 2. Navega pelas associações
-				"JOIN FETCH a.raca r " + // 3. JOIN FETCH para carregar junto
-				"JOIN FETCH r.especie e " +
+		String jpql = "SELECT DISTINCT a FROM Atendimento at " +
+				"JOIN at.animal a " +
+				"LEFT JOIN FETCH a.raca r " +
+				"LEFT JOIN FETCH r.especie e " +
+				"LEFT JOIN FETCH a.proprietario p " +
 				"WHERE at.solicitacao.idSolicitacao = :solicitacao";
 
 		return this.manager.createQuery(jpql, Animal.class)
@@ -297,6 +298,17 @@ public class Animais implements Serializable {
 
 		TypedQuery<Animal> query = manager.createQuery(criteriaQuery);
 		return query.getSingleResult();
+	}
+
+	public List<Animal> animaisDaSolicitacao(Integer idSolicitacao) {
+		String jpql = "SELECT DISTINCT a FROM Solicitacao s " +
+				"JOIN s.animais a " +
+				"LEFT JOIN FETCH a.raca r " +
+				"LEFT JOIN FETCH r.especie e " +
+				"WHERE s.idSolicitacao = :idSolicitacao";
+		return manager.createQuery(jpql, Animal.class)
+				.setParameter("idSolicitacao", idSolicitacao)
+				.getResultList();
 	}
 
 }

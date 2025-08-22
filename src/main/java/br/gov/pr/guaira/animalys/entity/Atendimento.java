@@ -137,8 +137,7 @@ public class Atendimento implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Atendimento [idAtendimento=" + idAtendimento + ", diagnostico=" + diagnostico + ", data=" + data
-				+ ", animal=" + animal + "]";
+		return "Atendimento{id=" + idAtendimento + "}";
 	}
 
 	@Override

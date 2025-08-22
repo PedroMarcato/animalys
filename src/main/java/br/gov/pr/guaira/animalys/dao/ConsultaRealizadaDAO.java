@@ -9,9 +9,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
 import java.util.Arrays;
-import java.util.Calendar; // <-- Importe Calendar para usá-lo
+import java.util.Calendar;
 import java.util.List;
 import br.gov.pr.guaira.animalys.entity.Status;
+import br.gov.pr.guaira.animalys.entity.TipoAtendimento;
 
 @ApplicationScoped
 public class ConsultaRealizadaDAO {
@@ -20,7 +21,7 @@ public class ConsultaRealizadaDAO {
     private EntityManager em;
 
     public List<ConsultaRealizada> listarConsultasRealizadas() {
-        String jpql = "SELECT new br.gov.pr.guaira.animalys.dto.ConsultaRealizada(" +
+        String jpql = "SELECT DISTINCT new br.gov.pr.guaira.animalys.dto.ConsultaRealizada(" +
                 "a.idAnimal, " +
                 "a.nome, " +
                 "p.nome, " +
@@ -29,7 +30,8 @@ public class ConsultaRealizadaDAO {
                 "c.celular, " +
                 "s.status, " +
                 "at, " +
-                "a.foto) " +
+                "a.foto, " +
+                "s.idSolicitacao) " + // <-- Adicione aqui
                 "FROM Atendimento at " +
                 "JOIN at.animal a " +
                 "JOIN a.proprietario p " +
@@ -38,16 +40,18 @@ public class ConsultaRealizadaDAO {
                 "JOIN at.solicitacao s " +
                 "WHERE s.status IN (:statusList) " +
                 "AND at.procedimentos IS EMPTY " +
+                "AND at.tipoAtendimento = :tipo " + // <<< filtro adicionado
                 "ORDER BY at.data DESC";
 
         return em.createQuery(jpql, ConsultaRealizada.class)
                 .setParameter("statusList", Arrays.asList(Status.FINALIZADO, Status.AGENDADOCASTRACAO))
+                .setParameter("tipo", TipoAtendimento.CONSULTA)
                 .getResultList();
     }
 
     public List<ConsultaRealizada> buscarComFiltro(ConsultaFiltro filtro) {
         StringBuilder jpql = new StringBuilder(
-                "SELECT new br.gov.pr.guaira.animalys.dto.ConsultaRealizada(" +
+                "SELECT DISTINCT new br.gov.pr.guaira.animalys.dto.ConsultaRealizada(" +
                         "a.idAnimal, " +
                         "a.nome, " +
                         "p.nome, " +
@@ -56,7 +60,8 @@ public class ConsultaRealizadaDAO {
                         "c.celular, " +
                         "s.status, " +
                         "at, " +
-                        "a.foto) " +
+                        "a.foto, " +
+                        "s.idSolicitacao) " + // <-- Adicione aqui
                         "FROM Atendimento at " +
                         "JOIN at.animal a " +
                         "JOIN a.proprietario p " +
@@ -64,7 +69,8 @@ public class ConsultaRealizadaDAO {
                         "LEFT JOIN p.contato c " +
                         "JOIN at.solicitacao s " +
                         "WHERE s.status IN (:statusList) " +
-                        "AND at.procedimentos IS EMPTY");
+                        "AND at.procedimentos IS EMPTY " +
+                        "AND at.tipoAtendimento = :tipo"); // <<< filtro adicionado
 
         if (filtro.getNomeProprietario() != null && !filtro.getNomeProprietario().trim().isEmpty()) {
             jpql.append(" AND LOWER(p.nome) LIKE LOWER(CONCAT('%', :nomeProprietario, '%'))");
@@ -85,7 +91,8 @@ public class ConsultaRealizadaDAO {
         jpql.append(" ORDER BY at.data DESC");
 
         TypedQuery<ConsultaRealizada> query = em.createQuery(jpql.toString(), ConsultaRealizada.class)
-                .setParameter("statusList", Arrays.asList(Status.FINALIZADO, Status.AGENDADOCASTRACAO));
+                .setParameter("statusList", Arrays.asList(Status.FINALIZADO, Status.AGENDADOCASTRACAO))
+                .setParameter("tipo", TipoAtendimento.CONSULTA); // <<< parâmetro adicionado
 
         if (filtro.getNomeProprietario() != null && !filtro.getNomeProprietario().trim().isEmpty()) {
             query.setParameter("nomeProprietario", filtro.getNomeProprietario());
@@ -96,18 +103,16 @@ public class ConsultaRealizadaDAO {
         }
 
         if (filtro.getDataInicio() != null) {
-            // CORREÇÃO 1: Converte o Calendar para Date antes de passar como parâmetro.
             query.setParameter("dataInicio", filtro.getDataInicio().getTime());
         }
 
         if (filtro.getDataFim() != null) {
-            // CORREÇÃO 2: Ajusta a data final usando Calendar e depois converte para Date.
             Calendar dataFimAjustada = filtro.getDataFim();
             dataFimAjustada.set(Calendar.HOUR_OF_DAY, 23);
             dataFimAjustada.set(Calendar.MINUTE, 59);
             dataFimAjustada.set(Calendar.SECOND, 59);
             dataFimAjustada.set(Calendar.MILLISECOND, 999);
-            
+
             query.setParameter("dataFim", dataFimAjustada.getTime());
         }
 

@@ -89,9 +89,8 @@
 
                     <p:commandButton icon="fa fa-search" title="Visualizar Animais"
                         oncomplete="PF('animaisDialog').show()" process="@this" update=":formAnimaisDialog"
-                        action="#{consultasRealizadasBean.carregarAnimais}" immediate="true">
-                        <f:setPropertyActionListener target="#{consultasRealizadasBean.consultaSelecionada}"
-                            value="#{consulta.atendimento}" />
+                        action="#{consultasRealizadasBean.carregarAnimais}">
+                        <f:setPropertyActionListener target="#{consultasRealizadasBean.consultaSelecionada}" value="#{consulta}" />
                     </p:commandButton>
 
                     <h:link title="Nova Consulta"
@@ -131,9 +130,11 @@
                         <h:outputText value="#{animal.sexo}" />
                     </p:column>
                     <p:column headerText="Foto" style="width: 100px;">
-                        <p:commandLink onclick="PF('imagemDialog').show();"
-                            action="#{consultasRealizadasBean.selecionarImagem(animal.foto)}" process="@this"
-                            update="imagemDialogContent">
+                        <p:commandLink 
+                            action="#{consultasRealizadasBean.selecionarImagem(animal.foto)}" 
+                            process="@this"
+                            update="imagemDialogContent"
+                            oncomplete="PF('imagemDialog').show();">
                             <img src="/uploads/#{not empty animal.foto ? animal.foto : 'no_image.jpg'}" width="100"
                                 alt="Foto de #{animal.nome}" style="cursor: pointer;" />
                         </p:commandLink>

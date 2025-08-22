@@ -2,21 +2,20 @@ package br.gov.pr.guaira.animalys.controller;
 
 import br.gov.pr.guaira.animalys.dto.ConsultaRealizada;
 import br.gov.pr.guaira.animalys.entity.Animal;
-import br.gov.pr.guaira.animalys.entity.Atendimento;
 import br.gov.pr.guaira.animalys.entity.ConsultaFiltro;
 import br.gov.pr.guaira.animalys.service.AnimalService;
 import br.gov.pr.guaira.animalys.service.ConsultaRealizadaService;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
+import javax.faces.view.ViewScoped;
 
 @Named
-@RequestScoped
+@ViewScoped // <-- Troque de @RequestScoped para @ViewScoped
 public class ConsultasRealizadasBean implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -30,7 +29,7 @@ public class ConsultasRealizadasBean implements Serializable {
     private AnimalService servicoAnimal;
 
     private List<ConsultaRealizada> consultas;
-    private Atendimento consultaSelecionada;
+    private ConsultaRealizada consultaSelecionada;
     private List<Animal> animaisCarregados;
 
     @PostConstruct
@@ -59,11 +58,11 @@ public class ConsultasRealizadasBean implements Serializable {
         consultas = service.listar();
     }
 
-    public Atendimento getConsultaSelecionada() {
+    public ConsultaRealizada getConsultaSelecionada() {
         return consultaSelecionada;
     }
 
-    public void setConsultaSelecionada(Atendimento consultaSelecionada) {
+    public void setConsultaSelecionada(ConsultaRealizada consultaSelecionada) {
         this.consultaSelecionada = consultaSelecionada;
     }
 
@@ -72,31 +71,11 @@ public class ConsultasRealizadasBean implements Serializable {
     }
 
     public void carregarAnimais() {
-
-        System.out.println("--- Debug carregarAnimais ---");
-        System.out.println("consultaSelecionada: " + consultaSelecionada);
-
-        if (consultaSelecionada != null) {
-            System.out.println("consultaSelecionada.getSolicitacao(): " + consultaSelecionada.getSolicitacao());
-            if (consultaSelecionada.getSolicitacao() != null) {
-                System.out.println("consultaSelecionada.getSolicitacao().getIdSolicitacao(): "
-                        + consultaSelecionada.getSolicitacao().getIdSolicitacao());
-            }
-        }
-
-        if (consultaSelecionada != null
-                && consultaSelecionada.getSolicitacao() != null
-                && consultaSelecionada.getSolicitacao().getIdSolicitacao() != null) {
-
-            System.out.println("Solicitação: " + consultaSelecionada.getSolicitacao().getIdSolicitacao());
-
-            this.animaisCarregados = servicoAnimal.buscarPorSolicitacao(
-                    consultaSelecionada.getSolicitacao().getIdSolicitacao());
+        if (consultaSelecionada != null && consultaSelecionada.getIdSolicitacao() != null) {
+            this.animaisCarregados = servicoAnimal.buscarPorSolicitacao(consultaSelecionada.getIdSolicitacao());
         } else {
-            System.out.println("consultaSelecionada ou sua solicitação está nula");
             this.animaisCarregados = Collections.emptyList();
         }
-        System.out.println("--- Fim Debug carregarAnimais ---");
     }
 
     private String imagemSelecionada;

@@ -21,6 +21,7 @@ public class AnimalService implements Serializable{
 	}
 
 	public List<Animal> buscarPorSolicitacao(Integer idSolicitacao) {
-        return animais.porSolicitacao(idSolicitacao);
+        //return animais.animaisPorSolicitacao(idSolicitacao);
+		return animais.porSolicitacao(idSolicitacao);
     }
 }

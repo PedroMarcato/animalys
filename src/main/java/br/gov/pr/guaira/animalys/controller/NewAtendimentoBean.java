@@ -56,6 +56,6 @@ public class NewAtendimentoBean implements Serializable {
 	}
 
 	private void buscaAnimais() {
-		this.animaisDoProprietario = this.animais.animaisPorSolicitacao(this.solicitacao.getIdSolicitacao());
+    this.animaisDoProprietario = this.animais.animaisDaSolicitacao(this.solicitacao.getIdSolicitacao());
 	}	
 }

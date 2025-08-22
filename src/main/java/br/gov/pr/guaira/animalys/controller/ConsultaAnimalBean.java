@@ -340,8 +340,7 @@ public class ConsultaAnimalBean implements Serializable {
 		this.dataFimDia.set(Calendar.SECOND, 59);
 
 		try {
-			this.atendimento = this.atendimentos.atendimentoPorAnimal(this.animalSelecionado, dataComecoDia,
-					dataFimDia);
+			this.atendimento = this.atendimentos.atendimentoPorAnimal(this.animalSelecionado, dataComecoDia, dataFimDia);
 
 			// Proteção caso a data de castração seja null
 			if (this.animalSelecionado.getDataAgendaCastracao() != null) {
@@ -352,7 +351,8 @@ public class ConsultaAnimalBean implements Serializable {
 
 			this.itensLotes = this.itensLotesAtendimento.porAtendimento(this.atendimento);
 		} catch (NoResultException e) {
-			e.printStackTrace();
+			// Nenhum atendimento encontrado para o animal no dia. Isso é esperado.
+			System.out.println("############# Nenhum atendimento encontrado para o animal no dia #############");
 		} catch (NonUniqueResultException e) {
 			e.printStackTrace();
 			FacesUtil.addErrorMessage("Este animal já foi atendido!");

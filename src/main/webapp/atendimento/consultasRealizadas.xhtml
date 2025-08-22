@@ -33,25 +33,6 @@
                     <p:outputLabel value="Nome animal" for="nomeAnimal" />
                     <p:inputText id="nomeAnimal" value="#{consultasRealizadasBean.filtro.nomeAnimal}" />
 
-                    <p:outputLabel value="Período" for="dataInicio" />
-                    <h:panelGroup>
-                        <p:outputLabel for="dataInicio" value="Data Inicial" style="margin-right: 10px;" />
-                        <p:calendar id="dataInicio" pattern="dd/MM/yyyy" mask="true"
-                            value="#{consultasRealizadasBean.filtro.dataInicio}" locale="pt_BR" size="30"
-                            timeZone="America/Sao_Paulo">
-                            <f:convertDateTime type="calendar" pattern="dd/MM/yyyy" timeZone="America/Sao_Paulo" />
-                        </p:calendar>
-
-                        <p:outputLabel value="Data Final" for="dataFinal"
-                            style="margin-left: 10px; margin-right: 10px;" />
-
-                        <p:calendar id="dataFinal" pattern="dd/MM/yyyy" mask="true"
-                            value="#{consultasRealizadasBean.filtro.dataFim}" locale="pt_BR" size="30"
-                            timeZone="America/Sao_Paulo">
-                            <f:convertDateTime type="calendar" pattern="dd/MM/yyyy" timeZone="America/Sao_Paulo" />
-                        </p:calendar>
-                    </h:panelGroup>
-
                 </p:panelGrid>
             </div>
 

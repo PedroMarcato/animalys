@@ -85,20 +85,21 @@
                     </div>
                 </p:column>
 
-                <p:column headerText="Ação" style="width: 70px;">
+                <p:column headerText="Ação" style="width: 72px;">
 
                     <p:commandButton icon="fa fa-search" title="Visualizar Animais"
                         oncomplete="PF('animaisDialog').show()" process="@this" update=":formAnimaisDialog"
                         action="#{consultasRealizadasBean.carregarAnimais}">
-                        <f:setPropertyActionListener target="#{consultasRealizadasBean.consultaSelecionada}" value="#{consulta}" />
+                        <f:setPropertyActionListener target="#{consultasRealizadasBean.consultaSelecionada}"
+                            value="#{consulta}" />
                     </p:commandButton>
 
-                    <h:link title="Nova Consulta"
-                        styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-left"
-                        style="padding: .3em;">
-                        <f:param name="" value="" />
-                        <i style="margin: 0 5px;" class="fa fa-refresh"></i>
-                    </h:link>
+                    <p:commandButton icon="fa fa-plus"
+                        oncomplete="PF('novaConsultaDialog').show();" process="@this"
+                        update=":novaConsultaDialog" title="Agendar nova consulta para este animal">
+                        <f:setPropertyActionListener target="#{consultasRealizadasBean.consultaSelecionada}"
+                            value="#{consulta}" />
+                    </p:commandButton>
 
                 </p:column>
 
@@ -130,11 +131,8 @@
                         <h:outputText value="#{animal.sexo}" />
                     </p:column>
                     <p:column headerText="Foto" style="width: 100px;">
-                        <p:commandLink 
-                            action="#{consultasRealizadasBean.selecionarImagem(animal.foto)}" 
-                            process="@this"
-                            update="imagemDialogContent"
-                            oncomplete="PF('imagemDialog').show();">
+                        <p:commandLink action="#{consultasRealizadasBean.selecionarImagem(animal.foto)}" process="@this"
+                            update="imagemDialogContent" oncomplete="PF('imagemDialog').show();">
                             <img src="/uploads/#{not empty animal.foto ? animal.foto : 'no_image.jpg'}" width="100"
                                 alt="Foto de #{animal.nome}" style="cursor: pointer;" />
                         </p:commandLink>
@@ -155,6 +153,21 @@
                 </div>
             </h:panelGroup>
 
+        </p:dialog>
+
+        <!-- Dialog para agendar nova consulta -->
+        <p:dialog header="Agendar Nova Consulta" widgetVar="novaConsultaDialog" modal="true" id="novaConsultaDialog">
+            <h:form id="formNovaConsulta">
+                <h:panelGrid columns="2">
+                    <p:outputLabel for="dataNovaConsulta" value="Data da Consulta:" />
+                    <p:calendar id="dataNovaConsulta" value="#{consultasRealizadasBean.dataNovaConsulta}" pattern="dd/MM/yyyy HH:mm" showTime="true" />
+
+                    <p:commandButton value="Agendar" icon="fa fa-check"
+                        action="#{consultasRealizadasBean.salvarNovaConsulta}"
+                        update=":formConsultas:consultasTable :formConsultas:msg"
+                        oncomplete="PF('novaConsultaDialog').hide();" />
+                </h:panelGrid>
+            </h:form>
         </p:dialog>
 
     </ui:define>

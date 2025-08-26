@@ -321,7 +321,9 @@ public class ConsultaAnimalBean implements Serializable {
 				.animaisPorProprietario(this.animalSelecionado.getProprietario(), Status.CONSULTA_ELETIVA_AGENDADA);
 
 		if (animaisDaSolicitacao.size() < 1) {
-			if (this.animalSelecionado.getDataAgendaCastracao() != null) {
+			// Só agenda castração se o animal NÃO estiver castrado
+			if (this.animalSelecionado.getDataAgendaCastracao() != null
+					&& this.animalSelecionado.getStatus() != Status.CASTRADO) {
 				this.solicitacao.setStatus(Status.AGENDADOCASTRACAO);
 			} else {
 				this.solicitacao.setStatus(Status.FINALIZADO);
@@ -350,9 +352,19 @@ public class ConsultaAnimalBean implements Serializable {
 			}
 
 			this.itensLotes = this.itensLotesAtendimento.porAtendimento(this.atendimento);
+
+			// Só bloqueia se o atendimento encontrado for da mesma solicitação
+			if (this.atendimento.getSolicitacao() != null &&
+                this.solicitacao != null &&
+                this.atendimento.getSolicitacao().getIdSolicitacao().equals(this.solicitacao.getIdSolicitacao())) {
+                this.atendido = true;
+            } else {
+                this.atendido = false;
+            }
+
 		} catch (NoResultException e) {
 			// Nenhum atendimento encontrado para o animal no dia. Isso é esperado.
-			System.out.println("############# Nenhum atendimento encontrado para o animal no dia #############");
+			this.atendido = false; // Libera atendimento se não encontrou atendimento no dia
 		} catch (NonUniqueResultException e) {
 			e.printStackTrace();
 			FacesUtil.addErrorMessage("Este animal já foi atendido!");

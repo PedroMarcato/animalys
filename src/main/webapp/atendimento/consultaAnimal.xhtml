@@ -145,7 +145,8 @@
 							update="itensTable" />
 					</p:confirmDialog>
 				</p:tab>
-				<p:tab title="Agendar Castração">
+				<p:tab title="Agendar Castração"
+					rendered="#{consultaAnimalBean.animalSelecionado.status.name() ne 'CASTRADO'}">
 
 					<p:schedule id="scheduleLocale"
 						value="#{consultaAnimalBean.eventModel}" locale="pt"

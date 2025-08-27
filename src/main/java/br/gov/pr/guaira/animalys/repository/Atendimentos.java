@@ -87,25 +87,25 @@ public class Atendimentos implements Serializable{
 		Root<Atendimento> atendimentoRoot = criteriaQuery.from(Atendimento.class);
 		atendimentoRoot.fetch("animal", JoinType.INNER);
 		//atendimentoRoot.fetch("solicitacao", JoinType.INNER);
-		
+
 		if (animal != null) {
 			predicates.add(
 					builder.equal(atendimentoRoot.get("animal"), animal));
 		}
-		
+
 		if (dataComeco != null && dataFim != null) {
-			
 			predicates.add(builder.between(atendimentoRoot.get("data"), dataComeco,
 					dataFim));
-			
 		}
-		
+
 		criteriaQuery.select(atendimentoRoot);
 		criteriaQuery.where(predicates.toArray(new Predicate[0]));
 		criteriaQuery.orderBy(builder.asc(atendimentoRoot.get("animal").get("nome")));
 
 		TypedQuery<Atendimento> query = manager.createQuery(criteriaQuery);
-		return query.getSingleResult();
+		query.setMaxResults(1);
+		List<Atendimento> resultados = query.getResultList();
+		return resultados.isEmpty() ? null : resultados.get(0);
 	}
 	
 	public List<Atendimento> atendimentosPorAnimal(Animal animal) {

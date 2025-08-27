@@ -14,6 +14,7 @@
 
 	<ui:define name="content">
 		<h:form id="form">
+			<p:remoteCommand name="abrirDialogDuplicado" onstart="PF('confirmDialogDuplicado').show();" />
 			<h1 class="aw-page-title">Consulta Clínica</h1>
 
 			<p:messages id="msg" closable="true" />
@@ -68,12 +69,9 @@
 						</p:column>
 				
 				<p:column style="width:32px;text-align: center">
-					<p:button icon="fa fa-external-link" title="Atender"
-						outcome="/atendimento/consultaAnimal">
-						<f:param name="animal" value="#{animal.idAnimal}" />
-						<f:param name="solicitacao"
-							value="#{newAtendimentoBean.solicitacao.idSolicitacao}" />
-					</p:button>
+					<p:commandButton icon="fa fa-external-link" title="Atender"
+						actionListener="#{newAtendimentoBean.solicitarAtendimento(animal.idAnimal)}"
+						process="@this" update=":form" />
 				</p:column>
 			</p:dataTable>
 			
@@ -100,6 +98,20 @@
 				
 			</p:dataTable> -->
 		</h:form>
+
+		<p:dialog header="Confirmação de Atendimento Duplicado" widgetVar="confirmDialogDuplicado" modal="true" closable="false"
+			visible="#{newAtendimentoBean.mostrarConfirmacaoDuplicada}">
+			<h:outputText value="Este animal já foi atendido hoje. Deseja realmente realizar outra consulta para este animal?" />
+			<br/><br/>
+			<p:commandButton value="Sim, continuar" icon="fa fa-check"
+				actionListener="#{newAtendimentoBean.confirmarAtendimentoDuplicado}"
+				oncomplete="PF('confirmDialogDuplicado').hide();"
+				update=":form"/>
+			<p:commandButton value="Cancelar" icon="fa fa-close"
+				actionListener="#{newAtendimentoBean.cancelarAtendimentoDuplicado}"
+				oncomplete="PF('confirmDialogDuplicado').hide();"
+				update=":form"/>
+		</p:dialog>
 		
 		<p:dialog header="Visualização da Imagem" 
 	          widgetVar="imagemDialog"

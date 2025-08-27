@@ -30,7 +30,7 @@
                     <p:outputLabel value="Proprietário" for="proprietario" />
                     <p:inputText id="proprietario" value="#{consultasRealizadasBean.filtro.nomeProprietario}" />
 
-                    <p:outputLabel value="Nome animal" for="nomeAnimal" />
+                    <p:outputLabel value="Animal" for="nomeAnimal" />
                     <p:inputText id="nomeAnimal" value="#{consultasRealizadasBean.filtro.nomeAnimal}" />
 
                 </p:panelGrid>
@@ -169,6 +169,26 @@
                 </h:panelGrid>
             </h:form>
         </p:dialog>
+
+
+        <!-- Dialog de Confirmação de Consulta Duplicada -->
+        <p:dialog header="Confirmação" widgetVar="dlgConsultaDuplicada" modal="true"
+          visible="#{consultaAnimalBean.mostrarConfirmacaoConsultaDuplicada}">
+            <h:form id="formConfirmacaoDuplicada">
+                <h:outputText value="Este animal já foi atendido hoje. Deseja realmente realizar outra consulta para este animal?" />
+                <br/><br/>
+                <p:commandButton value="Sim, continuar" icon="fa fa-check"
+                    action="#{consultaAnimalBean.confirmarConsultaDuplicada}"
+                    oncomplete="PF('dlgConsultaDuplicada').hide();"
+                    update=":formConsultas:consultasTable :formConsultas:msg"/>
+                <p:commandButton value="Cancelar" icon="fa fa-close"
+                    onclick="PF('dlgConsultaDuplicada').hide(); return false;" />
+            </h:form>
+        </p:dialog>
+
+        <p:remoteCommand name="abrirDialogConsultaDuplicada" 
+                 actionListener="#{consultaAnimalBean.setMostrarConfirmacaoConsultaDuplicada(false)}"
+                 onstart="PF('dlgConsultaDuplicada').show();" />
 
     </ui:define>
 </ui:composition>

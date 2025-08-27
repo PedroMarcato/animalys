@@ -12,6 +12,7 @@ import javax.inject.Named;
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.DefaultScheduleEvent;
 import org.primefaces.model.DefaultScheduleModel;
@@ -70,6 +71,9 @@ public class ConsultaAnimalBean implements Serializable {
 	private Integer quantidade;
 	private boolean temAtendimentoAnterior;
 	private boolean atendido;
+	private boolean mostrarConfirmacaoConsultaDuplicada = false;
+	@SuppressWarnings("unused")
+	private boolean aguardandoConfirmacaoDuplicada = false;
 	private List<Animal> animaisAgendadosCastracao;
 	private List<Lote> lotesCadastrados;
 	private List<Produto> produtosCadastrados;
@@ -87,6 +91,7 @@ public class ConsultaAnimalBean implements Serializable {
 	private SolicitacaoService solicitacaoService;
 	@Inject
 	private Atendimentos atendimentos;
+	@SuppressWarnings("unused")
 	@Inject
 	private ItensLotes itensLotesAtendimento;
 	@UsuarioLogado
@@ -99,7 +104,10 @@ public class ConsultaAnimalBean implements Serializable {
 		this.atendido = false;
 		this.buscaAnimaisAgendadosParaCastracao();
 
-		this.buscaAtendimentoNoDia();
+		String confirmadoDuplicado = javax.faces.context.FacesContext.getCurrentInstance()
+			.getExternalContext().getRequestParameterMap().get("confirmadoDuplicado");
+		boolean skipDuplicado = confirmadoDuplicado != null && confirmadoDuplicado.equals("1");
+		this.buscaAtendimentoNoDia(skipDuplicado);
 		this.buscaAtendimentosAnteriores();
 	}
 
@@ -227,6 +235,14 @@ public class ConsultaAnimalBean implements Serializable {
 		this.atendido = atendido;
 	}
 
+	public boolean isMostrarConfirmacaoConsultaDuplicada() {
+		return mostrarConfirmacaoConsultaDuplicada;
+	}
+
+	public void setMostrarConfirmacaoConsultaDuplicada(boolean mostrar) {
+		this.mostrarConfirmacaoConsultaDuplicada = mostrar;
+	}
+
 	public void onEventSelect(SelectEvent selectEvent) {
 
 		event = (ScheduleEvent) selectEvent.getObject();
@@ -288,12 +304,14 @@ public class ConsultaAnimalBean implements Serializable {
 		this.atendimento.setTipoAtendimento(TipoAtendimento.CONSULTA);
 		this.atendimento.setData(this.dataAtendimento);
 
-		// Se houver data de castração, atualiza status
-		if (this.animalSelecionado.getDataAgendaCastracao() != null) {
-			this.animalSelecionado.setStatus(Status.AGENDADOCASTRACAO);
-		} else {
-			this.animalSelecionado.setStatus(Status.CONSULTA_ELETIVA_REALIZADA);
-			this.animalSelecionado.setDataAgendaCastracao(null);
+		// Se o animal já está castrado, não altera status para AGENDADOCASTRACAO
+		if (this.animalSelecionado.getStatus() != Status.CASTRADO) {
+			if (this.animalSelecionado.getDataAgendaCastracao() != null) {
+				this.animalSelecionado.setStatus(Status.AGENDADOCASTRACAO);
+			} else {
+				this.animalSelecionado.setStatus(Status.CONSULTA_ELETIVA_REALIZADA);
+				this.animalSelecionado.setDataAgendaCastracao(null);
+			}
 		}
 
 		this.atendimento.setAnimal(this.animalSelecionado);
@@ -322,8 +340,7 @@ public class ConsultaAnimalBean implements Serializable {
 
 		if (animaisDaSolicitacao.size() < 1) {
 			// Só agenda castração se o animal NÃO estiver castrado
-			if (this.animalSelecionado.getDataAgendaCastracao() != null
-					&& this.animalSelecionado.getStatus() != Status.CASTRADO) {
+			if (this.animalSelecionado.getStatus() != Status.CASTRADO && this.animalSelecionado.getDataAgendaCastracao() != null) {
 				this.solicitacao.setStatus(Status.AGENDADOCASTRACAO);
 			} else {
 				this.solicitacao.setStatus(Status.FINALIZADO);
@@ -332,7 +349,7 @@ public class ConsultaAnimalBean implements Serializable {
 		}
 	}
 
-	private void buscaAtendimentoNoDia() {
+	private void buscaAtendimentoNoDia(boolean skipDuplicado) {
 		this.dataComecoDia.set(Calendar.HOUR_OF_DAY, 0);
 		this.dataComecoDia.set(Calendar.MINUTE, 1);
 		this.dataComecoDia.set(Calendar.SECOND, 1);
@@ -342,34 +359,33 @@ public class ConsultaAnimalBean implements Serializable {
 		this.dataFimDia.set(Calendar.SECOND, 59);
 
 		try {
-			this.atendimento = this.atendimentos.atendimentoPorAnimal(this.animalSelecionado, dataComecoDia, dataFimDia);
+			Atendimento atendimentoExistente = this.atendimentos.atendimentoPorAnimal(this.animalSelecionado, dataComecoDia, dataFimDia);
 
-			// Proteção caso a data de castração seja null
-			if (this.animalSelecionado.getDataAgendaCastracao() != null) {
-				this.dataAgendaCastracao = this.animalSelecionado.getDataAgendaCastracao().getTime();
-			} else {
-				this.dataAgendaCastracao = null;
+			// Se já existe atendimento para o animal no dia, pede confirmação
+			if (atendimentoExistente != null && !skipDuplicado) {
+				this.mostrarConfirmacaoConsultaDuplicada = true;
+				this.aguardandoConfirmacaoDuplicada = true;
+				this.atendido = false;
+				PrimeFaces.current().executeScript("abrirDialogConsultaDuplicada()");
+				return;
 			}
-
-			this.itensLotes = this.itensLotesAtendimento.porAtendimento(this.atendimento);
-
-			// Só bloqueia se o atendimento encontrado for da mesma solicitação
-			if (this.atendimento.getSolicitacao() != null &&
-                this.solicitacao != null &&
-                this.atendimento.getSolicitacao().getIdSolicitacao().equals(this.solicitacao.getIdSolicitacao())) {
-                this.atendido = true;
-            } else {
-                this.atendido = false;
-            }
-
 		} catch (NoResultException e) {
-			// Nenhum atendimento encontrado para o animal no dia. Isso é esperado.
-			this.atendido = false; // Libera atendimento se não encontrou atendimento no dia
+			// Não existe atendimento para o animal no dia
 		} catch (NonUniqueResultException e) {
 			e.printStackTrace();
-			FacesUtil.addErrorMessage("Este animal já foi atendido!");
-			this.atendido = true;
+			FacesUtil.addErrorMessage("Erro ao buscar atendimentos!");
+			this.atendido = false;
 		}
+
+		// Se não existe atendimento, ou usuário confirmou, cria novo atendimento em branco
+		this.atendimento = new Atendimento();
+		this.atendimento.setAnimal(this.animalSelecionado);
+		this.atendimento.setSolicitacao(this.solicitacao);
+		this.atendimento.setData(Calendar.getInstance());
+		this.itensLotes = new ArrayList<>();
+		this.mostrarConfirmacaoConsultaDuplicada = false;
+		this.aguardandoConfirmacaoDuplicada = false;
+		this.atendido = false;
 	}
 
 	private void buscaAtendimentosAnteriores() {
@@ -413,4 +429,15 @@ public class ConsultaAnimalBean implements Serializable {
 
 	}
 
+	public void confirmarConsultaDuplicada() {
+		this.mostrarConfirmacaoConsultaDuplicada = false;
+		this.aguardandoConfirmacaoDuplicada = false;
+		// Cria novo atendimento em branco
+		this.atendimento = new Atendimento();
+		this.atendimento.setAnimal(this.animalSelecionado);
+		this.atendimento.setSolicitacao(this.solicitacao);
+		this.atendimento.setData(Calendar.getInstance());
+		this.itensLotes = new ArrayList<>();
+		this.atendido = false;
+	}
 }

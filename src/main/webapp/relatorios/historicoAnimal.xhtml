@@ -13,30 +13,27 @@
         		<p:column headerText="Data">
             		#{historico.data}
         		</p:column>
-        		<p:column headerText="Tipo Solicitação">
-					<h:outputText value="#{historico.tipoSolicitacao}"
-								  style="#{historico.tipoSolicitacao == 'Sem registros' ? 'color: #888; font-style: italic;' : ''}" />
-				</p:column>
-        		<p:column headerText="Situação">
-					<h:outputText value="#{historico.statusSolicitacao}"
-								  style="#{historico.statusSolicitacao == 'Sem registros' ? 'color: #888; font-style: italic;' : ''}" />
-				</p:column>
+        		
         		<p:column headerText="Tipo de Atendimento">
 					<h:outputText value="#{historico.tipoAtendimento}"
 								  style="#{historico.tipoAtendimento == 'Sem registros' ? 'color: #888; font-style: italic;' : ''}" />
 				</p:column>
+				<p:column headerText="Procedimento">
+					<h:outputText value="#{historico.procedimento}"
+								  style="#{historico.procedimento == 'Sem registros' ? 'color: #888; font-style: italic;' : ''}" />
+        		</p:column>
 				<p:column headerText="Diagnóstico">
 					<h:outputText value="#{historico.diagnostico}"
 								  style="#{historico.diagnostico == 'Sem registros' ? 'color: #888; font-style: italic;' : ''}" escape="false" />
 				</p:column>
-        		<p:column headerText="Procedimento">
-					<h:outputText value="#{historico.procedimento}"
-								  style="#{historico.procedimento == 'Sem registros' ? 'color: #888; font-style: italic;' : ''}" />
-        		</p:column>
         		<p:column headerText="Responsável">
 					<h:outputText value="#{historico.responsavel}"
 								  style="#{historico.responsavel == 'Sem registros' ? 'color: #888; font-style: italic;' : ''}" />
         		</p:column>
+				<p:column headerText="Situação">
+					<h:outputText value="#{historico.statusSolicitacao}"
+								  style="#{historico.statusSolicitacao == 'Sem registros' ? 'color: #888; font-style: italic;' : ''}" />
+				</p:column>
         <!--	<p:column headerText="Ações">
 			    <p:commandButton icon="ui-icon-trash"
 			                     title="Excluir"

@@ -15,7 +15,7 @@
 	<ui:define name="titulo">Consulta Clínica</ui:define>
 
 	<ui:define name="content">
-		<h:form id="form">
+	<h:form id="form">
 			<h1 class="aw-page-title">Consulta Clínica</h1>
 
 			<p:messages id="msg" closable="true" />
@@ -61,6 +61,20 @@
 
 
 			</p:panelGrid>
+			<p:remoteCommand name="abrirDialogConsultaDuplicada" onstart="PF('dlgConsultaDuplicada').show();" />
+
+			<p:dialog header="Confirmação de Atendimento Duplicado" widgetVar="dlgConsultaDuplicada" modal="true" closable="false"
+				visible="#{consultaAnimalBean.mostrarConfirmacaoConsultaDuplicada}">
+				<h:outputText value="Este animal já foi atendido hoje. Deseja realmente realizar outra consulta para este animal?" />
+				<br/><br/>
+				<p:commandButton value="Sim, continuar" icon="fa fa-check"
+					action="#{consultaAnimalBean.confirmarConsultaDuplicada}"
+					oncomplete="PF('dlgConsultaDuplicada').hide();"
+					update="@form"/>
+				<p:commandButton value="Cancelar" icon="fa fa-close"
+					onclick="PF('dlgConsultaDuplicada').hide(); window.history.back(); return false;"/>
+			</p:dialog>
+
 			<p:tabView id="tabView1">
 
 				<p:tab title="Diagnóstico">

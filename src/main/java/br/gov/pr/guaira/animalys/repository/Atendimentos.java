@@ -29,13 +29,13 @@ public class Atendimentos implements Serializable{
 	private EntityManager manager;
 
 	public Atendimento guardar(Atendimento atendimento) {
-	    if (atendimento.getAnimal() != null) {
-	        manager.merge(atendimento.getAnimal());
-	    }
-	    if (atendimento.getSolicitacao() != null) {
-	        manager.merge(atendimento.getSolicitacao());
-	    }
-	    return manager.merge(atendimento);
+		/*if (atendimento.getAnimal() != null) {
+			manager.merge(atendimento.getAnimal());
+		} */
+		/*if (atendimento.getSolicitacao() != null) {
+			manager.merge(atendimento.getSolicitacao());
+		}*/
+		return manager.merge(atendimento);
 	}
 
 	@Transactional
@@ -46,7 +46,7 @@ public class Atendimentos implements Serializable{
 			manager.flush();
 		} catch (PersistenceException e) {
 			e.printStackTrace();
-			throw new NegocioException("Este Atendimento de Produto n�o pode ser exclu�do!");
+			throw new NegocioException("Este Atendimento de Produto não pode ser excluído!");
 		}
 
 	}

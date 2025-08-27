@@ -35,7 +35,11 @@ public class Animais implements Serializable {
 	private EntityManager manager;
 
 	public Animal guardar(Animal animal) {
-		return manager.merge(animal);
+	System.out.println("[DEBUG] REPOSITÓRIO: Status recebido para salvar: " + animal.getStatus());
+	Animal a = manager.merge(animal);
+	manager.flush();
+	System.out.println("[DEBUG] REPOSITÓRIO: Status após merge e flush: " + a.getStatus());
+	return a;
 	}
 
 	public List<Animal> porSolicitacao(Integer idSolicitacao) {

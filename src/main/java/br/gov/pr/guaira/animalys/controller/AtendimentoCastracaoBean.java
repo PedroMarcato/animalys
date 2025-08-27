@@ -271,29 +271,53 @@ public class AtendimentoCastracaoBean implements Serializable {
 		}
 	}
 
-	public void salvar() {
+	   public void salvar() {
+		   if (!this.procedimentosSelecionados.isEmpty()) {
+			   System.out.println("[DEBUG] Status do animal ANTES de salvar: " + this.animal.getStatus());
+			   // Buscar atendimento existente para este animal e solicitação
+			   Atendimento atendimentoExistente = null;
+			   if (this.animal != null && this.solicitacao != null) {
+				   List<Atendimento> atendimentosDoAnimal = this.atendimentos.atendimentosPorAnimal(this.animal);
+				   for (Atendimento at : atendimentosDoAnimal) {
+					   if (at.getSolicitacao() != null && at.getSolicitacao().equals(this.solicitacao)
+						   && TipoAtendimento.CASTRACAO.equals(at.getTipoAtendimento())) {
+						   atendimentoExistente = at;
+						   break;
+					   }
+				   }
+			   }
 
-		if (!this.procedimentosSelecionados.isEmpty()) {
+			   Atendimento atendimentoParaSalvar = atendimentoExistente != null ? atendimentoExistente : this.atendimento;
 
-			this.atendimento.setItemLoteAtendimento(this.itensLotes);
-			this.atendimento.setProcedimentos(this.procedimentosSelecionados);
-			this.atendimento.setData(this.dataAtendimento);
-			this.animal.setStatus(Status.CASTRADO);
-			this.animal.setDataCastracao(this.dataAtendimento);
-			this.animalService.salvar(this.animal);
-			this.solicitacao.setStatus(Status.FINALIZADO);
-			this.atendimento.setSolicitacao(this.solicitacao);
-			this.atendimento.setAnimal(this.animal);
-			this.atendimento.setTipoAtendimento(TipoAtendimento.CASTRACAO);
-			this.atendimento.setProfissional(this.usuarioLogado.getUsuarioLogado().getUsuario().getProfissional());
-			this.atendimento = this.atendimentoService.salvar(this.atendimento);
-			FacesUtil.addInfoMessage("Atendimento do(a) " + this.animal.getNome() + " realizado com sucesso!");
-			this.alterarAtendimento1 = true;
-			
-			// limpar();
+			   // 1. Atualiza o status do animal e salva primeiro
+			   this.animal.setStatus(Status.CASTRADO);
+			   this.animal.setDataCastracao(this.dataAtendimento);
+			   this.animalService.salvar(this.animal);
+			   System.out.println("[DEBUG] Status do animal DEPOIS de salvar: " + this.animal.getStatus());
 
-		} else {
-			FacesUtil.addErrorMessage("Adicione ao menos um procedimento para finalizar o atendimento!");
-		}
-	}
+			   // 2. Só depois finaliza a solicitação
+			   this.solicitacao.setStatus(Status.FINALIZADO);
+
+			   // 3. Preenche e salva o atendimento
+			   atendimentoParaSalvar.setItemLoteAtendimento(this.itensLotes);
+			   atendimentoParaSalvar.setProcedimentos(this.procedimentosSelecionados);
+			   atendimentoParaSalvar.setData(this.dataAtendimento);
+			   atendimentoParaSalvar.setSolicitacao(this.solicitacao);
+			   atendimentoParaSalvar.setAnimal(this.animal);
+			   atendimentoParaSalvar.setTipoAtendimento(TipoAtendimento.CASTRACAO);
+			   atendimentoParaSalvar.setProfissional(this.usuarioLogado.getUsuarioLogado().getUsuario().getProfissional());
+			   this.atendimento = this.atendimentoService.salvar(atendimentoParaSalvar);
+
+			   // 4. Força o update do animal novamente após tudo
+			   System.out.println("[DEBUG] Status do animal ANTES do salvar FINAL: " + this.animal.getStatus());
+			   this.animalService.salvar(this.animal);
+			   System.out.println("[DEBUG] Status do animal DEPOIS do salvar FINAL: " + this.animal.getStatus());
+
+			   FacesUtil.addInfoMessage("Atendimento do(a) " + this.animal.getNome() + " realizado com sucesso!");
+			   this.alterarAtendimento1 = true;
+			   // limpar();
+		   } else {
+			   FacesUtil.addErrorMessage("Adicione ao menos um procedimento para finalizar o atendimento!");
+		   }
+	   }
 }

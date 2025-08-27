@@ -22,6 +22,12 @@
     	</repository>
 	</repositories>
 	<dependencies>
+		<!-- OmniFaces para conversores e utilidades JSF -->
+		<dependency>
+			<groupId>org.omnifaces</groupId>
+			<artifactId>omnifaces</artifactId>
+			<version>2.7.10</version>
+		</dependency>
 		<!-- PrimeFaces (biblioteca de componentes) -->
 		<dependency>
 			<groupId>org.primefaces</groupId>

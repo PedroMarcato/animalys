@@ -1,4 +1,5 @@
 package br.gov.pr.guaira.animalys.controller;
+import br.gov.pr.guaira.animalys.entity.Procedimento;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -97,6 +98,11 @@ public class ConsultaAnimalBean implements Serializable {
 	@UsuarioLogado
 	private Seguranca usuarioLogado;
 
+	@Inject
+	private br.gov.pr.guaira.animalys.repository.Procedimentos procedimentosRepo;
+
+	private List<br.gov.pr.guaira.animalys.entity.Procedimento> procedimentos;
+
 	public void inicializar() {
 		this.dataAtendimento = Calendar.getInstance();
 		this.eventModel = new DefaultScheduleModel();
@@ -104,11 +110,28 @@ public class ConsultaAnimalBean implements Serializable {
 		this.atendido = false;
 		this.buscaAnimaisAgendadosParaCastracao();
 
+		// Carrega procedimentos para o selectOneMenu
+		this.procedimentos = procedimentosRepo.procedimentosCadastrados();
+
 		String confirmadoDuplicado = javax.faces.context.FacesContext.getCurrentInstance()
 			.getExternalContext().getRequestParameterMap().get("confirmadoDuplicado");
 		boolean skipDuplicado = confirmadoDuplicado != null && confirmadoDuplicado.equals("1");
 		this.buscaAtendimentoNoDia(skipDuplicado);
 		this.buscaAtendimentosAnteriores();
+
+		// Seleciona automaticamente o procedimento de id 6, se existir
+		if (this.atendimento.getTratamento() == null && this.procedimentos != null) {
+			this.atendimento.setTratamento(
+				this.procedimentos.stream()
+					.filter(p -> p.getIdProcedimento() != null && p.getIdProcedimento().equals(6))
+					.findFirst()
+					.orElse(null)
+			);
+		}
+	}
+
+	public List<Procedimento> getProcedimentos() {
+		return procedimentos;
 	}
 
 	public Atendimento getAtendimento() {
@@ -318,6 +341,12 @@ public class ConsultaAnimalBean implements Serializable {
 		this.atendimento.setSolicitacao(this.solicitacao);
 		this.atendimento.setProfissional(this.usuarioLogado.getUsuarioLogado().getUsuario().getProfissional());
 		this.atendimentoService.salvar(this.atendimento);
+
+		// Força o update da solicitação para FINALIZADO se o animal já está castrado
+		if (this.animalSelecionado.getStatus() == Status.CASTRADO) {
+			this.solicitacao.setStatus(Status.FINALIZADO);
+			this.solicitacaoService.salvar(this.solicitacao);
+		}
 
 		this.atendido = true;
 		this.confereAnimaisAtendidos();

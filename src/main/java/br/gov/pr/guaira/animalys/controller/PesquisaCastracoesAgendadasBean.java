@@ -137,7 +137,7 @@ public class PesquisaCastracoesAgendadasBean implements Serializable{
 				e.printStackTrace();
 			}
 		} else {
-			FacesUtil.addErrorMessage("A data informada é inválida!");
+			FacesUtil.addErrorMessage("A data informada Ã© invÃ¡lida!");
 		}
 		
 	}
@@ -147,8 +147,8 @@ public class PesquisaCastracoesAgendadasBean implements Serializable{
 		
 		this.animalSelecionado.setStatus(Status.CANCELADO);
 		this.animalService.salvar(this.animalSelecionado);
-		
-		FacesUtil.addInfoMessage("Castração cancelada com sucesso!");
+
+		FacesUtil.addInfoMessage("Castracao cancelada com sucesso!");
 	}
 	
 	private boolean confereData() {

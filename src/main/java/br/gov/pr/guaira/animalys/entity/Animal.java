@@ -1,3 +1,5 @@
+
+
 package br.gov.pr.guaira.animalys.entity;
 
 import java.io.Serializable;
@@ -10,6 +12,22 @@ import java.util.List;
 @Entity
 @Table(schema = "animal")
 public class Animal implements Serializable {
+  // ...existing code...
+
+
+  public String getNome() {
+    return nome;
+  }
+
+  public String getCor() {
+    return cor;
+  }
+
+  public void setCor(String cor) {
+    this.cor = cor;
+  }
+  @Column(name = "cor")
+  private String cor;
 
   private static final long serialVersionUID = 1L;
 
@@ -23,8 +41,6 @@ public class Animal implements Serializable {
   @Column
   private String numeroMicrochip;
 
-  @Column
-  private Double peso;
 
   @Column
   private String idade;
@@ -86,40 +102,10 @@ public class Animal implements Serializable {
   
   // Getters e Setters
 
-  public Especie getEspecie() {
-    return especie;
-  }
+
   
   public Integer getIdAnimal() {
     return idAnimal;
-  }
-
-  public String getNome() {
-    return nome;
-  }
-
-  public void setEspecie(Especie especie) {
-    this.especie = especie;
-  }
-
-  public void setNome(String nome) {
-    this.nome = nome != null ? nome.toUpperCase() : null;
-  }
-
-  public String getNumeroMicrochip() {
-    return numeroMicrochip;
-  }
-
-  public void setNumeroMicrochip(String numeroMicrochip) {
-    this.numeroMicrochip = numeroMicrochip;
-  }
-
-  public Double getPeso() {
-    return peso;
-  }
-
-  public void setPeso(Double peso) {
-    this.peso = peso;
   }
 
   public String getIdade() {
@@ -309,7 +295,7 @@ public class Animal implements Serializable {
   @Override
   public String toString() {
     return "Animal [idAnimal=" + idAnimal + ", nome=" + nome + ", numeroMicrochip=" + numeroMicrochip
-        + ", peso=" + peso + ", dataEntrada=" + dataEntrada + ", dataSaida=" + dataSaida
+  + ", dataEntrada=" + dataEntrada + ", dataSaida=" + dataSaida
         + ", castrado=" + castrado + ", vacinado=" + vacinado + ", desmifurgado=" + desmifurgado
         + ", visitado=" + visitado + "]";
   }

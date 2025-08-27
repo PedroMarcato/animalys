@@ -1,4 +1,5 @@
 package br.gov.pr.guaira.animalys.entity;
+import javax.persistence.Column;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -27,6 +28,71 @@ import javax.persistence.Transient;
 @Entity
 @Table(schema = "atendimento")
 public class Atendimento implements Serializable {
+
+	@Column(name = "peso")
+	private Double peso;
+	public Double getPeso() {
+		return peso;
+	}
+
+	public void setPeso(Double peso) {
+		this.peso = peso;
+	}
+
+	@Column(name = "escore_corporal")
+	private Double escoreCorporal;
+
+	@Column(name = "fc")
+	private String fc;
+
+	@Column(name = "fr")
+	private String fr;
+
+	@Column(name = "temperatura")
+	private Double temperatura;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "tratamento_id")
+	private Procedimento tratamento;
+	public Double getEscoreCorporal() {
+		return escoreCorporal;
+	}
+
+	public void setEscoreCorporal(Double escoreCorporal) {
+		this.escoreCorporal = escoreCorporal;
+	}
+
+	public String getFc() {
+		return fc;
+	}
+
+	public void setFc(String fc) {
+		this.fc = fc;
+	}
+
+	public String getFr() {
+		return fr;
+	}
+
+	public void setFr(String fr) {
+		this.fr = fr;
+	}
+
+	public Double getTemperatura() {
+		return temperatura;
+	}
+
+	public void setTemperatura(Double temperatura) {
+		this.temperatura = temperatura;
+	}
+
+	public Procedimento getTratamento() {
+		return tratamento;
+	}
+
+	public void setTratamento(Procedimento tratamento) {
+		this.tratamento = tratamento;
+	}
 
 	private static final long serialVersionUID = 1L;
 

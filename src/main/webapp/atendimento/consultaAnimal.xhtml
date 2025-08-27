@@ -77,7 +77,48 @@
 
 			<p:tabView id="tabView1">
 
-				<p:tab title="Diagnóstico">
+			   <p:tab title="Dados da Consulta">
+				   <p:panelGrid columns="2" id="painelDadosConsulta" layout="grid"
+					   columnClasses="ui-grid-col-2,ui-grid-col-10"
+					   styleClass="panelgrid-noborder">
+
+
+					   <p:outputLabel value="Escore Corporal:" for="escoreCorporal" />
+					   <p:inputNumber id="escoreCorporal" value="#{consultaAnimalBean.atendimento.escoreCorporal}"
+						   readonly="#{consultaAnimalBean.atendido}" decimalPlaces="1" placeholder=" " />
+
+					   <p:outputLabel value="Peso (kg):" for="peso" />
+					   <p:inputNumber id="peso" value="#{consultaAnimalBean.atendimento.peso}"
+						   readonly="#{consultaAnimalBean.atendido}" decimalPlaces="2" minValue="0" />
+
+					   <p:outputLabel value="FC (bpm):" for="fc" />
+					   <p:inputNumber id="fc" value="#{consultaAnimalBean.atendimento.fc}"
+						   readonly="#{consultaAnimalBean.atendido}" decimalPlaces="0" minValue="0" />
+
+					   <p:outputLabel value="FR (irpm):" for="fr" />
+					   <p:inputNumber id="fr" value="#{consultaAnimalBean.atendimento.fr}"
+						   readonly="#{consultaAnimalBean.atendido}" decimalPlaces="0" minValue="0" />
+
+					   <p:outputLabel value="Temperatura (°C):" for="temperatura" />
+					   <p:inputNumber id="temperatura" value="#{consultaAnimalBean.atendimento.temperatura}"
+						   readonly="#{consultaAnimalBean.atendido}" decimalPlaces="1" placeholder=" " />
+
+					   <p:outputLabel value="Cor:" for="cor" />
+					   <p:inputText id="cor" value="#{consultaAnimalBean.animalSelecionado.cor}"
+						   readonly="#{consultaAnimalBean.atendido}" maxlength="30" />
+
+					   <p:outputLabel value="Tratamento:" for="tratamento" />
+					   <p:selectOneMenu id="tratamento" value="#{consultaAnimalBean.atendimento.tratamento}" 
+						   converter="omnifaces.SelectItemsConverter" 
+						   disabled="#{consultaAnimalBean.atendido}">
+						   <f:selectItem itemLabel="Selecione" itemValue="" />
+						   <f:selectItems value="#{consultaAnimalBean.procedimentos}" var="proc"
+							   itemLabel="#{proc.nome}" itemValue="#{proc}" />
+					   </p:selectOneMenu>
+				   </p:panelGrid>
+			   </p:tab>
+
+			   <p:tab title="Diagnóstico">
 
 					<p:panelGrid columns="1" id="painel" layout="grid"
 						columnClasses="ui-grid-col-12" styleClass="panelgrid-noborder">

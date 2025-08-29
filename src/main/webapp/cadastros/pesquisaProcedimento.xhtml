@@ -40,11 +40,11 @@
 				reflow="true" value="#{pesquisaProcedimentoBean.procedimentosFiltrados}"
 				var="pro">
 				<p:column headerText="Nome">
-					<h:outputText value="#{pro.especie.nome}" />
+					<h:outputText value="#{pro.nome}" />
 				</p:column>
 				
 				<p:column headerText="Espécie">
-					<h:outputText value="#{pro.nome}" />
+					<h:outputText value="#{pro.especie.nome}" />
 				</p:column>
 
 				<p:column headerText="Ações"

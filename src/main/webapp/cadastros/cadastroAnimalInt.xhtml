@@ -34,7 +34,7 @@
 						value="#{cadastroAnimalBean.solicitacao.modalidade}"
 						required="true"
 						requiredMessage="Informe a modalidade do cadastro!">
-						<f:selectItem itemLabel="Selecione a modalidade" />
+						<f:selectItem itemLabel="Selecione a modalidade" itemValue=""/>
 						<f:selectItems
 							value="#{cadastroAnimalBean.modalidadesSolicitante}" var="moda"
 							itemValue="#{moda}" itemLabel="#{moda.descricao}" />
@@ -206,7 +206,8 @@
 				<div class="chamada_acao">
 					<p:commandButton value="Enviar Solicitação" icon="fa fa-send"
 						id="botaoSalvar" action="#{cadastroAnimalBean.salvar()}"
-						update="@form"  />
+						update="@form"
+						disabled="#{empty cadastroAnimalBean.solicitacao.modalidade}" />
 				</div>
 			</div>
 
@@ -297,8 +298,8 @@
 				<p:commandButton value="Salvar" icon="fa fa-send" ajax="false"
 					action="#{cadastroAnimalBean.adicionarAnimal}"
 					update="form:animalTable" process="@this"
-					oncomplete="PF('dlg').hide()">
-
+					oncomplete="PF('dlg').hide()"
+					disabled="#{empty cadastroAnimalBean.solicitacao.modalidade}">
 				</p:commandButton>
 			</p:dialog>
 

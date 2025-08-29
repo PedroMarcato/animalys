@@ -1,0 +1,48 @@
+<ui:composition template="/WEB-INF/template/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="titulo">Cadastro de Tratamento</ui:define>
+
+	<ui:define name="content">
+		<f:metadata>
+			<f:viewParam name="tratamento" value="#{cadastroTratamentoBean.idTratamento}" />
+			<f:event type="preRenderView" listener="#{cadastroTratamentoBean.inicializar}" />
+		</f:metadata>
+		<h:form id="formCadastro">
+			<h1 class="aw-page-title">Cadastro de Tratamento</h1>
+
+			<p:messages closable="true" />
+
+			<div class="ui-fluid">
+				<p:panelGrid columns="2" layout="grid"
+					columnClasses="ui-grid-col-2, ui-grid-col-6"
+					styleClass="panelgrid-noborder" style="margin-top: 20px">
+
+					<p:outputLabel value="Nome" for="nome" />
+					<p:inputText id="nome" maxlength="100" required="true"
+						value="#{cadastroTratamentoBean.tratamento.nome}" />
+
+					<p:outputLabel value="Sigla" for="sigla" />
+					<p:inputText id="sigla" maxlength="20" required="true"
+						value="#{cadastroTratamentoBean.tratamento.sigla}" />
+
+				</p:panelGrid>
+			</div>
+
+			<p:toolbar style="margin-top: 20px">
+				<p:toolbarGroup>
+					<p:commandButton value="Salvar" icon="fa fa-save"
+						action="#{cadastroTratamentoBean.salvar()}" update="@form" />
+				</p:toolbarGroup>
+				<p:toolbarGroup align="right">
+					<p:button value="Cancelar" icon="fa fa-undo"
+						outcome="/cadastros/pesquisaTratamento" />
+				</p:toolbarGroup>
+			</p:toolbar>
+		</h:form>
+	</ui:define>
+</ui:composition>

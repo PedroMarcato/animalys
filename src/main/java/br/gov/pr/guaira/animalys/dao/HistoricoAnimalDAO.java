@@ -64,7 +64,7 @@ public class HistoricoAnimalDAO implements Serializable {
         a.getAnimal() != null && a.getAnimal().getProprietario() != null && a.getAnimal().getProprietario().getEndereco() != null ? a.getAnimal().getProprietario().getEndereco().getLogradouro() : "",
         a.getAnimal() != null && a.getAnimal().getProprietario() != null && a.getAnimal().getProprietario().getEndereco() != null ? a.getAnimal().getProprietario().getEndereco().getNumero() : "",
         a.getAnimal() != null && a.getAnimal().getProprietario() != null && a.getAnimal().getProprietario().getEndereco() != null ? a.getAnimal().getProprietario().getEndereco().getBairro() : "",
-        a.getAnimal() != null && a.getAnimal().getProprietario() != null && a.getAnimal().getProprietario().getContato() != null ? a.getAnimal().getProprietario().getContato().getTelefone() : "",
+        a.getAnimal() != null && a.getAnimal().getProprietario() != null && a.getAnimal().getProprietario().getContato() != null ? a.getAnimal().getProprietario().getContato().getCelular() : "",
         a.getAnimal() != null ? a.getAnimal().getDataEntrada() : null,
         a.getAnimal() != null ? a.getAnimal().getFoto() : "",
         a.getEscoreCorporal() != null ? a.getEscoreCorporal().toString() : "",

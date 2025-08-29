@@ -1,49 +1,157 @@
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-				xmlns:h="http://xmlns.jcp.org/jsf/html"
-				xmlns:f="http://xmlns.jcp.org/jsf/core"
-				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-				xmlns:p="http://primefaces.org/ui"
-				template="/WEB-INF/template/Layout.xhtml" xmlns:c="http://www.w3.org/1999/XSL/Transform">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template/Layout.xhtml">
 
     <ui:define name="content">
-        <h1 class="aw-page-title">Histórico do Animal - #{historicoAnimalBean.nomeAnimal}</h1>
+        <h1 class="aw-page-title">Ficha Clínica: <span style="color: red;">#{historicoAnimalBean.nomeAnimal}</span></h1>
 
         <h:form>
-    		<p:dataTable var="historico" value="#{historicoAnimalBean.lista}" emptyMessage="Nenhum histórico encontrado.">
-        		<p:column headerText="Data">
-            		#{historico.data}
-        		</p:column>
-        		
-        		<p:column headerText="Tipo de Atendimento">
-					<h:outputText value="#{historico.tipoAtendimento}"
-								  style="#{historico.tipoAtendimento == 'Sem registros' ? 'color: #888; font-style: italic;' : ''}" />
-				</p:column>
-				<p:column headerText="Procedimento">
-					<h:outputText value="#{historico.procedimento}"
-								  style="#{historico.procedimento == 'Sem registros' ? 'color: #888; font-style: italic;' : ''}" />
-        		</p:column>
-				<p:column headerText="Diagnóstico">
-					<h:outputText value="#{historico.diagnostico}"
-								  style="#{historico.diagnostico == 'Sem registros' ? 'color: #888; font-style: italic;' : ''}" escape="false" />
-				</p:column>
-        		<p:column headerText="Responsável">
-					<h:outputText value="#{historico.responsavel}"
-								  style="#{historico.responsavel == 'Sem registros' ? 'color: #888; font-style: italic;' : ''}" />
-        		</p:column>
-				<p:column headerText="Situação">
-					<h:outputText value="#{historico.statusSolicitacao}"
-								  style="#{historico.statusSolicitacao == 'Sem registros' ? 'color: #888; font-style: italic;' : ''}" />
-				</p:column>
-        <!--	<p:column headerText="Ações">
-			    <p:commandButton icon="ui-icon-trash"
-			                     title="Excluir"
-			                     action="#{historicoAnimalBean.excluir(historico.idAtendimento)}"
-			                     update="@form"
-			                     styleClass="ui-button-danger"
-			                     process="@this"
-			                     onclick="return confirm('Tem certeza que deseja excluir este atendimento?');" />
-			    </p:column>		-->
-    		</p:dataTable>
-		</h:form>
+            <!-- Ficha Clínica (dados principais) -->
+            <p:panel header="Dados da Ficha Clínica">
+                <h:panelGrid columns="2" style="width:100%; vertical-align:top;">
+                    <h:panelGroup>
+                        <div class="container">
+                            <div class="columns">
+                                <div class="item">
+                                    <h:outputText value="Data de Entrada: " styleClass="destaque-topico" />
+                                    <h:outputText value="#{historicoAnimalBean.fichaClinica.dataEntrada.time}">
+                                        <f:convertDateTime pattern="dd/MM/yyyy" />
+                                    </h:outputText>
+                                </div>
+                                <div class="item">
+                                    <h:outputText value="Proprietário: " styleClass="destaque-topico" />
+                                    <h:outputText value="#{historicoAnimalBean.fichaClinica.nomeProprietario}" />
+                                </div>
+                                <div class="item">
+                                    <h:outputText value="CPF: " styleClass="destaque-topico" />
+                                    <h:outputText value="#{historicoAnimalBean.fichaClinica.cpfProprietario}" />
+                                </div>
+                            </div>
+                            <div class="columns" style="margin-left: 50px;">
+                                <div class="item">
+                                    <h:outputText value="Endereço: " styleClass="destaque-topico" />
+                                    <h:outputText value="#{historicoAnimalBean.fichaClinica.enderecoProprietario}" />
+                                    <h:outputText value=", #{historicoAnimalBean.fichaClinica.numeroEndereco}"
+                                        rendered="#{not empty historicoAnimalBean.fichaClinica.numeroEndereco}" />
+                                </div>
+                                <div class="item">
+                                    <h:outputText value="Bairro: " styleClass="destaque-topico" />
+                                    <h:outputText value="#{historicoAnimalBean.fichaClinica.bairroProprietario}" />
+                                </div>
+                                <div class="item">
+                                    <h:outputText value="Contato: " styleClass="destaque-topico" />
+                                    <h:outputText value="#{historicoAnimalBean.fichaClinica.contatoProprietario}" />
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <h:panelGrid columns="6" cellpadding="4">
+                            <h:outputText value="Espécie:" styleClass="destaque-topico" />
+                            <h:outputText value="#{historicoAnimalBean.fichaClinica.especie}" />
+                            <h:outputText value="Raça:" styleClass="destaque-topico" />
+                            <h:outputText value="#{historicoAnimalBean.fichaClinica.raca}" />
+                            <h:outputText value="Nome:" styleClass="destaque-topico" />
+                            <h:outputText value="#{historicoAnimalBean.nomeAnimal}" />
+
+                            <h:outputText value="Idade:" styleClass="destaque-topico" />
+                            <h:outputText value="#{historicoAnimalBean.fichaClinica.idade}" />
+                            <h:outputText value="Sexo:" styleClass="destaque-topico" />
+                            <h:outputText value="#{historicoAnimalBean.fichaClinica.sexo}" />
+                            <h:outputText value="Cor:" styleClass="destaque-topico" />
+                            <h:outputText value="#{historicoAnimalBean.fichaClinica.cor}" />
+                        </h:panelGrid>
+                    </h:panelGroup>
+                    <h:panelGroup style="display: flex; justify-content: center; align-items: center;">
+                        <img src="/uploads/#{not empty historicoAnimalBean.fotoAnimal ? historicoAnimalBean.fotoAnimal : 'no_image.jpg'}"
+                            style="border:1px solid #ccc; border-radius:8px; width: auto; height: 160px;"
+                            alt="Foto do animal" />
+                    </h:panelGroup>
+                </h:panelGrid>
+            </p:panel>
+
+            <style>
+                .destaque-topico {
+                    font-weight: bold;
+                    color: #2a3f54;
+                }
+
+                .container {
+                    display: flex;
+                }
+
+                .item {
+                    flex: 1 1 30%;
+                    box-sizing: border-box;
+                    padding: 5px;
+                }
+            </style>
+
+            <br />
+
+            <!-- Histórico Clínico (accordion retrátil) -->
+            <p:panel header="Histórico de Atendimentos">
+                <p:accordionPanel var="historico" value="#{historicoAnimalBean.lista}">
+                    <p:tab title="Atendimento em #{historico.data}">
+                        <h:panelGrid columns="2" cellpadding="4">
+
+                            <h:outputText value="Tipo de Atendimento:" styleClass="destaque-topico"
+                                rendered="#{not empty historico.tipoAtendimento}" />
+                            <h:outputText value="#{historico.tipoAtendimento}"
+                                rendered="#{not empty historico.tipoAtendimento}" />
+
+
+                            <h:outputText value="Procedimento:" styleClass="destaque-topico"
+                                rendered="#{not empty historico.procedimento}" />
+                            <h:outputText value="#{historico.procedimento}"
+                                rendered="#{not empty historico.procedimento}" />
+
+
+                            <h:outputText value="Diagnóstico:" styleClass="destaque-topico" />
+                            <h:outputText value="#{historico.diagnostico}" escape="false" />
+
+
+                            <h:outputText value="Escore Corporal:" styleClass="destaque-topico"
+                                rendered="#{not empty historico.escoreCorporal}" />
+                            <h:outputText value="#{historico.escoreCorporal}"
+                                rendered="#{not empty historico.escoreCorporal}" />
+
+
+                            <h:outputText value="Peso:" styleClass="destaque-topico"
+                                rendered="#{not empty historico.peso}" />
+                            <h:outputText value="#{historico.peso} kg" rendered="#{not empty historico.peso}" />
+
+
+                            <h:outputText value="FC:" styleClass="destaque-topico"
+                                rendered="#{not empty historico.fc}" />
+                            <h:outputText value="#{historico.fc} bpm" rendered="#{not empty historico.fc}" />
+
+
+                            <h:outputText value="FR:" styleClass="destaque-topico"
+                                rendered="#{not empty historico.fr}" />
+                            <h:outputText value="#{historico.fr} irpm" rendered="#{not empty historico.fr}" />
+
+
+                            <h:outputText value="Temperatura:" styleClass="destaque-topico"
+                                rendered="#{not empty historico.temperatura}" />
+                            <h:outputText value="#{historico.temperatura} °C"
+                                rendered="#{not empty historico.temperatura}" />
+
+
+                            <h:outputText value="Tratamento:" styleClass="destaque-topico"
+                                rendered="#{not empty historico.tratamento}" />
+                            <h:outputText value="#{historico.tratamento}"
+                                rendered="#{not empty historico.tratamento}" />
+
+                            <h:outputText value="Responsável:" styleClass="destaque-topico" />
+                            <h:outputText value="#{historico.responsavel}" />
+
+                            <h:outputText value="Situação:" styleClass="destaque-topico" />
+                            <h:outputText value="#{historico.statusSolicitacao}" />
+
+                        </h:panelGrid>
+                    </p:tab>
+                </p:accordionPanel>
+            </p:panel>
+        </h:form>
     </ui:define>
 </ui:composition>

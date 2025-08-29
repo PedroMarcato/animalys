@@ -1,5 +1,5 @@
 package br.gov.pr.guaira.animalys.controller;
-import br.gov.pr.guaira.animalys.entity.Procedimento;
+import br.gov.pr.guaira.animalys.entity.Tratamento;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -99,9 +99,9 @@ public class ConsultaAnimalBean implements Serializable {
 	private Seguranca usuarioLogado;
 
 	@Inject
-	private br.gov.pr.guaira.animalys.repository.Procedimentos procedimentosRepo;
+	private br.gov.pr.guaira.animalys.repository.Tratamentos tratamentosRepo;
 
-	private List<br.gov.pr.guaira.animalys.entity.Procedimento> procedimentos;
+	private List<Tratamento> tratamentos;
 
 	public void inicializar() {
 		this.dataAtendimento = Calendar.getInstance();
@@ -110,8 +110,8 @@ public class ConsultaAnimalBean implements Serializable {
 		this.atendido = false;
 		this.buscaAnimaisAgendadosParaCastracao();
 
-		// Carrega procedimentos para o selectOneMenu
-		this.procedimentos = procedimentosRepo.procedimentosCadastrados();
+		// Carrega tratamentos para o selectOneMenu
+		this.tratamentos = tratamentosRepo.tratamentosCadastrados();
 
 		String confirmadoDuplicado = javax.faces.context.FacesContext.getCurrentInstance()
 			.getExternalContext().getRequestParameterMap().get("confirmadoDuplicado");
@@ -119,19 +119,20 @@ public class ConsultaAnimalBean implements Serializable {
 		this.buscaAtendimentoNoDia(skipDuplicado);
 		this.buscaAtendimentosAnteriores();
 
-		// Seleciona automaticamente o procedimento de id 6, se existir
-		if (this.atendimento.getTratamento() == null && this.procedimentos != null) {
+		// Seleciona automaticamente o tratamento de id 1, se existir
+		if (this.atendimento.getTratamento() == null && this.tratamentos != null) {
 			this.atendimento.setTratamento(
-				this.procedimentos.stream()
-					.filter(p -> p.getIdProcedimento() != null && p.getIdProcedimento().equals(6))
+				this.tratamentos.stream()
+					.filter(t -> t.getIdTratamento() != null && t.getIdTratamento().equals(1))
 					.findFirst()
 					.orElse(null)
 			);
 		}
 	}
 
-	public List<Procedimento> getProcedimentos() {
-		return procedimentos;
+
+	public List<Tratamento> getTratamentos() {
+		return tratamentos;
 	}
 
 	public Atendimento getAtendimento() {

@@ -112,8 +112,8 @@
 						   converter="omnifaces.SelectItemsConverter" 
 						   disabled="#{consultaAnimalBean.atendido}">
 						   <f:selectItem itemLabel="Selecione" itemValue="" />
-						   <f:selectItems value="#{consultaAnimalBean.procedimentos}" var="proc"
-							   itemLabel="#{proc.nome}" itemValue="#{proc}" />
+						   <f:selectItems value="#{consultaAnimalBean.tratamentos}" var="trat"
+							   itemLabel="#{trat.nome}" itemValue="#{trat}" />
 					   </p:selectOneMenu>
 				   </p:panelGrid>
 			   </p:tab>

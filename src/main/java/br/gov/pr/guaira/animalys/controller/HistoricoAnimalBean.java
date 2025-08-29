@@ -70,10 +70,24 @@ public class HistoricoAnimalBean implements Serializable {
     public void setNomeAnimal(String nomeAnimal) {
         this.nomeAnimal = nomeAnimal;
     }
+
+    // Adicione getters para os dados da ficha clínica do primeiro item
+    public HistoricoAnimalDTO getFichaClinica() {
+        if (lista != null && !lista.isEmpty()) {
+            return lista.get(0);
+        }
+        return null;
+    }
+
     public void excluir(Integer idAtendimento) {
         historicoAnimalDAO.removerAtendimento(idAtendimento);
         FacesContext.getCurrentInstance().addMessage(null,
             new FacesMessage("Atendimento excluído com sucesso."));
         lista = historicoAnimalDAO.buscarHistoricoPorAnimal(idAnimal);
+    }
+    // Getter para foto do animal
+    public String getFotoAnimal() {
+        HistoricoAnimalDTO dto = getFichaClinica();
+        return (dto != null) ? dto.getFotoAnimal() : null;
     }
 }

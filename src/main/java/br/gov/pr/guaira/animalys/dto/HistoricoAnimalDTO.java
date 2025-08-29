@@ -3,6 +3,39 @@ package br.gov.pr.guaira.animalys.dto;
 
 public class HistoricoAnimalDTO {
 
+    // Construtor exato exigido pelo Hibernate/HQL
+    public HistoricoAnimalDTO(int idAtendimento, String data, String procedimento, String responsavel, String nomeAnimal, String tipoAtendimento, String diagnostico, String modalidadeSolicitante, br.gov.pr.guaira.animalys.entity.Status status,
+                              String idade, String sexo, String cor, String raca, String especie, String nomeProprietario, String cpfProprietario, String enderecoProprietario, String numeroEndereco, String bairroProprietario, String contatoProprietario, java.util.Calendar dataEntrada, String fotoAnimal,
+                              String escoreCorporal, double peso, String fc, String fr, String temperatura, String tratamento) {
+        this.idAtendimento = idAtendimento;
+        this.data = data;
+        this.procedimento = procedimento;
+        this.responsavel = responsavel;
+        this.nomeAnimal = nomeAnimal;
+        this.tipoAtendimento = tipoAtendimento;
+        this.diagnostico = diagnostico;
+        this.modalidadeSolicitante = modalidadeSolicitante;
+        this.status = (status != null) ? status.toString() : null;
+        this.idade = idade;
+        this.sexo = sexo;
+        this.cor = cor;
+        this.raca = raca;
+        this.especie = especie;
+        this.nomeProprietario = nomeProprietario;
+        this.cpfProprietario = cpfProprietario;
+        this.enderecoProprietario = enderecoProprietario;
+        this.numeroEndereco = numeroEndereco;
+        this.bairroProprietario = bairroProprietario;
+        this.contatoProprietario = contatoProprietario;
+        this.dataEntrada = dataEntrada;
+        this.fotoAnimal = fotoAnimal;
+        this.escoreCorporal = escoreCorporal;
+        this.peso = peso;
+        this.fc = fc;
+        this.fr = fr;
+        this.temperatura = temperatura;
+        this.tratamento = tratamento;
+    }
     private String nomeAnimal;
     private String data;
     private String procedimento;
@@ -13,18 +46,62 @@ public class HistoricoAnimalDTO {
     private String status;
     private Integer idAtendimento;
 
+    // Novos campos para ficha clínica
+    private String idade;
+    private String sexo;
+    private String cor;
+    private String raca;
+    private String especie;
+    private String nomeProprietario;
+    private String cpfProprietario;
+    private String enderecoProprietario;
+    private String numeroEndereco;
+    private String bairroProprietario;
+    private String contatoProprietario;
+    private java.util.Calendar dataEntrada;
+    private String fotoAnimal;
+    private String escoreCorporal;
+    private Double peso;
+    private String fc;
+    private String fr;
+    private String temperatura;
+    private String tratamento;
+
     // Construtor exigido pelo JPQL
-    public HistoricoAnimalDTO(Integer idAtendimento, String data, String procedimento, String responsavel, String nomeAnimal, String tipoAtendimento, String diagnostico, String modalidadeSolicitante, String status) {
-    	this.idAtendimento = idAtendimento;
-    	this.data = (data != null) ? data : "Sem registros";
-        this.procedimento = (procedimento != null) ? procedimento : "CONSULTA NORMAL";
+    public HistoricoAnimalDTO(Integer idAtendimento, String data, String procedimento, String responsavel, String nomeAnimal, String tipoAtendimento, String diagnostico, String modalidadeSolicitante, String status,
+                              String idade, String sexo, String cor, String raca, String especie, String nomeProprietario, String cpfProprietario, String enderecoProprietario, String numeroEndereco, String bairroProprietario, String contatoProprietario, java.util.Calendar dataEntrada, String fotoAnimal,
+                              String escoreCorporal, Double peso, String fc, String fr, String temperatura, String tratamento) {
+        this.idAtendimento = idAtendimento;
+        this.data = (data != null) ? data : "Sem registros";
+        this.procedimento = (procedimento != null) ? procedimento : "Consulta Clínica";
         this.responsavel = (responsavel != null) ? responsavel : "Sem registros";
         this.nomeAnimal = (nomeAnimal != null) ? nomeAnimal : "Sem registros";
         this.tipoAtendimento = (tipoAtendimento != null) ? tipoAtendimento : "Sem registros";
         this.diagnostico = (diagnostico != null) ? diagnostico : "Sem registros";
         this.modalidadeSolicitante = (modalidadeSolicitante != null) ? modalidadeSolicitante : "Sem registros";
         this.status = (status != null) ? status : "Sem registros";
+        // Novos campos
+        this.idade = idade;
+        this.sexo = sexo;
+        this.cor = cor;
+        this.raca = raca;
+        this.especie = especie;
+        this.nomeProprietario = nomeProprietario;
+        this.cpfProprietario = cpfProprietario;
+        this.enderecoProprietario = enderecoProprietario;
+        this.numeroEndereco = numeroEndereco;
+        this.bairroProprietario = bairroProprietario;
+        this.contatoProprietario = contatoProprietario;
+    this.dataEntrada = dataEntrada;
+    this.fotoAnimal = fotoAnimal;
+    this.escoreCorporal = escoreCorporal;
+    this.peso = peso;
+    this.fc = fc;
+    this.fr = fr;
+    this.temperatura = temperatura;
+    this.tratamento = tratamento;
     } 
+
 
     // Construtor anterior (opcional)
    /* public HistoricoAnimalDTO(Calendar data, String procedimento, String responsavel, String nomeAnimal) {
@@ -45,4 +122,25 @@ public class HistoricoAnimalDTO {
     public String getTipoSolicitacao() { return modalidadeSolicitante; }
     public String getStatusSolicitacao() { return status; }
     public Integer getIdAtendimento() { return idAtendimento; }       
+
+    // Getters para os novos campos
+    public String getIdade() { return idade; }
+    public String getSexo() { return sexo; }
+    public String getCor() { return cor; }
+    public String getRaca() { return raca; }
+    public String getEspecie() { return especie; }
+    public String getNomeProprietario() { return nomeProprietario; }
+    public String getCpfProprietario() { return cpfProprietario; }
+    public String getEnderecoProprietario() { return enderecoProprietario; }
+    public String getNumeroEndereco() { return numeroEndereco; }
+    public String getBairroProprietario() { return bairroProprietario; }
+    public String getContatoProprietario() { return contatoProprietario; }
+    public java.util.Calendar getDataEntrada() { return dataEntrada; }
+    public String getFotoAnimal() { return fotoAnimal; }
+    public String getEscoreCorporal() { return escoreCorporal; }
+    public Double getPeso() { return peso; }
+    public String getFc() { return fc; }
+    public String getFr() { return fr; }
+    public String getTemperatura() { return temperatura; }
+    public String getTratamento() { return tratamento; }
 }

@@ -53,7 +53,7 @@ public class Atendimento implements Serializable {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "tratamento_id")
-	private Procedimento tratamento;
+	private Tratamento tratamento;
 	public Double getEscoreCorporal() {
 		return escoreCorporal;
 	}
@@ -86,11 +86,11 @@ public class Atendimento implements Serializable {
 		this.temperatura = temperatura;
 	}
 
-	public Procedimento getTratamento() {
+	public Tratamento getTratamento() {
 		return tratamento;
 	}
 
-	public void setTratamento(Procedimento tratamento) {
+	public void setTratamento(Tratamento tratamento) {
 		this.tratamento = tratamento;
 	}
 

@@ -1,6 +1,5 @@
 
-
-package br.gov.pr.guaira.animalys.entity;
+  package br.gov.pr.guaira.animalys.entity;
 
 import java.io.Serializable;
 import java.util.Calendar;
@@ -14,9 +13,20 @@ import java.util.List;
 public class Animal implements Serializable {
   // ...existing code...
 
+  public String getNumeroMicrochip() {
+    return numeroMicrochip;
+  }
+
+  public void setNumeroMicrochip(String numeroMicrochip) {
+    this.numeroMicrochip = numeroMicrochip;
+  }
+
 
   public String getNome() {
     return nome;
+  }
+  public void setNome(String nome) {
+    this.nome = nome;
   }
 
   public String getCor() {

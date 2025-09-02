@@ -51,6 +51,15 @@
 
 					<p:outputLabel value=" Nome: " style="font-weight: bold" />
 					<p:outputLabel value="#{atendimentoCastracaoBean.animal.nome}" />
+
+					<p:outputLabel value=" Microchip: " style="font-weight: bold" />
+					<h:panelGroup>
+						<p:outputLabel value="#{atendimentoCastracaoBean.animal.numeroMicrochip}" 
+							rendered="#{not empty atendimentoCastracaoBean.animal.numeroMicrochip}" />
+						<p:outputLabel value="Sem Microchip" 
+							style="color: #999999; font-style: italic;"
+							rendered="#{empty atendimentoCastracaoBean.animal.numeroMicrochip}" />
+					</h:panelGroup>
 				</h:panelGroup>
 
 			</h:panelGrid>
@@ -69,7 +78,25 @@
 							readonly="#{atendimentoCastracaoBean.alterarAtendimento1}" />
 
 					</p:panelGrid>
+					
+					<p:panelGrid columns="2" id="painelProfissional" layout="grid"
+						columnClasses="ui-grid-col-2, ui-grid-col-4"
+						styleClass="panelgrid-noborder" style="margin-top: 10px;">
+						
+						<p:selectOneMenu id="profissional" value="#{atendimentoCastracaoBean.profissionalSelecionado}"
+							disabled="#{atendimentoCastracaoBean.alterarAtendimento1}" required="true" 
+							requiredMessage="O profissional deve ser selecionado">
+							<f:selectItem itemLabel="Selecione o profissional" itemValue="#{null}" />
+							<f:selectItems value="#{atendimentoCastracaoBean.profissionaisSelect}" var="prof"
+								itemLabel="#{prof.nome}" itemValue="#{prof}" />
+						</p:selectOneMenu>
+						
+						<p:outputLabel value="" />
+						<p:message for="profissional" display="text" />
+
+					</p:panelGrid>
 				</p:tab>
+				
 				<p:tab id="tabProcedimento" title="Procedimentos">
 
 					<p:panelGrid columns="2" id="painelProcedimento" layout="grid"

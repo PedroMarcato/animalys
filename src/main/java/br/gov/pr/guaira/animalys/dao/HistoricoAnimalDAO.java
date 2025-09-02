@@ -67,6 +67,7 @@ public class HistoricoAnimalDAO implements Serializable {
         a.getAnimal() != null && a.getAnimal().getProprietario() != null && a.getAnimal().getProprietario().getContato() != null ? a.getAnimal().getProprietario().getContato().getCelular() : "",
         a.getAnimal() != null ? a.getAnimal().getDataEntrada() : null,
         a.getAnimal() != null ? a.getAnimal().getFoto() : "",
+        a.getAnimal() != null ? a.getAnimal().getNumeroMicrochip() : "",
         a.getEscoreCorporal() != null ? a.getEscoreCorporal().toString() : "",
         a.getPeso(),
         a.getFc(),

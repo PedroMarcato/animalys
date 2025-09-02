@@ -279,6 +279,8 @@ public class HistoricoAnimalBean implements Serializable {
                     ficha.getSexo() != null ? ficha.getSexo() : "Nao informado", boldFont, normalFont, cinzaFundo, azulTitulo);
                 adicionarLinhaTabelaColorida(tabelaDados, "Cor:", 
                     ficha.getCor() != null && !ficha.getCor().trim().isEmpty() ? ficha.getCor() : "Nao informado", boldFont, normalFont, cinzaFundo, azulTitulo);
+                adicionarLinhaTabelaColorida(tabelaDados, "Microchip:", 
+                    ficha.getNumeroMicrochip() != null && !ficha.getNumeroMicrochip().trim().isEmpty() ? ficha.getNumeroMicrochip() : "Sem Microchip", boldFont, normalFont, cinzaFundo, azulTitulo);
                 
                 if (ficha.getDataEntrada() != null) {
                     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");

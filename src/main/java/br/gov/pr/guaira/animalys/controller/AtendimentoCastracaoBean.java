@@ -28,6 +28,7 @@ import br.gov.pr.guaira.animalys.service.AnimalService;
 import br.gov.pr.guaira.animalys.service.AtendimentoService;
 import br.gov.pr.guaira.animalys.service.LoteService;
 import br.gov.pr.guaira.animalys.util.jsf.FacesUtil;
+import br.gov.pr.guaira.animalys.dto.ProfissionalSelectDTO;
 @Named
 @ViewScoped
 public class AtendimentoCastracaoBean implements Serializable {
@@ -53,6 +54,9 @@ public class AtendimentoCastracaoBean implements Serializable {
 		
 		this.procedimentosCadastrados = this.procedimentos.procedimentosCadastrados();
 
+		// Carrega profissionais para o selectOneMenu usando DTOs
+		this.profissionaisSelect = profissionaisRepo.profissionaisParaSelect();
+
 		this.buscaSolicitacao();
 		this.buscaAtendimentosAnteriores1();
 	}
@@ -71,6 +75,8 @@ public class AtendimentoCastracaoBean implements Serializable {
 	private List<Procedimento> procedimentosCadastrados;
 	private List<ItemLoteAtendimento> itensLotes;
 	private List<Atendimento> atendimentosAnteriores;
+	private List<ProfissionalSelectDTO> profissionaisSelect;
+	private ProfissionalSelectDTO profissionalSelecionado;
 
 	@Inject
 	private AtendimentoService atendimentoService;
@@ -88,6 +94,8 @@ public class AtendimentoCastracaoBean implements Serializable {
 	private Seguranca usuarioLogado;
 	@Inject
 	private AnimalService animalService;
+	@Inject
+	private br.gov.pr.guaira.animalys.repository.Profissionais profissionaisRepo;
 
 
 	public Animal getAnimal() {
@@ -168,6 +176,18 @@ public class AtendimentoCastracaoBean implements Serializable {
 
 	public List<Atendimento> getAtendimentosAnteriores() {
 		return atendimentosAnteriores;
+	}
+
+	public List<ProfissionalSelectDTO> getProfissionaisSelect() {
+		return profissionaisSelect;
+	}
+
+	public ProfissionalSelectDTO getProfissionalSelecionado() {
+		return profissionalSelecionado;
+	}
+
+	public void setProfissionalSelecionado(ProfissionalSelectDTO profissionalSelecionado) {
+		this.profissionalSelecionado = profissionalSelecionado;
 	}
 
 	public List<Procedimento> completarProcedimento(String descricao) {
@@ -272,6 +292,12 @@ public class AtendimentoCastracaoBean implements Serializable {
 	}
 
 	   public void salvar() {
+		   // Validação do profissional selecionado
+		   if (this.profissionalSelecionado == null || this.profissionalSelecionado.getIdProfissional() == null) {
+			   FacesUtil.addErrorMessage("Selecione um profissional antes de salvar a castração!");
+			   return;
+		   }
+		   
 		   if (!this.procedimentosSelecionados.isEmpty()) {
 			   System.out.println("[DEBUG] Status do animal ANTES de salvar: " + this.animal.getStatus());
 			   // Buscar atendimento existente para este animal e solicitação
@@ -305,7 +331,17 @@ public class AtendimentoCastracaoBean implements Serializable {
 			   atendimentoParaSalvar.setSolicitacao(this.solicitacao);
 			   atendimentoParaSalvar.setAnimal(this.animal);
 			   atendimentoParaSalvar.setTipoAtendimento(TipoAtendimento.CASTRACAO);
-			   atendimentoParaSalvar.setProfissional(this.usuarioLogado.getUsuarioLogado().getUsuario().getProfissional());
+			   
+			   // Se um profissional foi selecionado no dropdown, busca o objeto completo
+			   if (this.profissionalSelecionado != null && this.profissionalSelecionado.getIdProfissional() != null) {
+				   br.gov.pr.guaira.animalys.entity.Profissional profissional = 
+					   profissionaisRepo.porId(this.profissionalSelecionado.getIdProfissional());
+				   atendimentoParaSalvar.setProfissional(profissional);
+			   } else {
+				   // Fallback para o usuário logado
+				   atendimentoParaSalvar.setProfissional(this.usuarioLogado.getUsuarioLogado().getUsuario().getProfissional());
+			   }
+			   
 			   this.atendimento = this.atendimentoService.salvar(atendimentoParaSalvar);
 
 			   // 4. Força o update do animal novamente após tudo

@@ -44,6 +44,15 @@
 				<p:outputLabel value=" Cor: " style="font-weight: bold" />
 				<p:outputLabel value="#{consultaAnimalBean.animalSelecionado.cor}" />
 
+				<p:outputLabel value=" Microchip: " style="font-weight: bold" />
+				<h:panelGroup>
+					<p:outputLabel value="#{consultaAnimalBean.animalSelecionado.numeroMicrochip}" 
+						rendered="#{not empty consultaAnimalBean.animalSelecionado.numeroMicrochip}" />
+					<p:outputLabel value="Sem Microchip" 
+						style="color: #999999; font-style: italic;"
+						rendered="#{empty consultaAnimalBean.animalSelecionado.numeroMicrochip}" />
+				</h:panelGroup>
+
 				<p:outputLabel value=" Situação: " style="font-weight: bold" />
 				<p:outputLabel value="#{consultaAnimalBean.animalSelecionado.status.descricao}" />
 
@@ -188,6 +197,22 @@
 							action="#{consultaAnimalBean.removerProduto}" process="@this" update="itensTable" />
 					</p:confirmDialog>
 				</p:tab>
+
+				<p:tab title="Microchip">
+
+					<p:panelGrid columns="2" id="painelMicro" layout="grid"
+						columnClasses="ui-grid-col-2, ui-grid-col-2"
+						styleClass="panelgrid-noborder">
+
+						<p:outputLabel value="Informe o Nº do microchip:" for="microchip" />
+
+						<p:inputText id="microchip"
+							value="#{consultaAnimalBean.animalSelecionado.numeroMicrochip}"
+							readonly="#{consultaAnimalBean.atendido}" />
+
+					</p:panelGrid>
+				</p:tab>
+
 				<p:tab title="Agendar Castração"
 					rendered="#{consultaAnimalBean.animalSelecionado.status.name() ne 'CASTRADO'}">
 

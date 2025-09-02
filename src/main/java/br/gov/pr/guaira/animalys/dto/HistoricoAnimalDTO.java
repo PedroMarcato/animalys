@@ -60,6 +60,7 @@ public class HistoricoAnimalDTO {
     private String contatoProprietario;
     private java.util.Calendar dataEntrada;
     private String fotoAnimal;
+    private String numeroMicrochip;
     private String escoreCorporal;
     private Double peso;
     private String fc;
@@ -70,7 +71,7 @@ public class HistoricoAnimalDTO {
     // Construtor exigido pelo JPQL
     public HistoricoAnimalDTO(Integer idAtendimento, String data, String procedimento, String responsavel, String nomeAnimal, String tipoAtendimento, String diagnostico, String modalidadeSolicitante, String status,
                               String idade, String sexo, String cor, String raca, String especie, String nomeProprietario, String cpfProprietario, String enderecoProprietario, String numeroEndereco, String bairroProprietario, String contatoProprietario, java.util.Calendar dataEntrada, String fotoAnimal,
-                              String escoreCorporal, Double peso, String fc, String fr, String temperatura, String tratamento) {
+                              String numeroMicrochip, String escoreCorporal, Double peso, String fc, String fr, String temperatura, String tratamento) {
         this.idAtendimento = idAtendimento;
         this.data = (data != null) ? data : "Sem registros";
         this.procedimento = (procedimento != null) ? procedimento : "Consulta Clínica";
@@ -94,6 +95,7 @@ public class HistoricoAnimalDTO {
         this.contatoProprietario = contatoProprietario;
     this.dataEntrada = dataEntrada;
     this.fotoAnimal = fotoAnimal;
+    this.numeroMicrochip = numeroMicrochip;
     this.escoreCorporal = escoreCorporal;
     this.peso = peso;
     this.fc = fc;
@@ -137,6 +139,7 @@ public class HistoricoAnimalDTO {
     public String getContatoProprietario() { return contatoProprietario; }
     public java.util.Calendar getDataEntrada() { return dataEntrada; }
     public String getFotoAnimal() { return fotoAnimal; }
+    public String getNumeroMicrochip() { return numeroMicrochip; }
     public String getEscoreCorporal() { return escoreCorporal; }
     public Double getPeso() { return peso; }
     public String getFc() { return fc; }

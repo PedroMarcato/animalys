@@ -211,16 +211,24 @@ public class CadastroFichaClinicaBean implements Serializable {
             novoAtendimento.setSolicitacao(solicitacao);
             novoAtendimento.setProfissional(profissionalSelecionado);
             novoAtendimento.setProcedimentos(new ArrayList<>(procedimentosSelecionados));
-            novoAtendimento.setItemLoteAtendimento(new ArrayList<>(itensLotes));
             
             // Atualiza microchip se informado
             if (numeroMicrochip != null && !numeroMicrochip.trim().isEmpty()) {
                 animalSelecionado.setNumeroMicrochip(numeroMicrochip.trim());
             }
             
-            // Salva animal e atendimento
+            // Salva animal e atendimento PRIMEIRO para gerar o ID
             animalService.salvar(animalSelecionado);
-            atendimentoService.salvar(novoAtendimento);
+            novoAtendimento = atendimentoService.salvar(novoAtendimento);
+            
+            // AGORA associa os medicamentos ao atendimento que já tem ID
+            if (!itensLotes.isEmpty()) {
+                for (ItemLoteAtendimento item : itensLotes) {
+                    item.setAtendimento(novoAtendimento);
+                }
+                novoAtendimento.setItemLoteAtendimento(new ArrayList<>(itensLotes));
+                atendimentoService.salvar(novoAtendimento); // Salva novamente com os medicamentos
+            }
             
             // Atualiza a lista de atendimentos
             atendimentosDoAnimal = atendimentos.atendimentosPorAnimal(animalSelecionado);

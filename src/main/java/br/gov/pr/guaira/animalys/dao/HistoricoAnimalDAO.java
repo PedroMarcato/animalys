@@ -7,6 +7,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import br.gov.pr.guaira.animalys.dto.HistoricoAnimalDTO;
 import br.gov.pr.guaira.animalys.entity.Atendimento;
+import br.gov.pr.guaira.animalys.entity.ItemLoteAtendimento;
 
 public class HistoricoAnimalDAO implements Serializable {
   
@@ -75,6 +76,19 @@ public class HistoricoAnimalDAO implements Serializable {
         a.getTemperatura() != null ? a.getTemperatura().toString() : "",
         a.getTratamento() != null ? a.getTratamento().getNome() : ""
       );
+      
+      // Buscar medicamentos do atendimento
+      String jpqlMedicamentos = "SELECT il FROM ItemLoteAtendimento il " +
+        "JOIN FETCH il.lote l " +
+        "JOIN FETCH l.produto p " +
+        "WHERE il.atendimento.idAtendimento = :idAtendimento";
+      
+      TypedQuery<ItemLoteAtendimento> queryMed = em.createQuery(jpqlMedicamentos, ItemLoteAtendimento.class);
+      queryMed.setParameter("idAtendimento", a.getIdAtendimento());
+      List<ItemLoteAtendimento> medicamentos = queryMed.getResultList();
+      
+      dto.setMedicamentos(medicamentos);
+      
       dtos.add(dto);
     }
     return dtos;

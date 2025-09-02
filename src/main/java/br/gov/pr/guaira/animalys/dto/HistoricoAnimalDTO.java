@@ -1,5 +1,7 @@
 package br.gov.pr.guaira.animalys.dto;
 
+import java.util.List;
+import br.gov.pr.guaira.animalys.entity.ItemLoteAtendimento;
 
 public class HistoricoAnimalDTO {
 
@@ -67,6 +69,9 @@ public class HistoricoAnimalDTO {
     private String fr;
     private String temperatura;
     private String tratamento;
+    
+    // Lista de medicamentos utilizados no atendimento
+    private List<ItemLoteAtendimento> medicamentos;
 
     // Construtor exigido pelo JPQL
     public HistoricoAnimalDTO(Integer idAtendimento, String data, String procedimento, String responsavel, String nomeAnimal, String tipoAtendimento, String diagnostico, String modalidadeSolicitante, String status,
@@ -146,4 +151,34 @@ public class HistoricoAnimalDTO {
     public String getFr() { return fr; }
     public String getTemperatura() { return temperatura; }
     public String getTratamento() { return tratamento; }
+    
+    public List<ItemLoteAtendimento> getMedicamentos() { return medicamentos; }
+    public void setMedicamentos(List<ItemLoteAtendimento> medicamentos) { this.medicamentos = medicamentos; }
+    
+    // Métodos auxiliares para facilitar o acesso aos dados dos medicamentos na página
+    public String getNomeProduto(ItemLoteAtendimento item) {
+        return item != null && item.getLote() != null && item.getLote().getProduto() != null 
+            ? item.getLote().getProduto().getNome() : "";
+    }
+    
+    public String getNumeroLote(ItemLoteAtendimento item) {
+        return item != null && item.getLote() != null 
+            ? item.getLote().getNumeroLote() : "";
+    }
+    
+    public String getDataValidadeFormatada(ItemLoteAtendimento item) {
+        if (item != null && item.getLote() != null && item.getLote().getValidade() != null) {
+            try {
+                java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
+                return sdf.format(item.getLote().getValidade().getTime());
+            } catch (Exception e) {
+                return "Data inválida";
+            }
+        }
+        return "";
+    }
+    
+    public Integer getQuantidadeMedicamento(ItemLoteAtendimento item) {
+        return item != null ? item.getQuantidade() : 0;
+    }
 }

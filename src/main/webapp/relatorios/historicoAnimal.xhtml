@@ -122,6 +122,26 @@
                     padding: 5px;
                 }
 
+                /* Estilos para tabela de medicamentos */
+                .medicamentos-table {
+                    width: 100%;
+                    margin-top: 10px;
+                    border-collapse: collapse;
+                }
+
+                .medicamentos-table th {
+                    background-color: #f8f9fa;
+                    padding: 8px;
+                    text-align: left;
+                    font-weight: bold;
+                    border: 1px solid #dee2e6;
+                }
+
+                .medicamentos-table td {
+                    padding: 6px 8px;
+                    border: 1px solid #dee2e6;
+                }
+
                 /* Estilos para impressão */
                 @media print {
 
@@ -168,6 +188,26 @@
                     .destaque-topico {
                         color: black !important;
                         font-weight: bold;
+                    }
+
+                    /* Estilos para tabela de medicamentos na impressão */
+                    .medicamentos-table {
+                        width: 100% !important;
+                        border-collapse: collapse !important;
+                        margin-top: 10px !important;
+                        font-size: 11px !important;
+                    }
+
+                    .medicamentos-table th,
+                    .medicamentos-table td {
+                        border: 1px solid black !important;
+                        padding: 4px !important;
+                        text-align: left !important;
+                    }
+
+                    .medicamentos-table th {
+                        background-color: #f0f0f0 !important;
+                        font-weight: bold !important;
                     }
                 }
             </style>
@@ -235,6 +275,35 @@
                             <h:outputText value="#{historico.statusSolicitacao}" />
 
                         </h:panelGrid>
+                        
+                        <!-- Medicamentos utilizados no atendimento -->
+                        <h:panelGroup rendered="#{not empty historico.medicamentos}">
+                            <br/>
+                            <h:outputText value="Medicamentos Utilizados:" styleClass="destaque-topico" style="font-size: 14px; margin-bottom: 10px; display: block;" />
+                            
+                            <p:dataTable value="#{historico.medicamentos}" var="medicamento" 
+                                        emptyMessage="Nenhum medicamento foi utilizado neste atendimento"
+                                        styleClass="medicamentos-table"
+                                        style="margin-top: 10px; font-size: 12px;">
+                                
+                                <p:column headerText="Medicamento">
+                                    <h:outputText value="#{historico.getNomeProduto(medicamento)}" />
+                                </p:column>
+                                
+                                <p:column headerText="Quantidade">
+                                    <h:outputText value="#{historico.getQuantidadeMedicamento(medicamento)}" />
+                                </p:column>
+                                
+                                <p:column headerText="Lote">
+                                    <h:outputText value="#{historico.getNumeroLote(medicamento)}" />
+                                </p:column>
+                                
+                                <p:column headerText="Validade">
+                                    <h:outputText value="#{historico.getDataValidadeFormatada(medicamento)}" />
+                                </p:column>
+                                
+                            </p:dataTable>
+                        </h:panelGroup>
                     </p:tab>
                 </p:accordionPanel>
             </p:panel>

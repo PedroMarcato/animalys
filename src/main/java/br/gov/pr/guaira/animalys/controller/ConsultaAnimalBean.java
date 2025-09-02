@@ -38,6 +38,7 @@ import br.gov.pr.guaira.animalys.service.AtendimentoService;
 import br.gov.pr.guaira.animalys.service.LoteService;
 import br.gov.pr.guaira.animalys.service.SolicitacaoService;
 import br.gov.pr.guaira.animalys.util.jsf.FacesUtil;
+import br.gov.pr.guaira.animalys.dto.ProfissionalSelectDTO;
 
 @Named
 @ViewScoped
@@ -101,7 +102,12 @@ public class ConsultaAnimalBean implements Serializable {
 	@Inject
 	private br.gov.pr.guaira.animalys.repository.Tratamentos tratamentosRepo;
 
+	@Inject
+	private br.gov.pr.guaira.animalys.repository.Profissionais profissionaisRepo;
+
 	private List<Tratamento> tratamentos;
+	private List<ProfissionalSelectDTO> profissionaisSelect;
+	private ProfissionalSelectDTO profissionalSelecionado;
 
 	public void inicializar() {
 		this.dataAtendimento = Calendar.getInstance();
@@ -112,6 +118,9 @@ public class ConsultaAnimalBean implements Serializable {
 
 		// Carrega tratamentos para o selectOneMenu
 		this.tratamentos = tratamentosRepo.tratamentosCadastrados();
+
+		// Carrega profissionais para o selectOneMenu usando DTOs
+		this.profissionaisSelect = profissionaisRepo.profissionaisParaSelect();
 
 		String confirmadoDuplicado = javax.faces.context.FacesContext.getCurrentInstance()
 			.getExternalContext().getRequestParameterMap().get("confirmadoDuplicado");
@@ -133,6 +142,18 @@ public class ConsultaAnimalBean implements Serializable {
 
 	public List<Tratamento> getTratamentos() {
 		return tratamentos;
+	}
+
+	public List<ProfissionalSelectDTO> getProfissionaisSelect() {
+		return profissionaisSelect;
+	}
+
+	public ProfissionalSelectDTO getProfissionalSelecionado() {
+		return profissionalSelecionado;
+	}
+
+	public void setProfissionalSelecionado(ProfissionalSelectDTO profissionalSelecionado) {
+		this.profissionalSelecionado = profissionalSelecionado;
 	}
 
 	public Atendimento getAtendimento() {
@@ -324,6 +345,12 @@ public class ConsultaAnimalBean implements Serializable {
 	}
 
 	public void salvar() {
+		// Validação do profissional selecionado
+		if (this.profissionalSelecionado == null || this.profissionalSelecionado.getIdProfissional() == null) {
+			FacesUtil.addErrorMessage("Selecione um profissional antes de salvar a consulta!");
+			return;
+		}
+		
 		this.atendimento.setItemLoteAtendimento(this.itensLotes);
 		this.atendimento.setTipoAtendimento(TipoAtendimento.CONSULTA);
 		this.atendimento.setData(this.dataAtendimento);
@@ -340,7 +367,17 @@ public class ConsultaAnimalBean implements Serializable {
 
 		this.atendimento.setAnimal(this.animalSelecionado);
 		this.atendimento.setSolicitacao(this.solicitacao);
-		this.atendimento.setProfissional(this.usuarioLogado.getUsuarioLogado().getUsuario().getProfissional());
+		
+		// Se um profissional foi selecionado no dropdown, busca o objeto completo
+		if (this.profissionalSelecionado != null && this.profissionalSelecionado.getIdProfissional() != null) {
+			br.gov.pr.guaira.animalys.entity.Profissional profissional = 
+				profissionaisRepo.porId(this.profissionalSelecionado.getIdProfissional());
+			this.atendimento.setProfissional(profissional);
+		} else {
+			// Fallback para o usuário logado
+			this.atendimento.setProfissional(this.usuarioLogado.getUsuarioLogado().getUsuario().getProfissional());
+		}
+		
 		this.atendimentoService.salvar(this.atendimento);
 
 		// Força o update da solicitação para FINALIZADO se o animal já está castrado

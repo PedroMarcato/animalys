@@ -20,6 +20,7 @@ import br.gov.pr.guaira.animalys.entity.Profissional;
 import br.gov.pr.guaira.animalys.filter.ProfissionalFilter;
 import br.gov.pr.guaira.animalys.service.NegocioException;
 import br.gov.pr.guaira.animalys.util.cdi.jpa.Transactional;
+import br.gov.pr.guaira.animalys.dto.ProfissionalSelectDTO;
 
 public class Profissionais implements Serializable {
 
@@ -40,7 +41,7 @@ public class Profissionais implements Serializable {
 			manager.flush();
 		} catch (PersistenceException e) {
 			e.printStackTrace();
-			throw new NegocioException("Esta Profissional n�o pode ser exclu�da!");
+			throw new NegocioException("Esta Profissional n�o pode ser exclu�da!");
 		}
 
 	}
@@ -90,5 +91,47 @@ public class Profissionais implements Serializable {
 		return this.manager
 				.createQuery("from Profissional where upper(nome) like :nome order by nome asc", Profissional.class)
 				.setParameter("nome", "%" + nome.toUpperCase() + "%").getResultList();
+	}
+
+	public List<Profissional> profissionaisCadastrados() {
+		TypedQuery<Profissional> query = this.manager.createQuery(
+			"SELECT DISTINCT p FROM Profissional p " +
+			"LEFT JOIN FETCH p.endereco " +
+			"LEFT JOIN FETCH p.contato " +
+			"LEFT JOIN FETCH p.profissao " +
+			"ORDER BY p.nome ASC", Profissional.class);
+		
+		List<Profissional> profissionais = query.getResultList();
+		
+		// Força a inicialização de todos os relacionamentos lazy para evitar LazyInitializationException
+		for (Profissional prof : profissionais) {
+			if (prof.getEndereco() != null) {
+				prof.getEndereco().getLogradouro(); // Força inicialização
+			}
+			if (prof.getContato() != null) {
+				prof.getContato().getTelefone(); // Força inicialização
+			}
+			if (prof.getProfissao() != null) {
+				prof.getProfissao().getNome(); // Força inicialização
+			}
+		}
+		
+		return profissionais;
+	}
+
+	public List<ProfissionalSelectDTO> profissionaisParaSelect() {
+		TypedQuery<Object[]> query = this.manager.createQuery(
+			"SELECT p.idProfissional, p.nome FROM Profissional p ORDER BY p.nome ASC", Object[].class);
+		
+		List<Object[]> results = query.getResultList();
+		List<ProfissionalSelectDTO> dtos = new ArrayList<>();
+		
+		for (Object[] result : results) {
+			Integer id = (Integer) result[0];
+			String nome = (String) result[1];
+			dtos.add(new ProfissionalSelectDTO(id, nome));
+		}
+		
+		return dtos;
 	}
 }

@@ -3,9 +3,28 @@
     xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template/Layout.xhtml">
 
     <ui:define name="content">
-        <h1 class="aw-page-title">Ficha Clínica: <span style="color: red;">#{historicoAnimalBean.nomeAnimal}</span></h1>
+
 
         <h:form>
+            <div class="topo">
+
+                <!-- Título -->
+                <h1 class="aw-page-title">Ficha Clínica: <span
+                        style="color: red;">#{historicoAnimalBean.nomeAnimal}</span></h1>
+
+                <!-- Botão de Impressão -->
+                <p:commandButton value="Imprimir Ficha Clínica" icon="fa fa-file-pdf-o" styleClass="ui-button-info"
+                    style="margin-bottom: 10px;" action="#{historicoAnimalBean.imprimirFichaClinica}" ajax="false" />
+
+            </div>
+            <!-- Botão de Impressão Simples 
+            <p:commandButton value="Impressão Simples" 
+                           icon="pi pi-file" 
+                           styleClass="ui-button-secondary"
+                           style="margin-bottom: 10px; margin-left: 10px;"
+                           onclick="window.print(); return false;" /> -->
+
+
             <!-- Ficha Clínica (dados principais) -->
             <p:panel header="Dados da Ficha Clínica">
                 <h:panelGrid columns="2" style="width:100%; vertical-align:top;">
@@ -70,6 +89,14 @@
             </p:panel>
 
             <style>
+                .topo {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: baseline;
+                    margin: 0;
+                    padding: 0;
+                }
+
                 .destaque-topico {
                     font-weight: bold;
                     color: #2a3f54;
@@ -83,6 +110,55 @@
                     flex: 1 1 30%;
                     box-sizing: border-box;
                     padding: 5px;
+                }
+
+                /* Estilos para impressão */
+                @media print {
+
+                    /* Ocultar botão de impressão e elementos desnecessários */
+                    .ui-button-info,
+                    .ui-panel-titlebar,
+                    .ui-accordionpanel-header {
+                        display: none !important;
+                    }
+
+                    /* Ajustar layout para impressão */
+                    body {
+                        font-size: 12px;
+                        color: black;
+                        background: white;
+                    }
+
+                    .aw-page-title {
+                        font-size: 18px;
+                        margin-bottom: 20px;
+                        text-align: center;
+                    }
+
+                    .ui-panel-content {
+                        border: none !important;
+                        padding: 10px !important;
+                    }
+
+                    /* Forçar quebra de página após cada atendimento */
+                    .ui-accordion-content {
+                        page-break-inside: avoid;
+                        margin-bottom: 15px;
+                        border: 1px solid #ccc;
+                        padding: 10px;
+                    }
+
+                    /* Ajustar imagem para impressão */
+                    img {
+                        max-width: 200px;
+                        height: auto;
+                    }
+
+                    /* Melhorar contraste para impressão */
+                    .destaque-topico {
+                        color: black !important;
+                        font-weight: bold;
+                    }
                 }
             </style>
 

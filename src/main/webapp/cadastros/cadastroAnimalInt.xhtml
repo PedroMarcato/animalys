@@ -146,7 +146,7 @@
 				</p:panelGrid>
 				<div class="setores"></div>
 				<h1 style="padding-left: 25px">Clique no link abaixo para
-					cadastrar o(s) animal(is)</h1>
+					cadastrar o animal</h1>
 				<h3>
 					<p:commandLink id="linkAnexo" oncomplete="PF('dlg').show()"
 						update="formAnexo:dlg" value="Clique aqui para adicionar!"
@@ -166,6 +166,9 @@
 							</p:column>
 							<p:column style="text-align: center;" headerText="Idade">
 								<h:outputText value="#{animal.idade}" />
+							</p:column>
+							<p:column style="text-align: center;" headerText="Cor">
+								<h:outputText value="#{animal.cor}" />
 							</p:column>
 							<p:column headerText="Foto" style="width: 100px;">
 						    <p:commandLink onclick="PF('imagemDialog').show();" 
@@ -283,6 +286,11 @@
 							<f:selectItems value="#{cadastroAnimalBean.sexos}" var="sexo"
 								itemValue="#{sexo}" itemLabel="#{sexo.descricao}" />
 						</p:selectOneMenu>
+						
+						<p:outputLabel value="Cor" for="cor" />
+						<p:inputText id="cor" value="#{cadastroAnimalBean.animal.cor}"
+							maxlength="30" placeholder="Ex: Branco, Preto, Caramelo..." />
+							
 						<p:outputLabel value="Foto" for="foto" />
 						<p:fileUpload id="foto"
     						fileUploadListener="#{cadastroAnimalBean.handleFotoUpload}"

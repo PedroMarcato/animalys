@@ -20,31 +20,28 @@
                 <p:column headerText="Sexo">
                     #{animal.sexo}
                 </p:column>
-                <p:column headerText="Ações" style="width: 145px;">
+                <p:column headerText="Ações" style="width: 108px;">
                     <h:link outcome="/relatorios/historicoAnimal.xhtml"
+                        title="Visualizar Ficha do Animal"
                         styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-left"
                         style="padding: .3em;">
                         <f:param name="animalId" value="#{animal.idAnimal}" />
                         <i style="margin: 0 5px;" class="fa fa-eye"></i>
                     </h:link>
                     <h:link styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-left"
+                    title="Editar Animal"
                         style="padding: .3em;">
                         <f:param name="animalId" value="#{animal.idAnimal}" />
                         <i style="margin: 0 5px;" class="fa fa-pencil"></i>
                     </h:link>
 
                     <p:commandLink class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-left"
+                        title="Visualizar Imagem do Animal"
                         onclick="PF('imagemDialog').show();"
                         action="#{pesquisaSolicitacoesBean.selecionarImagem(animal.foto)}" process="@this"
                         update="imagemDialogContent" style="padding: .3em;">
                         <i style="margin: 0 5px;" class="fa fa-picture-o"></i>
                     </p:commandLink>
-
-                    <h:link styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-left"
-                        style="padding: .3em;">
-                        <f:param name="animalId" value="#{animal.idAnimal}" />
-                        <i style="margin: 0 5px;" class="fa fa-trash"></i>
-                    </h:link>
                 </p:column>
             </p:dataTable>
         </h:form>

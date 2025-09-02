@@ -103,10 +103,6 @@
 					   <p:inputNumber id="temperatura" value="#{consultaAnimalBean.atendimento.temperatura}"
 						   readonly="#{consultaAnimalBean.atendido}" decimalPlaces="1" placeholder=" " />
 
-					   <p:outputLabel value="Cor:" for="cor" />
-					   <p:inputText id="cor" value="#{consultaAnimalBean.animalSelecionado.cor}"
-						   readonly="#{consultaAnimalBean.atendido}" maxlength="30" />
-
 					   <p:outputLabel value="Tratamento:" for="tratamento" />
 					   <p:selectOneMenu id="tratamento" value="#{consultaAnimalBean.atendimento.tratamento}" 
 						   converter="omnifaces.SelectItemsConverter" 
@@ -118,7 +114,7 @@
 				   </p:panelGrid>
 			   </p:tab>
 
-			   <p:tab title="Diagnóstico">
+			   <p:tab title="Sinais Clínicos/Tratamento">
 
 					<p:panelGrid columns="1" id="painel" layout="grid"
 						columnClasses="ui-grid-col-12" styleClass="panelgrid-noborder">

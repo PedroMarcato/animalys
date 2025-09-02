@@ -9,15 +9,25 @@
         <h1 class="aw-page-title">Proprietários</h1>
 
         <h:form id="form">
-            <p:panel header="Pesquisar:">
-                <p:inputText id="busca" value="#{historicoClienteBean.termoBusca}" placeholder="Digite o nome..." />
-                	<p:commandButton value="Buscar"
-                 					 actionListener="#{historicoClienteBean.pesquisar}"
-                 					 icon="fa fa-search"
-                 					 update="clientesTable busca"
-                 					 process="@form"
-                 					 styleClass="ui-button-success" />
-            </p:panel>
+            <p:toolbar>
+                <p:toolbarGroup>
+                    <p:panel header="Pesquisar:">
+                        <p:inputText id="busca" value="#{historicoClienteBean.termoBusca}" placeholder="Digite o nome..." />
+                        <p:commandButton value="Buscar"
+                                         actionListener="#{historicoClienteBean.pesquisar}"
+                                         icon="fa fa-search"
+                                         update="clientesTable busca"
+                                         process="@form"
+                                         styleClass="ui-button-success" />
+                    </p:panel>
+                </p:toolbarGroup>
+                <p:toolbarGroup align="right">
+                    <p:button value="Nova Ficha Clínica" 
+                             icon="fa fa-plus"
+                             outcome="/relatorios/cadastroFichaClinica.xhtml"
+                             styleClass="ui-button-info" />
+                </p:toolbarGroup>
+            </p:toolbar>
 
             <p:dataTable id="clientesTable" var="cliente" value="#{historicoClienteBean.clientes}" paginator="true" rows="10">
                 <p:column headerText="Nome">

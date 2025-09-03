@@ -2,7 +2,7 @@ package br.gov.pr.guaira.animalys.entity;
 
 public enum ModalidadeSolicitante {
 
-	PESSOA_FISICA("Pessoa Física"),
+	PESSOA_FISICA("Pessoa FÃ­sica"),
 	PROTETOR_INDIVIUAL_ANIMAIS("Protetor Individual de Animais");
 	
 	private ModalidadeSolicitante(String descricao) {

@@ -103,7 +103,7 @@ public class Endereco implements Serializable{
 	}
 	@Override
 	public String toString() {
-		return logradouro+ " N° " + numero + ", "
+		return logradouro+ " NÂ° " + numero + ", "
 				+ bairro + ", " + complemento;
 	}
 	

@@ -1,0 +1,97 @@
+<ui:composition template="/WEB-INF/template/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="titulo">Pesquisa de Animais</ui:define>
+
+	<ui:define name="content">
+		<h:form id="formPesquisa">
+			<h1 class="aw-page-title">Pesquisa de Animais</h1>
+
+			<p:messages closable="true" />
+			<p:toolbar>
+				<p:toolbarGroup>
+					<p:commandButton value="Pesquisar" icon="fa fa-search"
+						action="#{pesquisaAnimalBean.pesquisar()}" update="@form" />
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<div class="ui-fluid">
+				<p:panelGrid columns="2" layout="grid"
+					columnClasses="ui-grid-col-2, ui-grid-col-6"
+					styleClass="panelgrid-noborder" style="margin-top: 20px">
+
+					<p:outputLabel value="Nome do Animal" for="nomeAnimal" />
+					<p:inputText id="nomeAnimal"
+						value="#{pesquisaAnimalBean.animalFilter.nome}" />
+
+					<p:outputLabel value="CPF do Proprietário" for="cpfProprietario" />
+					<p:inputMask id="cpfProprietario" mask="999.999.999-99"
+						value="#{pesquisaAnimalBean.animalFilter.cpfProprietario}" />
+
+				</p:panelGrid>
+			</div>
+			
+			<p:dataTable id="animalTable" style="margin-top: 20px"
+				emptyMessage="Nenhum animal encontrado" rows="20"
+				paginator="true" paginatorAlwaysVisible="false"
+				paginatorPosition="bottom" reflow="true"
+				value="#{pesquisaAnimalBean.animaisFiltrados}" var="animal">
+				
+				<p:column headerText="Nome do Animal" style="height: 25px;">
+					<h:outputText value="#{animal.nome}" rendered="#{not empty animal.nome}" />
+					<h:outputText value="Sem Registros" style="color: gray; font-style: italic;" rendered="#{empty animal.nome}" />
+				</p:column>
+				
+				<p:column headerText="Proprietário">
+					<h:outputText value="#{animal.proprietario.nome}" rendered="#{not empty animal.proprietario.nome}" />
+					<h:outputText value="Sem Registros" style="color: gray; font-style: italic;" rendered="#{empty animal.proprietario.nome}" />
+				</p:column>
+				
+				<p:column headerText="CPF do Proprietário">
+					<h:outputText value="#{animal.proprietario.cpf}" rendered="#{not empty animal.proprietario.cpf}" />
+					<h:outputText value="Sem Registros" style="color: gray; font-style: italic;" rendered="#{empty animal.proprietario.cpf}" />
+				</p:column>
+				
+				<p:column headerText="Sexo">
+					<h:outputText value="#{animal.sexo}" rendered="#{not empty animal.sexo}" />
+					<h:outputText value="Sem Registros" style="color: gray; font-style: italic;" rendered="#{empty animal.sexo}" />
+				</p:column>
+				
+				<p:column headerText="Idade">
+					<h:outputText value="#{animal.idade}" rendered="#{not empty animal.idade}" />
+					<h:outputText value="Sem Registros" style="color: gray; font-style: italic;" rendered="#{empty animal.idade}" />
+				</p:column>
+				
+				<p:column headerText="Cor">
+					<h:outputText value="#{animal.cor}" rendered="#{not empty animal.cor}" />
+					<h:outputText value="Sem Registros" style="color: gray; font-style: italic;" rendered="#{empty animal.cor}" />
+				</p:column>
+				
+				<p:column headerText="Castrado">
+					<h:outputText value="#{animal.castrado ? 'Sim' : 'Não'}" />
+				</p:column>
+				
+				<p:column headerText="Vacinado">
+					<h:outputText value="#{animal.vacinado ? 'Sim' : 'Não'}" />
+				</p:column>
+				
+				<p:column headerText="Data de Entrada">
+					<h:outputText value="#{animal.dataEntrada.time}" rendered="#{not empty animal.dataEntrada}">
+						<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Sao_Paulo" />
+					</h:outputText>
+					<h:outputText value="Sem Registros" style="color: gray; font-style: italic;" rendered="#{empty animal.dataEntrada}" />
+				</p:column>
+				
+				<p:column headerText="Celular do Proprietário">
+					<h:outputText value="#{animal.proprietario.contato.celular}" rendered="#{not empty animal.proprietario.contato.celular}" />
+					<h:outputText value="Sem Registros" style="color: gray; font-style: italic;" rendered="#{empty animal.proprietario.contato.celular}" />
+				</p:column>
+				
+			</p:dataTable>
+		</h:form>
+	</ui:define>
+</ui:composition>

@@ -80,6 +80,11 @@ public class Animais implements Serializable {
 					"%" + filtro.getNomeProprietario().toLowerCase() + "%"));
 		}
 
+		if (StringUtils.isNotBlank(filtro.getCpfProprietario())) {
+			predicates.add(builder.like(builder.lower(animalRoot.get("proprietario").get("cpf")),
+					"%" + filtro.getCpfProprietario().toLowerCase() + "%"));
+		}
+
 		if (StringUtils.isNotBlank(filtro.getNome())) {
 			predicates.add(
 					builder.like(builder.lower(animalRoot.get("nome")), "%" + filtro.getNome().toLowerCase() + "%"));

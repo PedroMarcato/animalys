@@ -1,0 +1,86 @@
+<ui:composition template="/WEB-INF/template/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="titulo">Pesquisa de Proprietários</ui:define>
+
+	<ui:define name="content">
+		<h:form id="formPesquisa">
+			<h1 class="aw-page-title">Pesquisa de Proprietários</h1>
+
+			<p:messages closable="true" />
+			<p:toolbar>
+				<p:toolbarGroup>
+					<p:commandButton value="Pesquisar" icon="fa fa-search"
+						action="#{pesquisaProprietarioBean.pesquisar()}" update="@form" />
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<div class="ui-fluid">
+				<p:panelGrid columns="2" layout="grid"
+					columnClasses="ui-grid-col-2, ui-grid-col-6"
+					styleClass="panelgrid-noborder" style="margin-top: 20px">
+
+					<p:outputLabel value="Nome" for="nome" />
+					<p:inputText id="nome"
+						value="#{pesquisaProprietarioBean.proprietarioFilter.nome}" />
+
+					<p:outputLabel value="CPF" for="cpf" />
+					<p:inputMask id="cpf" mask="999.999.999-99"
+						value="#{pesquisaProprietarioBean.proprietarioFilter.cpf}" />
+
+				</p:panelGrid>
+			</div>
+			
+			<p:dataTable id="proprietarioTable" style="margin-top: 20px"
+				emptyMessage="Nenhum proprietário encontrado" rows="20"
+				paginator="true" paginatorAlwaysVisible="false"
+				paginatorPosition="bottom" reflow="true"
+				value="#{pesquisaProprietarioBean.proprietariosFiltrados}" var="prop">
+				
+				<p:column headerText="Nome">
+					<h:outputText value="#{prop.nome}" rendered="#{not empty prop.nome}" />
+					<h:outputText value="Sem Registros" style="color: gray; font-style: italic;" rendered="#{empty prop.nome}" />
+				</p:column>
+				
+				<p:column headerText="CPF">
+					<h:outputText value="#{prop.cpf}" rendered="#{not empty prop.cpf}" />
+					<h:outputText value="Sem Registros" style="color: gray; font-style: italic;" rendered="#{empty prop.cpf}" />
+				</p:column>
+				
+				<p:column headerText="RG">
+					<h:outputText value="#{prop.rg}" rendered="#{not empty prop.rg}" />
+					<h:outputText value="Sem Registros" style="color: gray; font-style: italic;" rendered="#{empty prop.rg}" />
+				</p:column>
+				
+				<p:column headerText="NIS">
+					<h:outputText value="#{prop.nis}" rendered="#{not empty prop.nis}" />
+					<h:outputText value="Sem Registros" style="color: gray; font-style: italic;" rendered="#{empty prop.nis}" />
+				</p:column>
+				
+				<p:column headerText="Data de Nascimento">
+					<h:outputText value="#{prop.dataNascimento.time}" rendered="#{not empty prop.dataNascimento}">
+						<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Sao_Paulo" />
+					</h:outputText>
+					<h:outputText value="Sem Registros" style="color: gray; font-style: italic;" rendered="#{empty prop.dataNascimento}" />
+				</p:column>
+				
+				<p:column headerText="Celular">
+					<h:outputText value="#{prop.contato.celular}" rendered="#{not empty prop.contato.celular}" />
+					<h:outputText value="Sem Registros" style="color: gray; font-style: italic;" rendered="#{empty prop.contato.celular}" />
+				</p:column>
+				
+				<p:column headerText="Endereço">
+					<h:outputText value="#{prop.endereco.logradouro}, #{prop.endereco.numero} - #{prop.endereco.bairro}" 
+						rendered="#{not empty prop.endereco.logradouro and not empty prop.endereco.bairro}" />
+					<h:outputText value="Sem Registros" style="color: gray; font-style: italic;" 
+						rendered="#{empty prop.endereco.logradouro or empty prop.endereco.bairro}" />
+				</p:column>
+				
+			</p:dataTable>
+		</h:form>
+	</ui:define>
+</ui:composition>

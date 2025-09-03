@@ -13,6 +13,7 @@ public class AnimalFilter implements Serializable {
 
 	private String nome;
 	private String nomeProprietario;
+	private String cpfProprietario;
 	private Raca raca;
 	private Date dataInicio;
 	private Date datafim;
@@ -40,6 +41,14 @@ public class AnimalFilter implements Serializable {
 
 	public void setNomeProprietario(String nomeProprietario) {
 		this.nomeProprietario = nomeProprietario;
+	}
+
+	public String getCpfProprietario() {
+		return cpfProprietario;
+	}
+
+	public void setCpfProprietario(String cpfProprietario) {
+		this.cpfProprietario = cpfProprietario;
 	}
 
 	public Raca getRaca() {

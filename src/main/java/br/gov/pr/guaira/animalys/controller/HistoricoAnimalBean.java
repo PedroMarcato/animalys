@@ -32,6 +32,8 @@ import com.itextpdf.layout.borders.Border;
 
 import br.gov.pr.guaira.animalys.dao.HistoricoAnimalDAO;
 import br.gov.pr.guaira.animalys.dto.HistoricoAnimalDTO;
+import br.gov.pr.guaira.animalys.repository.Animais;
+import br.gov.pr.guaira.animalys.entity.Animal;
 
 @Named
 @ViewScoped
@@ -41,6 +43,9 @@ public class HistoricoAnimalBean implements Serializable {
 
     @Inject
     private HistoricoAnimalDAO historicoAnimalDAO;
+    
+    @Inject
+    private Animais animais;
 
     private Integer idAnimal;
     private List<HistoricoAnimalDTO> lista;
@@ -96,6 +101,20 @@ public class HistoricoAnimalBean implements Serializable {
             return lista.get(0);
         }
         return null;
+    }
+    
+    // Método para verificar se o animal é castrado baseado no status real do animal
+    public boolean isAnimalCastrado() {
+        if (idAnimal != null) {
+            try {
+                Animal animal = animais.porId(idAnimal);
+                return animal != null && animal.getStatus() != null && 
+                       "CASTRADO".equals(animal.getStatus().name());
+            } catch (Exception e) {
+                return false;
+            }
+        }
+        return false;
     }
 
     public void excluir(Integer idAtendimento) {

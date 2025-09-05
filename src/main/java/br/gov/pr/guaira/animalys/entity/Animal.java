@@ -206,6 +206,14 @@ public class Animal implements Serializable {
     this.raca = raca;
   }
 
+  public Especie getEspecie() {
+    return especie;
+  }
+
+  public void setEspecie(Especie especie) {
+    this.especie = especie;
+  }
+
   public Status getStatus() {
     return status;
   }

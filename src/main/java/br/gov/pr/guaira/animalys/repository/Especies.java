@@ -4,7 +4,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
@@ -20,6 +22,8 @@ import br.gov.pr.guaira.animalys.filter.EspecieFilter;
 import br.gov.pr.guaira.animalys.service.NegocioException;
 import br.gov.pr.guaira.animalys.util.cdi.jpa.Transactional;
 
+@Named
+@RequestScoped
 public class Especies implements Serializable{
 
 	private static final long serialVersionUID = 1L;
@@ -39,7 +43,7 @@ public class Especies implements Serializable{
 			manager.flush();
 		} catch (PersistenceException e) {
 			e.printStackTrace();
-			throw new NegocioException("Esta Espécie não pode ser excluída!");
+			throw new NegocioException("Esta Espï¿½cie nï¿½o pode ser excluï¿½da!");
 		}
 
 	}

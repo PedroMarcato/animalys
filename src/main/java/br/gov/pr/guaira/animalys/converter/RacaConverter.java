@@ -6,6 +6,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
+import javax.faces.convert.FacesConverter;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -15,6 +16,7 @@ import br.gov.pr.guaira.animalys.repository.Racas;
 
 
 @Named("racaConverter")
+@FacesConverter(value = "racaConverter", forClass = Raca.class)
 @RequestScoped
 public class RacaConverter implements Converter {
 
@@ -23,8 +25,12 @@ public class RacaConverter implements Converter {
 
     @Override
     public Object getAsObject(FacesContext context, UIComponent component, String value) {
-        if (value != null && !"".equals(value)) {
-            return racas.porId(Integer.parseInt(value));
+        if (value != null && !"".equals(value.trim())) {
+            try {
+                return racas.porId(Integer.parseInt(value));
+            } catch (NumberFormatException e) {
+                return null;
+            }
         }
         return null;
     }

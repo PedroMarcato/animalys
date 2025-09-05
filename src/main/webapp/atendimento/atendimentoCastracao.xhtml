@@ -6,7 +6,8 @@
 	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui">
 
 	<f:metadata>
-		<f:viewParam name="animal" value="#{atendimentoCastracaoBean.animal}" />
+		<f:viewParam name="animal" value="#{atendimentoCastracaoBean.animal}" 
+			converter="animalConverter" />
 		<f:viewAction action="#{atendimentoCastracaoBean.inicializar()}" />
 	</f:metadata>
 	<ui:define name="titulo">Castração</ui:define>

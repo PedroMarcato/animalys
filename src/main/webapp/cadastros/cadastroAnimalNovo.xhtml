@@ -1,0 +1,200 @@
+<ui:composition template="/WEB-INF/template/Layout.xhtml" xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui">
+
+    <ui:define name="titulo">#{cadastroAnimalNovoBean.edicao ? 'Edição de animal' : 'Novo animal'}</ui:define>
+
+    <ui:define name="content">
+        <f:metadata>
+            <f:viewAction action="#{cadastroAnimalNovoBean.inicializar}" />
+        </f:metadata>
+
+        <h:form id="formCadastroAnimal">
+            <h1 class="aw-page-title">#{cadastroAnimalNovoBean.edicao ? 'Editar Animal' : 'Novo Animal'}</h1>
+
+            <p:messages autoUpdate="true" closable="true" />
+
+            <p:toolbar style="margin-top: 20px">
+                <p:toolbarGroup>
+                    <p:commandButton value="Salvar" id="botao-salvar" action="#{cadastroAnimalNovoBean.salvar}"
+                        update="@form" />
+                </p:toolbarGroup>
+                <p:toolbarGroup align="right">
+                    <p:button value="Pesquisa" outcome="/cadastros/pesquisaAnimal" />
+                </p:toolbarGroup>
+            </p:toolbar>
+
+            <div class="animal-form-container" style="display: flex; gap: 20px; margin-top: 0.5px;">
+                <!-- Coluna principal com os campos -->
+                <div class="animal-form-main" style="flex: 2;">
+                    <p:panelGrid columns="2" id="painel-animal" style="width: 100%"
+                        columnClasses="rotulo, campo">
+
+                        <p:outputLabel value="N°" for="codigo" />
+                        <p:inputText id="codigo" size="20" readonly="true" value="#{cadastroAnimalNovoBean.animal.idAnimal}" />
+
+                        <p:outputLabel value="Nome" for="nome" />
+                        <p:inputText id="nome" size="60" maxlength="80" required="true"
+                            value="#{cadastroAnimalNovoBean.animal.nome}" />
+
+                <p:outputLabel value="Proprietário" for="proprietario" />
+                <h:panelGroup id="painel-proprietario">
+                    <p:selectOneMenu id="proprietario" value="#{cadastroAnimalNovoBean.animal.proprietario}"
+                        converter="proprietarioConverter" required="true" style="width: 300px;"
+                        disabled="#{cadastroAnimalNovoBean.edicao}" 
+                        styleClass="#{cadastroAnimalNovoBean.edicao ? 'disabled-field' : ''}">
+                        <f:selectItem itemLabel="Selecione o proprietário" />
+                        <f:selectItems value="#{cadastroAnimalNovoBean.proprietariosCadastrados}" var="proprietario"
+                            itemValue="#{proprietario}" itemLabel="#{proprietario.nome} - CPF: #{proprietario.cpf}" />
+                    </p:selectOneMenu>
+                    <p:commandButton value="Pesquisar" type="button" onclick="PF('dlgPesquisaProprietario').show();"
+                        style="margin-left: 10px;" rendered="#{!cadastroAnimalNovoBean.edicao}" />
+                </h:panelGroup>
+
+                <p:outputLabel value="Espécie" for="especie" />
+                <p:selectOneMenu id="especie" value="#{cadastroAnimalNovoBean.animal.especie}"
+                    converter="especieConverter" required="true">
+                    <f:selectItem itemLabel="Selecione a espécie" />
+                    <f:selectItems value="#{cadastroAnimalNovoBean.especiesCadastradas}" var="especie"
+                        itemValue="#{especie}" itemLabel="#{especie.nome}" />
+                    <p:ajax listener="#{cadastroAnimalNovoBean.especieAlterada}" update="raca" />
+                </p:selectOneMenu>
+
+                <p:outputLabel value="Raça" for="raca" />
+                <p:selectOneMenu id="raca" value="#{cadastroAnimalNovoBean.animal.raca}" converter="racaConverter"
+                    required="true">
+                    <f:selectItem itemLabel="Selecione a raça" />
+                    <f:selectItems value="#{cadastroAnimalNovoBean.racasCadastradas}" var="raca" itemValue="#{raca}"
+                        itemLabel="#{raca.nome}" />
+                </p:selectOneMenu>
+
+                <p:outputLabel value="Sexo" for="sexo" />
+                <p:selectOneMenu id="sexo" value="#{cadastroAnimalNovoBean.animal.sexo}">
+                    <f:selectItem itemLabel="Selecione o sexo" />
+                    <f:selectItems value="#{cadastroAnimalNovoBean.sexos}" var="sexo" itemValue="#{sexo}"
+                        itemLabel="#{sexo.descricao}" />
+                </p:selectOneMenu>
+
+                <p:outputLabel value="Idade" for="idade" />
+                <p:inputText id="idade" size="30" maxlength="20" value="#{cadastroAnimalNovoBean.animal.idade}"
+                    placeholder="Ex: 2 anos, 6 meses" />
+
+                <p:outputLabel value="Cor/Pelagem" for="cor" />
+                <p:inputText id="cor" size="30" maxlength="50" value="#{cadastroAnimalNovoBean.animal.cor}" />
+
+                <p:outputLabel value="Data de Entrada" for="dataEntrada" />
+                <p:calendar id="dataEntrada" value="#{cadastroAnimalNovoBean.dataEntrada}" 
+                            pattern="dd/MM/yyyy HH:mm" mask="true" showOn="button" 
+                            timeOnly="false" timeZone="America/Sao_Paulo" 
+                            showTime="true" />
+
+                <p:outputLabel value="Status" for="status" />
+                <p:selectOneMenu id="status" value="#{cadastroAnimalNovoBean.animal.status}">
+                    <f:selectItem itemLabel="Selecione o status" />
+                    <f:selectItems value="#{cadastroAnimalNovoBean.statusList}" var="status" itemValue="#{status}"
+                        itemLabel="#{status.descricao}" />
+                    <p:ajax update="datacastracao-panel-label,datacastracao-panel" />
+                </p:selectOneMenu>
+
+                <h:panelGroup id="datacastracao-panel-label">
+                    <p:outputLabel value="Data da Castração" for="dataCastracao" 
+                                   rendered="#{cadastroAnimalNovoBean.animal.status != null and cadastroAnimalNovoBean.animal.status.name() eq 'CASTRADO'}" />
+                </h:panelGroup>
+                <h:panelGroup id="datacastracao-panel">
+                    <p:calendar id="dataCastracao" value="#{cadastroAnimalNovoBean.dataCastracao}" 
+                                pattern="dd/MM/yyyy HH:mm" mask="true" showOn="button"
+                                timeOnly="false" timeZone="America/Sao_Paulo" showTime="true" 
+                                rendered="#{cadastroAnimalNovoBean.animal.status != null and cadastroAnimalNovoBean.animal.status.name() eq 'CASTRADO'}" />
+                </h:panelGroup>
+
+                    </p:panelGrid>
+                </div>
+
+                <!-- Coluna lateral com microchip e foto -->
+                <div style="flex: 1; padding-left: 20px;">
+                    <p:panelGrid columns="1" style="width: 100%;">
+                        
+                        <p:outputLabel value="Microchip" for="microchip" style="font-weight: bold;" />
+                        <p:inputText id="microchip" size="30" maxlength="50"
+                            value="#{cadastroAnimalNovoBean.animal.numeroMicrochip}" style="width: 100%;" />
+
+                        <p:outputLabel value="Foto do Animal" for="foto" style="font-weight: bold; margin-top: 20px;" />
+                        <h:panelGroup>
+                            <p:fileUpload title="Foto Do Animal" id="foto" fileUploadListener="#{cadastroAnimalNovoBean.upload}" mode="advanced"
+                                dragDropSupport="false" update="foto-animal" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"
+                                invalidFileMessage="Formato de arquivo não suportado. Apenas GIF, JPEG e PNG são aceitos."
+                                sizeLimit="5242880" invalidSizeMessage="Tamanho do arquivo muito grande. Máximo 5MB."
+                                auto="true" style="width: 100%;" />
+                            
+                            <h:panelGroup id="foto-animal" style="display: block; margin-top: 10px; text-align: center;">
+                                <!-- Exibe a foto do animal se existir -->
+                                <h:panelGroup rendered="#{not empty cadastroAnimalNovoBean.animal.fotos}">
+                                    <img src="/uploads/#{cadastroAnimalNovoBean.animal.fotos[0].nomeArquivo}" 
+                                        width="auto" height="200" style="border: 1px solid #ccc; border-radius: 4px; object-fit: cover;" />
+                                    <br />
+                                    <p:commandButton value="Remover Foto" action="#{cadastroAnimalNovoBean.removerFoto(cadastroAnimalNovoBean.animal.fotos[0])}"
+                                        update="@form" style="margin-top: 5px;" styleClass="ui-button-danger"
+                                        onclick="return confirm('Deseja realmente remover esta foto?');" />
+                                </h:panelGroup>
+                                
+                                <!-- Foto padrão quando não há foto -->
+                                <h:panelGroup rendered="#{empty cadastroAnimalNovoBean.animal.fotos}">
+                                    <img src="/uploads/no_image.jpg" width="auto" height="200" 
+                                        style="border: 1px solid #ccc; border-radius: 4px; opacity: 0.7; object-fit: cover;" />
+                                    <h:outputText value="Nenhuma foto cadastrada" 
+                                        style="font-style: italic; color: #666; margin-top: 10px; display: block;" />
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </h:panelGroup>
+                        
+                    </p:panelGrid>
+                </div>
+            </div>
+        </h:form>
+
+        <!-- Modal de Pesquisa de Proprietário -->
+        <p:dialog header="Pesquisar Proprietário" widgetVar="dlgPesquisaProprietario" modal="true" height="400"
+            width="700" resizable="false">
+            <h:form id="formPesquisaProprietario">
+                <p:panelGrid columns="2" style="width: 100%;" columnClasses="rotulo, campo">
+                    <p:outputLabel value="Nome:" for="nomeProprietario" />
+                    <p:inputText id="nomeProprietario" value="#{cadastroAnimalNovoBean.nomeProprietarioFiltro}"
+                        size="30" />
+
+                    <p:outputLabel value="CPF:" for="cpfProprietario" />
+                    <p:inputMask id="cpfProprietario" value="#{cadastroAnimalNovoBean.cpfProprietarioFiltro}"
+                        mask="999.999.999-99" size="20" />
+                </p:panelGrid>
+
+                <p:toolbar style="margin-top: 10px;">
+                    <p:toolbarGroup>
+                        <p:commandButton value="Pesquisar" action="#{cadastroAnimalNovoBean.pesquisarProprietarios}"
+                            update="tabelaProprietarios" />
+                        <p:commandButton value="Limpar" action="#{cadastroAnimalNovoBean.limparFiltroProprietario}"
+                            update="@form" process="@this" />
+                    </p:toolbarGroup>
+                </p:toolbar>
+
+                <p:dataTable id="tabelaProprietarios" value="#{cadastroAnimalNovoBean.proprietariosFiltrados}"
+                    var="proprietario" style="margin-top: 10px;" emptyMessage="Nenhum proprietário encontrado" rows="10"
+                    paginator="true">
+                    <p:column headerText="Nome">
+                        <h:outputText value="#{proprietario.nome}" />
+                    </p:column>
+                    <p:column headerText="CPF">
+                        <h:outputText value="#{proprietario.cpf}" />
+                    </p:column>
+                    <p:column headerText="Telefone">
+                        <h:outputText value="#{proprietario.contato.telefone}" />
+                    </p:column>
+                    <p:column headerText="Ações" style="width: 100px; text-align: center;">
+                        <p:commandButton value="Selecionar"
+                            action="#{cadastroAnimalNovoBean.selecionarProprietario(proprietario)}"
+                            update=":formCadastroAnimal:painel-proprietario"
+                            oncomplete="PF('dlgPesquisaProprietario').hide();" />
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+        </p:dialog>
+    </ui:define>
+</ui:composition>

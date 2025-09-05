@@ -37,7 +37,7 @@ public class Cidades implements Serializable{
 			manager.flush();
 		}catch(PersistenceException e){
 			e.printStackTrace();
-			throw new NegocioException("Cidade n„o pode ser excluÌdo!");
+			throw new NegocioException("Cidade n√£o pode ser exclu√≠da!");
 		}
 		
 	}
@@ -64,8 +64,10 @@ public class Cidades implements Serializable{
 	}
 	
 	public List<Cidade> porNome(String nome) {
-		return this.manager.createQuery("from Cidade " +
-				"where upper(nome) like :nome", Cidade.class)
+		return this.manager.createQuery("select c from Cidade c " +
+				"join fetch c.estado e " +
+				"where upper(c.nome) like :nome " +
+				"order by c.nome", Cidade.class)
 				.setParameter("nome", nome.toUpperCase() + "%")
 				.getResultList();
 	}

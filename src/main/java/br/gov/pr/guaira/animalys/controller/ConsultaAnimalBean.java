@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -109,6 +110,14 @@ public class ConsultaAnimalBean implements Serializable {
 	private List<ProfissionalSelectDTO> profissionaisSelect;
 	private ProfissionalSelectDTO profissionalSelecionado;
 
+	@PostConstruct
+	public void init() {
+		// Garante que o eventModel seja sempre inicializado
+		if (this.eventModel == null) {
+			this.eventModel = new DefaultScheduleModel();
+		}
+	}
+
 	public void inicializar() {
 		this.dataAtendimento = Calendar.getInstance();
 		this.eventModel = new DefaultScheduleModel();
@@ -173,6 +182,9 @@ public class ConsultaAnimalBean implements Serializable {
 	}
 
 	public ItemLoteAtendimento getItemLoteSelecionado() {
+		if (itemLoteSelecionado == null) {
+			itemLoteSelecionado = new ItemLoteAtendimento();
+		}
 		return itemLoteSelecionado;
 	}
 
@@ -309,15 +321,37 @@ public class ConsultaAnimalBean implements Serializable {
 	}
 
 	public void adicionarLote() {
+		
+		// Validações de entrada
+		if (this.quantidade == null || this.quantidade <= 0) {
+			FacesUtil.addErrorMessage("Informe uma quantidade válida!");
+			return;
+		}
+		
+		if (this.itemLoteSelecionado == null) {
+			FacesUtil.addErrorMessage("Selecione um medicamento!");
+			return;
+		}
+		
+		if (this.itemLoteSelecionado.getLote() == null) {
+			FacesUtil.addErrorMessage("Lote do medicamento não encontrado!");
+			return;
+		}
 
 		if (this.quantidade <= this.itemLoteSelecionado.getLote().getQuantidade()) {
 
 			if (!this.confereItens()) {
-				this.itemLoteSelecionado.setQuantidade(this.quantidade);
+				// Criar uma nova instância para adicionar à lista
+				ItemLoteAtendimento novoItem = new ItemLoteAtendimento();
+				novoItem.setLote(this.itemLoteSelecionado.getLote());
+				novoItem.setQuantidade(this.quantidade);
+				novoItem.setAtendimento(this.atendimento);
+				
+				// Atualizar o estoque do lote
 				this.itemLoteSelecionado.getLote()
 						.setQuantidade(this.itemLoteSelecionado.getLote().getQuantidade() - this.quantidade);
-				this.itemLoteSelecionado.setAtendimento(this.atendimento);
-				this.itensLotes.add(this.itemLoteSelecionado);
+				
+				this.itensLotes.add(novoItem);
 				this.limparAposAdicionar();
 			} else {
 				FacesUtil.addErrorMessage("Este produto já foi adicionado!");
@@ -395,9 +429,11 @@ public class ConsultaAnimalBean implements Serializable {
 		this.animaisAgendadosCastracao = this.animais.animaisAgendadoCastracao(Status.AGENDADOCASTRACAO);
 
 		for (Animal animal : this.animaisAgendadosCastracao) {
-
-			this.eventModel.addEvent(new DefaultScheduleEvent(animal.getNome(),
-					animal.getDataAgendaCastracao().getTime(), animal.getDataAgendaCastracao().getTime()));
+			// Verificar se a data de agenda de castração não é null
+			if (animal.getDataAgendaCastracao() != null) {
+				this.eventModel.addEvent(new DefaultScheduleEvent(animal.getNome(),
+						animal.getDataAgendaCastracao().getTime(), animal.getDataAgendaCastracao().getTime()));
+			}
 		}
 	}
 
@@ -468,10 +504,14 @@ public class ConsultaAnimalBean implements Serializable {
 
 		if (this.animalSelecionado.getDataAgendaCastracao() == null) {
 
-			this.eventModel.addEvent(event);
-
-			this.dataAgendaCastracaoCalendar.setTime(this.event.getStartDate());
-			this.animalSelecionado.setDataAgendaCastracao(this.dataAgendaCastracaoCalendar);
+			// Verificar se o event não é null antes de usar
+			if (this.event != null) {
+				this.eventModel.addEvent(event);
+				this.dataAgendaCastracaoCalendar.setTime(this.event.getStartDate());
+				this.animalSelecionado.setDataAgendaCastracao(this.dataAgendaCastracaoCalendar);
+			} else {
+				FacesUtil.addErrorMessage("Erro: evento não foi criado corretamente!");
+			}
 
 		} else {
 			FacesUtil.addErrorMessage("A data de castração já foi informada para este animal!");

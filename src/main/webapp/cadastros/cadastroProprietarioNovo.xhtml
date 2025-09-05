@@ -1,0 +1,111 @@
+<ui:composition template="/WEB-INF/template/Layout.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="titulo">#{cadastroProprietarioBean.edicao ? 'Edição de proprietário' : 'Novo proprietário'}</ui:define>
+
+    <ui:define name="content">
+        <f:metadata>
+            <f:viewAction action="#{cadastroProprietarioBean.inicializar}" />
+        </f:metadata>
+
+        <h:form>
+            <h1>#{cadastroProprietarioBean.edicao ? 'Edição de proprietário' : 'Novo proprietário'}</h1>
+
+            <p:messages autoUpdate="true" closable="true" />
+
+            <p:toolbar style="margin-top: 20px">
+                <p:toolbarGroup>
+                    <p:commandButton value="Salvar" id="botao-salvar"
+                                     action="#{cadastroProprietarioBean.salvar}" update="@form" />
+                </p:toolbarGroup>
+                <p:toolbarGroup align="right">
+                    <p:button value="Pesquisa" outcome="/cadastros/pesquisaProprietario" />
+                </p:toolbarGroup>
+            </p:toolbar>
+
+            <p:panelGrid columns="2" id="painel-proprietario" style="width: 100%; margin-top: 20px"
+                         columnClasses="rotulo, campo">
+
+                <p:outputLabel value="Código" for="codigo" />
+                <p:inputText id="codigo" size="20" readonly="true"
+                             value="#{cadastroProprietarioBean.proprietario.idProprietario}" />
+
+                <p:outputLabel value="Nome *" for="nome" />
+                <p:inputText id="nome" size="60" maxlength="80" required="true"
+                             value="#{cadastroProprietarioBean.proprietario.nome}" />
+
+                <p:outputLabel value="CPF *" for="cpf" />
+                <p:inputMask id="cpf" mask="999.999.999-99" size="20" required="true"
+                             value="#{cadastroProprietarioBean.proprietario.cpf}" />
+
+                <p:outputLabel value="RG" for="rg" />
+                <p:inputText id="rg" size="20" maxlength="20"
+                             value="#{cadastroProprietarioBean.proprietario.rg}" />
+
+                <p:outputLabel value="Data de Nascimento" for="dataNascimento" />
+                <p:calendar id="dataNascimento" value="#{cadastroProprietarioBean.dataNascimento}"
+                            pattern="dd/MM/yyyy" mask="true" />
+
+                <p:outputLabel value="NIS" for="nis" />
+                <p:inputText id="nis" size="20" maxlength="20"
+                             value="#{cadastroProprietarioBean.proprietario.nis}" />
+            </p:panelGrid>
+
+            <!-- Dados de Contato -->
+            <h3>Contato</h3>
+            <p:panelGrid columns="2" style="width: 100%"
+                         columnClasses="rotulo, campo">
+
+                <p:outputLabel value="E-mail" for="email" />
+                <p:inputText id="email" size="40" maxlength="100"
+                             value="#{cadastroProprietarioBean.contato.email}" />
+
+                <p:outputLabel value="Celular" for="celular" />
+                <p:inputMask id="celular" mask="(99) 99999-9999" size="20"
+                             value="#{cadastroProprietarioBean.contato.celular}" />
+
+                <p:outputLabel value="Telefone" for="telefone" />
+                <p:inputMask id="telefone" mask="(99) 9999-9999" size="20"
+                             value="#{cadastroProprietarioBean.contato.telefone}" />
+            </p:panelGrid>
+
+            <!-- Dados de Endereço -->
+            <h3>Endereço</h3>
+            <p:panelGrid columns="2" style="width: 100%"
+                         columnClasses="rotulo, campo">
+
+                <p:outputLabel value="CEP" for="cep" />
+                <p:inputMask id="cep" mask="99999-999" size="15"
+                             value="#{cadastroProprietarioBean.endereco.cep}" />
+
+                <p:outputLabel value="Logradouro" for="logradouro" />
+                <p:inputText id="logradouro" size="60" maxlength="100"
+                             value="#{cadastroProprietarioBean.endereco.logradouro}" />
+
+                <p:outputLabel value="Número" for="numero" />
+                <p:inputText id="numero" size="10" maxlength="10"
+                             value="#{cadastroProprietarioBean.endereco.numero}" />
+
+                <p:outputLabel value="Complemento" for="complemento" />
+                <p:inputText id="complemento" size="30" maxlength="50"
+                             value="#{cadastroProprietarioBean.endereco.complemento}" />
+
+                <p:outputLabel value="Bairro" for="bairro" />
+                <p:inputText id="bairro" size="40" maxlength="50"
+                             value="#{cadastroProprietarioBean.endereco.bairro}" />
+
+                <p:outputLabel value="Cidade" for="cidade" />
+                <p:inputText id="cidade" size="40" maxlength="50"
+                             value="#{cadastroProprietarioBean.endereco.cidade}" />
+
+                <p:outputLabel value="UF" for="uf" />
+                <p:inputText id="uf" size="5" maxlength="2"
+                             value="#{cadastroProprietarioBean.endereco.uf}" />
+            </p:panelGrid>
+        </h:form>
+    </ui:define>
+</ui:composition>

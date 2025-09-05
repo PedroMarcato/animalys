@@ -17,6 +17,9 @@
 					<p:commandButton value="Pesquisar" icon="fa fa-search"
 						action="#{pesquisaProprietarioBean.pesquisar()}" update="@form" />
 				</p:toolbarGroup>
+				<p:toolbarGroup align="right">
+					<p:button value="Novo" outcome="/cadastros/cadastroProprietario" icon="fa fa-plus" />
+				</p:toolbarGroup>
 			</p:toolbar>
 
 			<div class="ui-fluid">
@@ -78,6 +81,12 @@
 						rendered="#{not empty prop.endereco.logradouro and not empty prop.endereco.bairro}" />
 					<h:outputText value="Sem Registros" style="color: gray; font-style: italic;" 
 						rendered="#{empty prop.endereco.logradouro or empty prop.endereco.bairro}" />
+				</p:column>
+				
+				<p:column headerText="Ações" style="width: 100px; text-align: center;">
+					<p:button outcome="/cadastros/cadastroProprietario" icon="fa fa-pencil" title="Editar">
+						<f:param name="proprietario" value="#{prop.idProprietario}" />
+					</p:button>
 				</p:column>
 				
 			</p:dataTable>

@@ -143,6 +143,9 @@ public class AtendimentoCastracaoBean implements Serializable {
 	}
 
 	public ItemLoteAtendimento getItemLoteSelecionado() {
+		if (itemLoteSelecionado == null) {
+			itemLoteSelecionado = new ItemLoteAtendimento();
+		}
 		return itemLoteSelecionado;
 	}
 
@@ -209,25 +212,42 @@ public class AtendimentoCastracaoBean implements Serializable {
 
 	public void adicionarLote() {
 		
-		try {
+		// Validações de entrada
+		if (this.quantidade == null || this.quantidade <= 0) {
+			FacesUtil.addErrorMessage("Informe uma quantidade válida!");
+			return;
+		}
+		
+		if (this.itemLoteSelecionado == null) {
+			FacesUtil.addErrorMessage("Selecione um medicamento!");
+			return;
+		}
+		
+		if (this.itemLoteSelecionado.getLote() == null) {
+			FacesUtil.addErrorMessage("Lote do medicamento não encontrado!");
+			return;
+		}
 
 		if (this.quantidade <= this.itemLoteSelecionado.getLote().getQuantidade()) {
 
 			if (!this.itensLotes.contains(this.itemLoteSelecionado)) {
-				this.itemLoteSelecionado.setQuantidade(this.quantidade);
+				// Criar uma nova instância para adicionar à lista
+				ItemLoteAtendimento novoItem = new ItemLoteAtendimento();
+				novoItem.setLote(this.itemLoteSelecionado.getLote());
+				novoItem.setQuantidade(this.quantidade);
+				novoItem.setAtendimento(this.atendimento);
+				
+				// Atualizar o estoque do lote
 				this.itemLoteSelecionado.getLote()
 						.setQuantidade(this.itemLoteSelecionado.getLote().getQuantidade() - this.quantidade);
-				this.itemLoteSelecionado.setAtendimento(this.atendimento);
-				this.itensLotes.add(this.itemLoteSelecionado);
+				
+				this.itensLotes.add(novoItem);
 				limparAposAdicionar();
 			} else {
 				FacesUtil.addErrorMessage("Este produto já foi adicionado!");
 			}
 		} else {
 			FacesUtil.addErrorMessage("A quantidade informada é maior que o estoque!");
-		}
-		}catch (NullPointerException e) {
-				FacesUtil.addErrorMessage("Seleciona o medicamento antes de adicionar!");
 		}
 		this.quantidade = null;
 	}

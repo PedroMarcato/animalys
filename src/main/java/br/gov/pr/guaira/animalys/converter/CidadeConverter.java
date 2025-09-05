@@ -20,16 +20,26 @@ private Cidades cidades;
 	
 	@Override
 	public Object getAsObject(FacesContext context, UIComponent component, String value) {
+		System.out.println("=== CIDADE CONVERTER getAsObject ===");
+		System.out.println("Value recebido: " + value);
 		Cidade retorno = null;
 		
 		try {
 		if(value != null){
 			int id = Integer.parseInt(value);
+			System.out.println("ID convertido: " + id);
 			retorno = cidades.porId(id);
+			System.out.println("Cidade encontrada: " + (retorno != null ? retorno.getNome() + " - " + 
+				(retorno.getEstado() != null ? retorno.getEstado().getUf() : "SEM_ESTADO") : "NULL"));
+			System.out.println("Converter finalizando - retornando: " + (retorno != null ? "CIDADE_VALIDA" : "NULL"));
+		} else {
+			System.out.println("Value é null - retornando null");
 		}
 		return retorno;
 		}catch (NumberFormatException e) {
-			System.err.println(e);
+			System.err.println("Erro NumberFormat: " + e);
+		} catch (Exception e) {
+			System.err.println("Erro geral: " + e);
 		}
 		return retorno;
 	}

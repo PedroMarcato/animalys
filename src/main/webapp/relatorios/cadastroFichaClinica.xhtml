@@ -40,14 +40,15 @@
             <!-- Etapa 1: Pesquisa do Proprietário -->
             <p:fieldset legend="1. Pesquisar Proprietário" style="margin-top: 20px;">
                 <p:panelGrid columns="3" layout="grid" 
-                           columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-2"
+                           columnClasses="ui-grid-col-2, ui-grid-col-1, ui-grid-col-1"
                            styleClass="panelgrid-noborder">
                     
                     <p:outputLabel value="CPF do Proprietário:" for="cpfPesquisa" />
                     <p:inputMask id="cpfPesquisa" 
                                 value="#{cadastroFichaClinicaBean.cpfPesquisa}"
                                 mask="999.999.999-99" 
-                                placeholder="000.000.000-00" />
+                                placeholder="000.000.000-00"
+                                style="width: 120px;" />
                     <p:commandButton value="Pesquisar" 
                                    icon="fa fa-search"
                                    action="#{cadastroFichaClinicaBean.pesquisarProprietarioPorCpf}"
@@ -161,7 +162,7 @@
                         <h:outputText value="#{atendimento.profissional.nome}" />
                     </p:column>
                     
-                    <p:column headerText="Diagnóstico">
+                    <p:column headerText="Sinais Clínicos/Tratamento">
                         <h:outputText value="#{atendimento.diagnostico}" escape="false" />
                     </p:column>
                 </p:dataTable>
@@ -253,8 +254,8 @@
                         </p:panelGrid>
                     </p:tab>
 
-                    <!-- Aba: Diagnóstico/Parecer -->
-                    <p:tab title="Diagnóstico/Parecer">
+                    <!-- Aba: Sinais Clínicos/Tratamento -->
+                    <p:tab title="Sinais Clínicos/Tratamento">
                         <p:panelGrid columns="1" layout="grid" 
                                    columnClasses="ui-grid-col-12"
                                    styleClass="panelgrid-noborder">

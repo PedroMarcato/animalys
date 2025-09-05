@@ -4,7 +4,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
@@ -22,6 +24,8 @@ import br.gov.pr.guaira.animalys.filter.RacaFilter;
 import br.gov.pr.guaira.animalys.service.NegocioException;
 import br.gov.pr.guaira.animalys.util.cdi.jpa.Transactional;
 
+@Named
+@RequestScoped
 public class Racas implements Serializable{
 
 	private static final long serialVersionUID = 1L;
@@ -41,7 +45,7 @@ public class Racas implements Serializable{
 			manager.flush();
 		} catch (PersistenceException e) {
 			e.printStackTrace();
-			throw new NegocioException("Esta Raça não pode ser excluída!");
+			throw new NegocioException("Esta Raï¿½a nï¿½o pode ser excluï¿½da!");
 		}
 
 	}

@@ -34,6 +34,7 @@ public class Animais implements Serializable {
 	@Inject
 	private EntityManager manager;
 
+	@Transactional
 	public Animal guardar(Animal animal) {
 	System.out.println("[DEBUG] REPOSITÓRIO: Status recebido para salvar: " + animal.getStatus());
 	Animal a = manager.merge(animal);

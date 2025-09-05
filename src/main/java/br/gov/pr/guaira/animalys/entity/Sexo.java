@@ -2,7 +2,7 @@ package br.gov.pr.guaira.animalys.entity;
 
 public enum Sexo {
 
-	MACHO("Macho"), FEMEA("Fêmea");
+	MACHO("Macho"), FEMEA("FÃªmea");
 	
 	private Sexo(String descricao) {
 		this.descricao = descricao;

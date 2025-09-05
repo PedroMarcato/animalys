@@ -83,7 +83,6 @@
                             <h:outputText value="#{historicoAnimalBean.fichaClinica.sexo}" />
                             <h:outputText value="Cor:" styleClass="destaque-topico" />
                             <h:outputText value="#{historicoAnimalBean.fichaClinica.cor}" />
-
                             <h:outputText value="Microchip:" styleClass="destaque-topico" />
                             <h:panelGroup>
                                 <h:outputText value="#{historicoAnimalBean.fichaClinica.numeroMicrochip}"
@@ -91,6 +90,10 @@
                                 <h:outputText value="Sem Microchip" style="color: #999999; font-style: italic;"
                                     rendered="#{empty historicoAnimalBean.fichaClinica.numeroMicrochip}" />
                             </h:panelGroup>
+                            <h:outputText value="Castrado:" styleClass="destaque-topico" />
+                            <h:outputText value="#{historicoAnimalBean.animalCastrado ? 'Sim' : 'Não'}" />
+
+                            <h:outputText value="" />
                             <h:outputText value="" />
                         </h:panelGrid>
                     </h:panelGroup>

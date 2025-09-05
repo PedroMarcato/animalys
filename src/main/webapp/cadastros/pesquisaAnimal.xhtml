@@ -17,6 +17,9 @@
 					<p:commandButton value="Pesquisar" icon="fa fa-search"
 						action="#{pesquisaAnimalBean.pesquisar()}" update="@form" />
 				</p:toolbarGroup>
+				<p:toolbarGroup align="right">
+					<p:button value="Novo" outcome="/cadastros/cadastroAnimalNovo" icon="fa fa-plus" />
+				</p:toolbarGroup>
 			</p:toolbar>
 
 			<div class="ui-fluid">
@@ -72,7 +75,7 @@
 				</p:column>
 				
 				<p:column headerText="Castrado">
-					<h:outputText value="#{animal.castrado ? 'Sim' : 'Não'}" />
+					<h:outputText value="#{animal.status != null and animal.status.name() eq 'CASTRADO' ? 'Sim' : 'Não'}" />
 				</p:column>
 				
 				<p:column headerText="Vacinado">
@@ -89,6 +92,12 @@
 				<p:column headerText="Celular do Proprietário">
 					<h:outputText value="#{animal.proprietario.contato.celular}" rendered="#{not empty animal.proprietario.contato.celular}" />
 					<h:outputText value="Sem Registros" style="color: gray; font-style: italic;" rendered="#{empty animal.proprietario.contato.celular}" />
+				</p:column>
+				
+				<p:column headerText="Ações" style="width: 100px; text-align: center;">
+					<p:button outcome="/cadastros/cadastroAnimalNovo" icon="fa fa-pencil" title="Editar">
+						<f:param name="animal" value="#{animal.idAnimal}" />
+					</p:button>
 				</p:column>
 				
 			</p:dataTable>

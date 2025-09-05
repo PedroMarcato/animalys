@@ -196,6 +196,8 @@ public class CadastroFichaClinicaBean implements Serializable {
             if ("CASTRACAO".equals(tipoAtendimentoSelecionado)) {
                 novoAtendimento.setTipoAtendimento(TipoAtendimento.CASTRACAO);
                 animalSelecionado.setStatus(Status.CASTRADO);
+                // Salva a data da castração no animal
+                animalSelecionado.setDataCastracao(novoAtendimento.getData());
             } else {
                 novoAtendimento.setTipoAtendimento(TipoAtendimento.CONSULTA);
             }

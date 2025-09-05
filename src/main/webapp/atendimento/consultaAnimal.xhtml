@@ -3,7 +3,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui">
 
 	<f:metadata>
-		<f:viewParam name="animal" value="#{consultaAnimalBean.animalSelecionado}" />
+		<f:viewParam name="animal" value="#{consultaAnimalBean.animalSelecionado}" 
+			converter="animalConverter" />
 		<f:viewParam name="solicitacao" value="#{consultaAnimalBean.solicitacao}" />
 		<f:viewAction action="#{consultaAnimalBean.inicializar}" />
 	</f:metadata>
@@ -116,7 +117,7 @@
 
 						<p:outputLabel value="Tratamento:" for="tratamento" />
 						<p:selectOneMenu id="tratamento" value="#{consultaAnimalBean.atendimento.tratamento}"
-							converter="omnifaces.SelectItemsConverter" disabled="#{consultaAnimalBean.atendido}">
+							disabled="#{consultaAnimalBean.atendido}" converter="omnifaces.SelectItemsConverter">
 							<f:selectItem itemLabel="Selecione" itemValue="" />
 							<f:selectItems value="#{consultaAnimalBean.tratamentos}" var="trat" itemLabel="#{trat.nome}"
 								itemValue="#{trat}" />

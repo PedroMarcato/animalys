@@ -9,7 +9,7 @@ import br.gov.pr.guaira.animalys.entity.Proprietario;
 import br.gov.pr.guaira.animalys.repository.Proprietarios;
 import br.gov.pr.guaira.animalys.util.cdi.CDIServiceLocator;
 
-@FacesConverter(forClass = Proprietario.class)
+@FacesConverter(value = "proprietarioConverter", forClass = Proprietario.class)
 public class ProprietarioConverter implements Converter{
 	
 	private Proprietarios proprietarios;
@@ -21,9 +21,14 @@ public class ProprietarioConverter implements Converter{
 	public Object getAsObject(FacesContext context, UIComponent component, String value) {
 		Proprietario retorno = null;
 
-		if (value != null) {
-			int id = Integer.parseInt(value);
-			retorno = proprietarios.porId(id);
+		if (value != null && !value.trim().isEmpty()) {
+			try {
+				int id = Integer.parseInt(value);
+				retorno = proprietarios.porId(id);
+			} catch (NumberFormatException e) {
+				// Retorna null se não conseguir converter
+				return null;
+			}
 		}
 		return retorno;
 	}

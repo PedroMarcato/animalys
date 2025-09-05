@@ -31,5 +31,35 @@ body {
 	}
 }
 
+/* Campos desabilitados com aparência apagada */
+.disabled-field .ui-selectonemenu-label {
+    opacity: 0.6;
+    background-color: #f5f5f5;
+    color: #666;
+    cursor: not-allowed;
+}
+
+.disabled-field .ui-selectonemenu-trigger {
+    opacity: 0.6;
+    background-color: #f5f5f5;
+    cursor: not-allowed;
+}
+
+/* Layout responsivo para formulário de animal */
+@media (max-width: 768px) {
+    .animal-form-container {
+        flex-direction: column !important;
+    }
+    
+    .animal-form-main {
+        flex: 1 !important;
+        padding-right: 0 !important;
+    }
+    
+    .animal-form-sidebar {
+        flex: 1 !important;
+        padding-left: 0 !important;
+        padding-top: 20px;
+    }
 }
 

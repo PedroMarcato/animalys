@@ -5,6 +5,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
+import javax.faces.convert.FacesConverter;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -14,6 +15,7 @@ import br.gov.pr.guaira.animalys.repository.Especies;
 
 
 @Named("especieConverter")
+@FacesConverter(value = "especieConverter", forClass = Especie.class)
 @RequestScoped
 public class EspecieConverter implements Converter {
 
@@ -22,8 +24,12 @@ public class EspecieConverter implements Converter {
 
     @Override
     public Object getAsObject(FacesContext context, UIComponent component, String value) {
-        if (value != null && !"".equals(value)) {
-            return especies.porId(Integer.parseInt(value));
+        if (value != null && !"".equals(value.trim())) {
+            try {
+                return especies.porId(Integer.parseInt(value));
+            } catch (NumberFormatException e) {
+                return null;
+            }
         }
         return null;
     }

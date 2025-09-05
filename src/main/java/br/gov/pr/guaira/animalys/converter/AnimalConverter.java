@@ -9,7 +9,7 @@ import br.gov.pr.guaira.animalys.entity.Animal;
 import br.gov.pr.guaira.animalys.repository.Animais;
 import br.gov.pr.guaira.animalys.util.cdi.CDIServiceLocator;
 
-@FacesConverter(forClass = Animal.class)
+@FacesConverter(value = "animalConverter", forClass = Animal.class)
 public class AnimalConverter implements Converter{
 	
 	private Animais animais;
@@ -21,9 +21,14 @@ public class AnimalConverter implements Converter{
 	public Object getAsObject(FacesContext context, UIComponent component, String value) {
 		Animal retorno = null;
 
-		if (value != null) {
-			int id = Integer.parseInt(value);
-			retorno = animais.porId(id);
+		if (value != null && !value.trim().isEmpty()) {
+			try {
+				int id = Integer.parseInt(value);
+				retorno = animais.porId(id);
+			} catch (NumberFormatException e) {
+				// Retorna null se não conseguir converter
+				return null;
+			}
 		}
 		return retorno;
 	}

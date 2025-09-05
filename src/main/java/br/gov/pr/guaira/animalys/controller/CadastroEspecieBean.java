@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import br.gov.pr.guaira.animalys.entity.Especie;
+import br.gov.pr.guaira.animalys.repository.Especies;
 import br.gov.pr.guaira.animalys.service.EspecieService;
 import br.gov.pr.guaira.animalys.util.jsf.FacesUtil;
 
@@ -21,9 +22,13 @@ public class CadastroEspecieBean implements Serializable{
 	}
 
 	private Especie especie;
+	private Integer idEspecie; // ID da espécie para edição
 	
 	@Inject
 	private EspecieService especieService;
+	
+	@Inject
+	private Especies especies;
 
 	public Especie getEspecie() {
 		return especie;
@@ -33,14 +38,40 @@ public class CadastroEspecieBean implements Serializable{
 		this.especie = especie;
 	}
 	
+	public Integer getIdEspecie() {
+		return idEspecie;
+	}
+
+	public void setIdEspecie(Integer idEspecie) {
+		this.idEspecie = idEspecie;
+	}
+	
+	public void inicializar() {
+		if (idEspecie != null) {
+			try {
+				this.especie = especies.porId(idEspecie);
+			} catch (Exception e) {
+				FacesUtil.addErrorMessage("Espécie não encontrada.");
+				limpar();
+			}
+		}
+	}
+	
 	public void salvar() {
 		this.especie = this.especieService.salvar(this.especie);
-		FacesUtil.addInfoMessage("Esp�cie cadastrada com sucesso!");
-		limpar();
+		if (idEspecie == null) {
+			// Só limpa se for um novo cadastro
+			FacesUtil.addInfoMessage("Espécie cadastrada com sucesso!");
+			limpar();
+		} else {
+			// Se é edição, apenas mostra mensagem
+			FacesUtil.addInfoMessage("Espécie atualizada com sucesso!");
+		}
 	}
 	
 	public void limpar() {
 		this.especie = new Especie();
+		this.idEspecie = null;
 	}
 	
 	public boolean isEditando() {

@@ -8,9 +8,8 @@
 
 	<ui:define name="titulo">#{cadastroProfissionalBean.editando ? 'Edição de Profissionais' : 'Cadastro de Profissão'}</ui:define>
 	<f:metadata>
-		<f:viewParam name="profissional"
-			value="#{cadastroProfissionalBean.profissional}" />
-		<f:viewAction action="#{cadastroProfissionalBean.inicializar()}" />
+		<f:viewParam name="profissional" value="#{cadastroProfissionalBean.idProfissional}" converter="javax.faces.Integer" />
+		<f:event type="preRenderView" listener="#{cadastroProfissionalBean.inicializar}" />
 	</f:metadata>
 	<ui:define name="content">
 		<h:form id="form">
@@ -45,7 +44,7 @@
 
 							<p:outputLabel value="CPF" for="cpf" />
 							<p:inputMask mask="999.999.999-99" id="cpf"
-								value="#{cadastroProfissionalBean.profissional.cpf}" required="true"
+								value="#{cadastroProfissionalBean.cpfFormatado}" required="true"
 								requiredMessage="Informe o CPF"/>
 								
 							<p:outputLabel value="Data Nascimento" for="dataNascimento" />

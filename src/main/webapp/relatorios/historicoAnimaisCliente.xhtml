@@ -28,10 +28,11 @@
                         <f:param name="animalId" value="#{animal.idAnimal}" />
                         <i style="margin: 0 5px;" class="fa fa-eye"></i>
                     </h:link>
-                    <h:link styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-left"
-                    title="Editar Animal"
+                    <h:link outcome="/cadastros/cadastroAnimalNovo.xhtml"
+                        styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-left"
+                        title="Editar Animal"
                         style="padding: .3em;">
-                        <f:param name="animalId" value="#{animal.idAnimal}" />
+                        <f:param name="animal" value="#{animal.idAnimal}" />
                         <i style="margin: 0 5px;" class="fa fa-pencil"></i>
                     </h:link>
 

@@ -16,6 +16,7 @@ import br.gov.pr.guaira.animalys.entity.Profissao;
 import br.gov.pr.guaira.animalys.entity.Profissional;
 import br.gov.pr.guaira.animalys.repository.Cidades;
 import br.gov.pr.guaira.animalys.repository.Profissoes;
+import br.gov.pr.guaira.animalys.repository.Profissionais;
 import br.gov.pr.guaira.animalys.service.ProfissionalService;
 import br.gov.pr.guaira.animalys.util.jsf.FacesUtil;
 
@@ -25,6 +26,8 @@ public class CadastroProfissionalBean implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
+	private Integer idProfissional;
+	
 	public CadastroProfissionalBean() {
 		this.profissional = new Profissional();
 		this.contato = new Contato();
@@ -33,10 +36,14 @@ public class CadastroProfissionalBean implements Serializable{
 	}
 	
 	public void inicializar() {
-		if(isEditando()) {
-			this.contato = this.profissional.getContato();
-			this.endereco = this.profissional.getEndereco();
-			this.dataNascimento = this.profissional.getDataNascimento().getTime();
+		if (idProfissional != null) {
+			this.profissional = profissionais.porId(idProfissional);
+			if (this.profissional != null) {
+				this.contato = this.profissional.getContato();
+				this.endereco = this.profissional.getEndereco();
+				this.dataNascimento = this.profissional.getDataNascimento().getTime();
+				this.cpfFormatado = this.profissional.getCpfFormatado();
+			}
 		}
 	}
 
@@ -45,8 +52,11 @@ public class CadastroProfissionalBean implements Serializable{
 	private Contato contato;
 	private Date dataNascimento;
 	private Calendar dataNascimentoCalendar;
+	private String cpfFormatado;
 	@Inject
 	private ProfissionalService profissionalService;
+	@Inject
+	private Profissionais profissionais;
 	@Inject
 	private Profissoes profissoes;
 	@Inject
@@ -93,14 +103,26 @@ public class CadastroProfissionalBean implements Serializable{
 	}
 
 	public void salvar() {
-		
 		this.dataNascimentoCalendar.setTime(this.dataNascimento);
 		this.profissional.setDataNascimento(this.dataNascimentoCalendar);
 		this.profissional.setContato(this.contato);
 		this.profissional.setEndereco(this.endereco);
-		this.profissionalService.salvar(this.profissional);
-		FacesUtil.addInfoMessage("Profissional cadastrado com sucesso!");
-		limpar();
+		
+		// Atualiza o CPF a partir do campo formatado
+		System.out.println("[DEBUG BEAN] CPF formatado: " + this.cpfFormatado);
+		if (this.cpfFormatado != null) {
+			this.profissional.setCpf(this.cpfFormatado);
+		}
+		System.out.println("[DEBUG BEAN] CPF no profissional antes de salvar: " + this.profissional.getCpf());
+		
+		this.profissional = this.profissionalService.salvar(this.profissional);
+		
+		if (idProfissional == null) {
+			FacesUtil.addInfoMessage("Profissional cadastrado com sucesso!");
+			limpar();
+		} else {
+			FacesUtil.addInfoMessage("Profissional atualizado com sucesso!");
+		}
 	}
 	
 	public void limpar() {
@@ -108,9 +130,27 @@ public class CadastroProfissionalBean implements Serializable{
 		this.endereco = new Endereco();
 		this.contato = new Contato();
 		this.dataNascimento = null;
+		this.idProfissional = null;
+		this.cpfFormatado = null;
 	}
 	
 	public boolean isEditando() {
 		return this.profissional.getIdProfissional() != null;
+	}
+	
+	public Integer getIdProfissional() {
+		return idProfissional;
+	}
+	
+	public void setIdProfissional(Integer idProfissional) {
+		this.idProfissional = idProfissional;
+	}
+	
+	public String getCpfFormatado() {
+		return cpfFormatado;
+	}
+	
+	public void setCpfFormatado(String cpfFormatado) {
+		this.cpfFormatado = cpfFormatado;
 	}
 }

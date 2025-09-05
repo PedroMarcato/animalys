@@ -41,7 +41,7 @@ public class Profissionais implements Serializable {
 			manager.flush();
 		} catch (PersistenceException e) {
 			e.printStackTrace();
-			throw new NegocioException("Esta Profissional n�o pode ser exclu�da!");
+			throw new NegocioException("Esta Profissional não pode ser excluída!");
 		}
 
 	}

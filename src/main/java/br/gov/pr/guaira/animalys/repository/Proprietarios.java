@@ -40,7 +40,7 @@ public class Proprietarios implements Serializable {
 			manager.flush();
 		} catch (PersistenceException e) {
 			e.printStackTrace();
-			throw new NegocioException("Este Proprietario n�o pode ser exclu�do!");
+			throw new NegocioException("Este Proprietario não pode ser excluído!");
 		}
 
 	}

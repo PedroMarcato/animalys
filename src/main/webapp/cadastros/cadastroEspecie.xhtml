@@ -8,7 +8,8 @@
 
 	<ui:define name="titulo">#{cadastroEspecieBean.editando ? 'Edição de Espécie' : 'Cadastro de Espécie'}</ui:define>
 	<f:metadata>
-		<f:viewParam name="especie" value="#{cadastroEspecieBean.especie}" />
+		<f:viewParam name="especie" value="#{cadastroEspecieBean.idEspecie}" />
+		<f:event type="preRenderView" listener="#{cadastroEspecieBean.inicializar}" />
 	</f:metadata>
 	<ui:define name="content">
 		<h:form id="form">

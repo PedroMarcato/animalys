@@ -84,9 +84,22 @@ public class Profissional implements Serializable {
 	public String getCpf() {
 		return cpf;
 	}
+	
+	public String getCpfFormatado() {
+		if (cpf != null && cpf.length() == 11) {
+			return cpf.substring(0, 3) + "." + 
+				   cpf.substring(3, 6) + "." + 
+				   cpf.substring(6, 9) + "-" + 
+				   cpf.substring(9, 11);
+		}
+		return cpf;
+	}
 
 	public void setCpf(String cpf) {
-		this.cpf = cpf;
+		// Remove formatação do CPF (pontos e hífen) para validação
+		System.out.println("[DEBUG CPF] Valor recebido: " + cpf);
+		this.cpf = cpf != null ? cpf.replaceAll("[^0-9]", "") : null;
+		System.out.println("[DEBUG CPF] Valor armazenado: " + this.cpf);
 	}
 
 	public Calendar getDataNascimento() {

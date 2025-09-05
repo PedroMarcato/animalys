@@ -8,9 +8,8 @@
 
 	<ui:define name="titulo">#{cadastroFornecedorBean.editando ? 'Edição de Fornecedor' : 'Cadastro de Fornecedores'}</ui:define>
 	<f:metadata>
-		<f:viewParam name="fornecedor"
-			value="#{cadastroFornecedorBean.fornecedor}" />
-			<f:viewAction action="#{cadastroFornecedorBean.inicializar()}" />
+		<f:viewParam name="fornecedor" value="#{cadastroFornecedorBean.idFornecedor}" />
+		<f:event type="preRenderView" listener="#{cadastroFornecedorBean.inicializar}" />
 	</f:metadata>
 	<ui:define name="content">
 		<h:form id="form">

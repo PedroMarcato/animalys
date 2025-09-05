@@ -5,4 +5,16 @@
     xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd"
     version="2.2">
 
+    <!-- Configuração do conversor de Espécie -->
+    <converter>
+        <converter-for-class>br.gov.pr.guaira.animalys.entity.Especie</converter-for-class>
+        <converter-class>br.gov.pr.guaira.animalys.converter.EspecieConverter</converter-class>
+    </converter>
+    
+    <!-- Configuração do conversor de Fornecedor -->
+    <converter>
+        <converter-for-class>br.gov.pr.guaira.animalys.entity.Fornecedor</converter-for-class>
+        <converter-class>br.gov.pr.guaira.animalys.converter.FornecedorConverter</converter-class>
+    </converter>
+
 </faces-config>

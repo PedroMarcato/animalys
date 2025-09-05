@@ -12,6 +12,7 @@ import br.gov.pr.guaira.animalys.entity.Contato;
 import br.gov.pr.guaira.animalys.entity.Endereco;
 import br.gov.pr.guaira.animalys.entity.Fornecedor;
 import br.gov.pr.guaira.animalys.repository.Cidades;
+import br.gov.pr.guaira.animalys.repository.Fornecedores;
 import br.gov.pr.guaira.animalys.service.FornecedorService;
 import br.gov.pr.guaira.animalys.util.jsf.FacesUtil;
 
@@ -28,19 +29,26 @@ public class CadastroFornecedorBean implements Serializable{
 	}
 	
 	public void inicializar() {
-		
-		if(isEditando()) {
-			this.contato = this.fornecedor.getContato();
-			this.endereco = this.fornecedor.getEndereco();
-			System.out.println("teste");
+		if (idFornecedor != null) {
+			try {
+				this.fornecedor = fornecedores.porId(idFornecedor);
+				this.contato = this.fornecedor.getContato();
+				this.endereco = this.fornecedor.getEndereco();
+			} catch (Exception e) {
+				FacesUtil.addErrorMessage("Fornecedor não encontrado.");
+				limpar();
+			}
 		}
 	}
 
 	private Fornecedor fornecedor;
+	private Integer idFornecedor; // ID do fornecedor para edição
 	private Endereco endereco;
 	private Contato contato;
 	@Inject
 	private FornecedorService fornecedorService;
+	@Inject
+	private Fornecedores fornecedores;
 	@Inject
 	private Cidades cidades;
 	
@@ -51,6 +59,15 @@ public class CadastroFornecedorBean implements Serializable{
 	public void setFornecedor(Fornecedor fornecedor) {
 		this.fornecedor = fornecedor;
 	}
+	
+	public Integer getIdFornecedor() {
+		return idFornecedor;
+	}
+
+	public void setIdFornecedor(Integer idFornecedor) {
+		this.idFornecedor = idFornecedor;
+	}
+	
 	public Endereco getEndereco() {
 		return endereco;
 	}
@@ -71,14 +88,21 @@ public class CadastroFornecedorBean implements Serializable{
 		this.fornecedor.setContato(this.contato);
 		this.fornecedor.setEndereco(this.endereco);
 		this.fornecedorService.salvar(this.fornecedor);
-		FacesUtil.addInfoMessage("Fornecedor cadastrado com sucesso!");
-		limpar();
+		if (idFornecedor == null) {
+			// Só limpa se for um novo cadastro
+			FacesUtil.addInfoMessage("Fornecedor cadastrado com sucesso!");
+			limpar();
+		} else {
+			// Se é edição, apenas mostra mensagem
+			FacesUtil.addInfoMessage("Fornecedor atualizado com sucesso!");
+		}
 	}
 	
 	private void limpar() {
 		this.fornecedor = new Fornecedor();
 		this.contato = new Contato();
 		this.endereco = new Endereco();
+		this.idFornecedor = null;
 	}
 	
 	public boolean isEditando() {

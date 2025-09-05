@@ -8,8 +8,8 @@
 
 	<ui:define name="titulo">#{cadastroRacaBean.editando ? 'Edição de Raça' : 'Cadastro de Raça'}</ui:define>
 	<f:metadata>
-		<f:viewParam name="raca" value="#{cadastroRacaBean.raca}" />
-		<f:viewAction action="#{cadastroRacaBean.inicializar()}" />
+		<f:viewParam name="raca" value="#{cadastroRacaBean.idRaca}" converter="javax.faces.Integer" />
+		<f:event type="preRenderView" listener="#{cadastroRacaBean.inicializar}" />
 	</f:metadata>
 	<ui:define name="content">
 		<h:form id="form">

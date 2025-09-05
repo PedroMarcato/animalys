@@ -202,7 +202,7 @@ public class AtendimentoCastracaoBean implements Serializable {
 		if (!this.procedimentosSelecionados.contains(this.procedimentoSelecionado)) {
 			this.procedimentosSelecionados.add(this.procedimentoSelecionado);
 		} else {
-			FacesUtil.addErrorMessage("Este procedimento j� foi adicionado!");
+			FacesUtil.addErrorMessage("Este procedimento já foi adicionado!");
 		}
 	}
 

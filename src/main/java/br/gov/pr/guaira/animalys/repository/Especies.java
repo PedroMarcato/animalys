@@ -43,7 +43,7 @@ public class Especies implements Serializable{
 			manager.flush();
 		} catch (PersistenceException e) {
 			e.printStackTrace();
-			throw new NegocioException("Esta Esp�cie n�o pode ser exclu�da!");
+			throw new NegocioException("Esta Especie não pode ser excluída!");
 		}
 
 	}

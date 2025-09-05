@@ -45,7 +45,7 @@ public class Racas implements Serializable{
 			manager.flush();
 		} catch (PersistenceException e) {
 			e.printStackTrace();
-			throw new NegocioException("Esta Ra�a n�o pode ser exclu�da!");
+			throw new NegocioException("Esta Raca não pode ser excluída!");
 		}
 
 	}

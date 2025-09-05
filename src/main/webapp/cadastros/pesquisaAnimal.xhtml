@@ -78,8 +78,9 @@
 					<h:outputText value="#{animal.status != null and animal.status.name() eq 'CASTRADO' ? 'Sim' : 'Não'}" />
 				</p:column>
 				
-				<p:column headerText="Vacinado">
-					<h:outputText value="#{animal.vacinado ? 'Sim' : 'Não'}" />
+				<p:column headerText="Raça">
+					<h:outputText value="#{animal.raca.nome}" rendered="#{not empty animal.raca.nome}" />
+					<h:outputText value="Sem Registros" style="color: gray; font-style: italic;" rendered="#{empty animal.raca.nome}" />
 				</p:column>
 				
 				<p:column headerText="Data de Entrada">

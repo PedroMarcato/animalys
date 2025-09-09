@@ -1,0 +1,60 @@
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports/schema/jasperreport"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/schema/jasperreport http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="historico_animal" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d1e8e8b4-5b2e-4c8b-8c7c-5c1c6c1e4c8f">
+    <property name="com.jaspersoft.studio.data.defaultdataadapter" value="YourDataAdapter"/>
+    <title>
+        <band height="50" splitType="Stretch">
+            <image>
+                <reportElement x="0" y="0" width="100" height="50" uuid="b1e8e8b4-5b2e-4c8b-8c7c-5c1c6c1e4c8f"/>
+                <imageExpression><![CDATA[$P{REPORT_DIRECTORY} + "images/centroDeControle.png"]]></imageExpression>
+            </image>
+            <image>
+                <reportElement x="455" y="0" width="100" height="50" uuid="c1e8e8b4-5b2e-4c8b-8c7c-5c1c6c1e4c8f"/>
+                <imageExpression><![CDATA[$P{REPORT_DIRECTORY} + "images/municipio.png"]]></imageExpression>
+            </image>
+        </band>
+    </title>
+    <detail>
+        <band height="20" splitType="Stretch">
+            <textField>
+                <reportElement x="0" y="0" width="200" height="20" uuid="d2e8e8b4-5b2e-4c8b-8c7c-5c1c6c1e4c8f"/>
+                <textFieldExpression><![CDATA[$F{idAnimal}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="200" y="0" width="355" height="20" uuid="e2e8e8b4-5b2e-4c8b-8c7c-5c1c6c1e4c8f"/>
+                <textFieldExpression><![CDATA["Ficha Clínica: " + $F{nomeAnimal}]]></textFieldExpression>
+            </textField>
+        </band>
+    </detail>
+    <summary>
+        <band height="20" splitType="Stretch">
+            <textField>
+                <reportElement x="0" y="0" width="200" height="20" uuid="f2e8e8b4-5b2e-4c8b-8c7c-5c1c6c1e4c8f"/>
+                <textFieldExpression><![CDATA[$F{dataEntrada}]]></textFieldExpression>
+                <textFieldExpression><![CDATA[$F{dataEntrada}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="200" y="0" width="355" height="20" uuid="g2e8e8b4-5b2e-4c8b-8c7c-5c1c6c1e4c8f"/>
+                <textFieldExpression><![CDATA[$F{nomeProprietario}]]></textFieldExpression>
+            </textField>
+        </band>
+    </summary>
+    <field name="idAnimal" class="java.lang.Integer"/>
+    <field name="nomeAnimal" class="java.lang.String"/>
+    <field name="dataEntrada" class="java.util.Date"/>
+    <field name="nomeProprietario" class="java.lang.String"/>
+    <field name="cpfProprietario" class="java.lang.String"/>
+    <field name="enderecoProprietario" class="java.lang.String"/>
+    <field name="numeroEndereco" class="java.lang.String"/>
+    <field name="bairroProprietario" class="java.lang.String"/>
+    <field name="contatoProprietario" class="java.lang.String"/>
+    <field name="especie" class="java.lang.String"/>
+    <field name="raca" class="java.lang.String"/>
+    <field name="idade" class="java.lang.String"/>
+    <field name="sexo" class="java.lang.String"/>
+    <field name="cor" class="java.lang.String"/>
+    <field name="numeroMicrochip" class="java.lang.String"/>
+    <field name="animalCastrado" class="java.lang.Boolean"/>
+    <field name="historico" class="java.util.List"/>
+</jasperReport>

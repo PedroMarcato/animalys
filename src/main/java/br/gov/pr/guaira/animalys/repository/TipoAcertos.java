@@ -13,7 +13,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import br.gov.pr.guaira.animalys.entity.TipoAcerto;
 import br.gov.pr.guaira.animalys.filter.TipoAcertoFilter;
@@ -39,7 +39,7 @@ public class TipoAcertos implements Serializable {
 			manager.flush();
 		} catch (PersistenceException e) {
 			e.printStackTrace();
-			throw new NegocioException("Esta Tipo de Acerto não pode ser excluída!");
+			throw new NegocioException("Esta Tipo de Acerto nï¿½o pode ser excluï¿½da!");
 		}
 	}
 	

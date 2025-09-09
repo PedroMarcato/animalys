@@ -19,7 +19,7 @@ import org.primefaces.model.charts.donut.DonutChartModel;
 import org.primefaces.model.charts.pie.PieChartDataSet;
 import org.primefaces.model.charts.pie.PieChartModel;
 
-import com.ibm.icu.text.SimpleDateFormat;
+import java.text.SimpleDateFormat;
 
 import br.gov.pr.guaira.animalys.entity.Sexo;
 import br.gov.pr.guaira.animalys.entity.Status;
@@ -36,9 +36,9 @@ public class DashBoardBean implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	public DashBoardBean() {
+		this.local = new Locale("pt", "BR");
 		this.sdf = new SimpleDateFormat("MM");
 		this.mesPorExtenso = new SimpleDateFormat("MMMM", local);
-		this.local = new Locale("pt", "BR");
 	}
 
 	private BarChartModel barModel2;

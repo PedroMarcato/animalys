@@ -26,7 +26,7 @@ public class HistoricoAnimalDAO implements Serializable {
       "LEFT JOIN FETCH r.especie e " +
       "LEFT JOIN FETCH an.proprietario p " +
       "LEFT JOIN FETCH p.contato c " +
-      "LEFT JOIN FETCH a.procedimentos proc " +
+      // Removido JOIN FETCH a.procedimentos proc para evitar duplicidade
       "WHERE an.idAnimal = :idAnimal " +
       "ORDER BY a.data DESC";
 
@@ -74,8 +74,16 @@ public class HistoricoAnimalDAO implements Serializable {
         a.getFc(),
         a.getFr(),
         a.getTemperatura() != null ? a.getTemperatura().toString() : "",
-        a.getTratamento() != null ? a.getTratamento().getNome() : ""
+        a.getTratamento() != null ? a.getTratamento().getNome() : "",
+        a.getAnimal() != null ? a.getAnimal().getIdAnimal() : null
       );
+  // Preencher o campo castrado do DTO
+    // Preencher castrado com base no status do animal
+    boolean isCastrado = false;
+    if (a.getAnimal() != null && a.getAnimal().getStatus() != null) {
+      isCastrado = br.gov.pr.guaira.animalys.entity.Status.CASTRADO.equals(a.getAnimal().getStatus());
+    }
+    dto.setCastrado(isCastrado);
       
       // Buscar medicamentos do atendimento
       String jpqlMedicamentos = "SELECT il FROM ItemLoteAtendimento il " +

@@ -129,6 +129,37 @@ public class HistoricoAnimalBean implements Serializable {
         return (dto != null) ? dto.getFotoAnimal() : null;
     }
 
+    // Método para imprimir usando JasperSoft
+    public void imprimirFichaClinicaJasper() {
+        try {
+            if (lista != null && !lista.isEmpty()) {
+                // Agora envia toda a lista de históricos para o relatório
+                FacesContext facesContext = FacesContext.getCurrentInstance();
+                facesContext.getExternalContext().getSessionMap().put("dadosRelatorio", lista);
+
+                // Executar JavaScript para abrir nova guia
+                String contextPath = facesContext.getExternalContext().getRequestContextPath();
+                String script = "window.open('" + contextPath + "/relatorio/ficha-clinica', '_blank');";
+
+                org.primefaces.PrimeFaces.current().executeScript(script);
+
+                FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Sucesso", 
+                        "Relatório será aberto em uma nova guia."));
+            } else {
+                FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_WARN, "Aviso", 
+                        "Não há dados disponíveis para gerar o relatório."));
+            }
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null,
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro", 
+                    "Erro ao gerar relatório: " + e.getMessage()));
+        }
+    }
+
+
+
     // impressão
 
     public void imprimirFichaClinica() {
@@ -386,7 +417,7 @@ public class HistoricoAnimalBean implements Serializable {
                 
                 // Rodapé com local para assinatura - linha divisória preta
                 document.add(new Paragraph("\n\n"));
-                document.add(new Paragraph("═══════════════════════════════════════════════")
+                document.add(new Paragraph("===============================================")
                     .setTextAlignment(TextAlignment.CENTER)
                     .setFont(boldFont)
                     .setFontColor(ColorConstants.BLACK)

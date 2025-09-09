@@ -17,7 +17,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
-import com.ibm.icu.text.SimpleDateFormat;
+import java.text.SimpleDateFormat;
 
 @Entity
 @Table(schema="estoque")

@@ -9,6 +9,8 @@
 	<properties>
     	<maven.compiler.source>1.8</maven.compiler.source>
     	<maven.compiler.target>1.8</maven.compiler.target>
+    	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    	<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
 	<repositories>
 		<repository>
@@ -94,7 +96,43 @@
 		<dependency>
 			<groupId>net.sf.jasperreports</groupId>
 			<artifactId>jasperreports</artifactId>
-			<version>6.4.1</version>
+			<version>7.0.3</version>
+		</dependency>
+
+		<!-- Dependência adicional para classes de fill do JasperReports 7.x -->
+		<dependency>
+			<groupId>net.sf.jasperreports</groupId>
+			<artifactId>jasperreports-functions</artifactId>
+			<version>7.0.3</version>
+		</dependency>
+
+		<!-- Compilador para JasperReports 7.x -->
+		<dependency>
+			<groupId>net.sf.jasperreports</groupId>
+			<artifactId>jasperreports-jdt</artifactId>
+			<version>7.0.3</version>
+		</dependency>
+
+		<!-- Groovy para compilação de expressões JasperReports 7.x -->
+		<dependency>
+			<groupId>org.apache.groovy</groupId>
+			<artifactId>groovy-all</artifactId>
+			<version>4.0.15</version>
+			<type>pom</type>
+		</dependency>
+
+		<!-- Extensão PDF para JasperReports 7.x -->
+		<dependency>
+			<groupId>net.sf.jasperreports</groupId>
+			<artifactId>jasperreports-pdf</artifactId>
+			<version>7.0.3</version>
+		</dependency>
+
+		<!-- Apache Commons Lang3 para StringUtils -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.12.0</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/net.sf.barcode4j/barcode4j -->

@@ -1,0 +1,513 @@
+<!-- Created with Jaspersoft Studio version 7.0.3.final using JasperReports Library version 7.0.3-41034ca841d452f3305ba55b9042260aaa1ab5dd  -->
+<jasperReport name="historico_animal" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f753a451-5f79-4e4e-9b68-c7991f720a2d">
+	<parameter name="REPORT_DIRECTORY" class="java.lang.String"/>
+	<field name="data" class="java.lang.String"/>
+	<field name="procedimento" class="java.lang.String"/>
+	<field name="responsavel" class="java.lang.String"/>
+	<field name="nomeAnimal" class="java.lang.String"/>
+	<field name="tipoAtendimento" class="java.lang.String"/>
+	<field name="diagnostico" class="java.lang.String"/>
+	<field name="statusSolicitacao" class="java.lang.String"/>
+	<field name="idade" class="java.lang.String"/>
+	<field name="sexo" class="java.lang.String"/>
+	<field name="cor" class="java.lang.String"/>
+	<field name="raca" class="java.lang.String"/>
+	<field name="especie" class="java.lang.String"/>
+	<field name="nomeProprietario" class="java.lang.String"/>
+	<field name="cpfProprietario" class="java.lang.String"/>
+	<field name="enderecoProprietario" class="java.lang.String"/>
+	<field name="numeroEndereco" class="java.lang.String"/>
+	<field name="bairroProprietario" class="java.lang.String"/>
+	<field name="contatoProprietario" class="java.lang.String"/>
+	<field name="dataEntrada" class="java.util.Calendar"/>
+	<field name="numeroMicrochip" class="java.lang.String"/>
+	<field name="escoreCorporal" class="java.lang.String"/>
+	<field name="peso" class="java.lang.Double"/>
+	<field name="fc" class="java.lang.String"/>
+	<field name="fr" class="java.lang.String"/>
+	<field name="temperatura" class="java.lang.String"/>
+	<field name="tratamento" class="java.lang.String"/>
+	<field name="idAnimal" class="java.lang.Integer"/>
+	<field name="castradoStr" class="java.lang.String"/>
+	<title height="289" splitType="Stretch">
+		<element kind="image" uuid="b1e8e8b4-5b2e-4c8b-8c7c-5c1c6c1e4c81" x="0" y="0" width="70" height="70">
+			<expression><![CDATA[$P{REPORT_DIRECTORY} + "images/centroDeControle.png"]]></expression>
+			<property name="com.jaspersoft.studio.unit.x" value="px"/>
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</element>
+		<element kind="staticText" uuid="c1e8e8b4-5b2e-4c8b-8c7c-5c1c6c1e4c82" x="100" y="0" width="355" height="20" fontSize="12.0" bold="true" hTextAlign="Center">
+			<text><![CDATA[MUNICIPIO DE GUAIRA]]></text>
+		</element>
+		<element kind="staticText" uuid="d1e8e8b4-5b2e-4c8b-8c7c-5c1c6c1e4c83" x="100" y="20" width="355" height="15" fontSize="10.0" hTextAlign="Center">
+			<text><![CDATA[SEMAM - DIRETORIA DE MEIO AMBIENTE]]></text>
+		</element>
+		<element kind="staticText" uuid="e1e8e8b4-5b2e-4c8b-8c7c-5c1c6c1e4c84" x="100" y="35" width="355" height="15" fontSize="11.0" bold="true" hTextAlign="Center">
+			<text><![CDATA[CENTRO DE CONTROLE ANIMAL]]></text>
+		</element>
+		<element kind="image" uuid="f1e8e8b4-5b2e-4c8b-8c7c-5c1c6c1e4c85" x="455" y="0" width="100" height="100">
+			<expression><![CDATA[$P{REPORT_DIRECTORY} + "images/municipio.png"]]></expression>
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</element>
+		<element kind="staticText" uuid="c812719f-baa7-4f36-8852-4d0e7b1ff91b" x="119" y="80" width="317" height="30" fontName="Arial Black" fontSize="21.0" bold="true" hTextAlign="Center">
+			<text><![CDATA[FICHA DE ATENDIMENTO]]></text>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</element>
+		<element kind="staticText" uuid="568ebd3b-e659-4a00-b1ba-1f33893b49d3" x="-15" y="70" width="100" height="39" forecolor="#005F2A" markup="none" fontName="Arial Black" fontSize="9.0" bold="true" hTextAlign="Center">
+			<text><![CDATA[Centro de Controle
+ Animal]]></text>
+		</element>
+		<element kind="staticText" uuid="32e8e8b4-5b2e-4c8b-8c7c-5c1c6c1e4c89" mode="Opaque" x="1" y="129" width="100" height="15" backcolor="#F0F0F0" fontSize="10.0" bold="true">
+			<text><![CDATA[ Nº FICHA:]]></text>
+			<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+				<pen lineWidth="0.5"/>
+			</box>
+		</element>
+		<element kind="staticText" uuid="41e8e8b4-5b2e-4c8b-8c7c-5c1c6c1e4c91" mode="Opaque" x="1" y="159" width="100" height="15" backcolor="#F0F0F0" fontSize="10.0" bold="true">
+			<text><![CDATA[ Data de Entrada:]]></text>
+			<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+				<pen lineWidth="0.5"/>
+			</box>
+		</element>
+		<element kind="textField" uuid="51e8e8b4-5b2e-4c8b-8c7c-5c1c6c1e4c92" x="106" y="159" width="449" height="15" fontSize="10.0" pattern="dd/MM/yyyy">
+			<expression><![CDATA[ $F{dataEntrada}.getTime()]]></expression>
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+				<pen lineWidth="0.5"/>
+				<leftPen lineWidth="0.0"/>
+			</box>
+		</element>
+		<element kind="staticText" uuid="52e8e8b4-5b2e-4c8b-8c7c-5c1c6c1e4c93" mode="Opaque" x="1" y="144" width="100" height="15" backcolor="#F0F0F0" fontSize="10.0" bold="true">
+			<text><![CDATA[ Proprietário:]]></text>
+			<property name="com.jaspersoft.studio.unit.x" value="px"/>
+			<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+				<pen lineWidth="0.5"/>
+			</box>
+		</element>
+		<element kind="textField" uuid="53e8e8b4-5b2e-4c8b-8c7c-5c1c6c1e4c94" x="106" y="144" width="449" height="15" fontSize="10.0">
+			<expression><![CDATA[ $F{nomeProprietario}]]></expression>
+			<property name="com.jaspersoft.studio.unit.x" value="px"/>
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+				<pen lineWidth="0.5"/>
+				<leftPen lineWidth="0.0"/>
+			</box>
+		</element>
+		<element kind="staticText" uuid="61e8e8b4-5b2e-4c8b-8c7c-5c1c6c1e4c95" mode="Opaque" x="1" y="174" width="100" height="15" backcolor="#F0F0F0" fontSize="10.0" bold="true">
+			<text><![CDATA[ CPF:]]></text>
+			<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+				<pen lineWidth="0.5"/>
+			</box>
+		</element>
+		<element kind="textField" uuid="71e8e8b4-5b2e-4c8b-8c7c-5c1c6c1e4c96" x="106" y="174" width="170" height="15" fontSize="10.0">
+			<expression><![CDATA[ $F{cpfProprietario}]]></expression>
+			<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+				<pen lineWidth="0.5"/>
+				<leftPen lineWidth="0.0"/>
+			</box>
+		</element>
+		<element kind="staticText" uuid="81e8e8b4-5b2e-4c8b-8c7c-5c1c6c1e4c97" mode="Opaque" x="276" y="174" width="84" height="15" backcolor="#F0F0F0" fontSize="10.0" bold="true">
+			<text><![CDATA[ Endereço:]]></text>
+			<property name="com.jaspersoft.studio.unit.x" value="px"/>
+			<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+				<pen lineWidth="0.5"/>
+			</box>
+		</element>
+		<element kind="textField" uuid="91e8e8b4-5b2e-4c8b-8c7c-5c1c6c1e4c98" x="365" y="174" width="190" height="15" fontSize="10.0">
+			<expression><![CDATA[ $F{enderecoProprietario} + ", " + $F{numeroEndereco}]]></expression>
+			<property name="com.jaspersoft.studio.unit.x" value="px"/>
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+				<pen lineWidth="0.5"/>
+				<leftPen lineWidth="0.0"/>
+			</box>
+		</element>
+		<element kind="staticText" uuid="a1e8e8b4-5b2e-4c8b-8c7c-5c1c6c1e4c99" mode="Opaque" x="1" y="189" width="100" height="15" backcolor="#F0F0F0" fontSize="10.0" bold="true">
+			<text><![CDATA[ Bairro:]]></text>
+			<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+				<pen lineWidth="0.5"/>
+			</box>
+		</element>
+		<element kind="textField" uuid="b1e8e8b4-5b2e-4c8b-8c7c-5c1c6c1e4d00" x="106" y="189" width="170" height="15" fontSize="10.0">
+			<expression><![CDATA[ $F{bairroProprietario}]]></expression>
+			<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+				<pen lineWidth="0.5"/>
+				<leftPen lineWidth="0.0"/>
+			</box>
+		</element>
+		<element kind="staticText" uuid="c1e8e8b4-5b2e-4c8b-8c7c-5c1c6c1e4d01" mode="Opaque" x="276" y="189" width="84" height="15" backcolor="#F0F0F0" fontSize="10.0" bold="true">
+			<text><![CDATA[ Contato:]]></text>
+			<property name="com.jaspersoft.studio.unit.x" value="px"/>
+			<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+				<pen lineWidth="0.5"/>
+			</box>
+		</element>
+		<element kind="textField" uuid="d1e8e8b4-5b2e-4c8b-8c7c-5c1c6c1e4d02" x="365" y="189" width="190" height="15" fontSize="10.0">
+			<expression><![CDATA[ $F{contatoProprietario}]]></expression>
+			<property name="com.jaspersoft.studio.unit.x" value="px"/>
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+				<pen lineWidth="0.5"/>
+				<leftPen lineWidth="0.0"/>
+			</box>
+		</element>
+		<element kind="staticText" uuid="e1e8e8b4-5b2e-4c8b-8c7c-5c1c6c1e4d03" mode="Opaque" x="1" y="244" width="59" height="15" backcolor="#F0F0F0" fontSize="10.0" bold="true">
+			<text><![CDATA[ Espécie:]]></text>
+			<box>
+				<pen lineWidth="0.5"/>
+			</box>
+		</element>
+		<element kind="textField" uuid="f1e8e8b4-5b2e-4c8b-8c7c-5c1c6c1e4d04" x="60" y="244" width="141" height="15" fontSize="10.0">
+			<expression><![CDATA[" " + $F{especie}]]></expression>
+			<box>
+				<pen lineWidth="0.5"/>
+			</box>
+		</element>
+		<element kind="staticText" uuid="11e8e8b4-5b2e-4c8b-8c7c-5c1c6c1e4d05" mode="Opaque" x="201" y="244" width="50" height="15" backcolor="#F0F0F0" fontSize="10.0" bold="true">
+			<text><![CDATA[ Raça:]]></text>
+			<box>
+				<pen lineWidth="0.5"/>
+			</box>
+		</element>
+		<element kind="textField" uuid="21e8e8b4-5b2e-4c8b-8c7c-5c1c6c1e4d06" x="251" y="244" width="110" height="15" fontSize="10.0">
+			<expression><![CDATA[" " + $F{raca}]]></expression>
+			<box>
+				<pen lineWidth="0.5"/>
+			</box>
+		</element>
+		<element kind="staticText" uuid="31e8e8b4-5b2e-4c8b-8c7c-5c1c6c1e4d07" mode="Opaque" x="361" y="244" width="40" height="15" backcolor="#F0F0F0" fontSize="10.0" bold="true">
+			<text><![CDATA[ Nome:]]></text>
+			<box>
+				<pen lineWidth="0.5"/>
+			</box>
+		</element>
+		<element kind="textField" uuid="41e8e8b4-5b2e-4c8b-8c7c-5c1c6c1e4d08" x="401" y="244" width="154" height="15" forecolor="#FF0703" fontSize="10.0">
+			<expression><![CDATA[" " + $F{nomeAnimal}]]></expression>
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			<box>
+				<pen lineWidth="0.5" lineColor="#030303"/>
+			</box>
+		</element>
+		<element kind="staticText" uuid="51e8e8b4-5b2e-4c8b-8c7c-5c1c6c1e4d09" mode="Opaque" x="1" y="259" width="59" height="15" backcolor="#F0F0F0" fontSize="10.0" bold="true">
+			<text><![CDATA[ Idade:]]></text>
+			<box>
+				<pen lineWidth="0.5"/>
+			</box>
+		</element>
+		<element kind="textField" uuid="61e8e8b4-5b2e-4c8b-8c7c-5c1c6c1e4d10" x="60" y="259" width="141" height="15" fontSize="10.0">
+			<expression><![CDATA[" " + $F{idade}]]></expression>
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			<box>
+				<pen lineWidth="0.5"/>
+			</box>
+		</element>
+		<element kind="staticText" uuid="71e8e8b4-5b2e-4c8b-8c7c-5c1c6c1e4d11" mode="Opaque" x="201" y="259" width="50" height="15" backcolor="#F0F0F0" fontSize="10.0" bold="true">
+			<text><![CDATA[ Sexo:]]></text>
+			<box>
+				<pen lineWidth="0.5"/>
+			</box>
+		</element>
+		<element kind="textField" uuid="81e8e8b4-5b2e-4c8b-8c7c-5c1c6c1e4d12" x="251" y="259" width="110" height="15" fontSize="10.0">
+			<expression><![CDATA[" " + $F{sexo}]]></expression>
+			<box>
+				<pen lineWidth="0.5"/>
+			</box>
+		</element>
+		<element kind="staticText" uuid="91e8e8b4-5b2e-4c8b-8c7c-5c1c6c1e4d13" mode="Opaque" x="361" y="259" width="40" height="15" backcolor="#F0F0F0" fontSize="10.0" bold="true">
+			<text><![CDATA[ Cor:]]></text>
+			<box>
+				<pen lineWidth="0.5"/>
+			</box>
+		</element>
+		<element kind="textField" uuid="a1e8e8b4-5b2e-4c8b-8c7c-5c1c6c1e4d14" x="401" y="259" width="154" height="15" fontSize="10.0">
+			<expression><![CDATA[" " + $F{cor}]]></expression>
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			<box>
+				<pen lineWidth="0.5"/>
+			</box>
+		</element>
+		<element kind="staticText" uuid="b1e8e8b4-5b2e-4c8b-8c7c-5c1c6c1e4d15" mode="Opaque" x="1" y="274" width="59" height="15" backcolor="#F0F0F0" fontSize="10.0" bold="true">
+			<text><![CDATA[ Microchip:]]></text>
+			<box>
+				<pen lineWidth="0.5"/>
+			</box>
+		</element>
+		<element kind="textField" uuid="c1e8e8b4-5b2e-4c8b-8c7c-5c1c6c1e4d16" x="60" y="274" width="141" height="15" fontSize="10.0">
+			<expression><![CDATA[" " + $F{numeroMicrochip}]]></expression>
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			<property name="com.jaspersoft.studio.unit.x" value="px"/>
+			<box>
+				<pen lineWidth="0.5"/>
+			</box>
+		</element>
+		<element kind="staticText" uuid="d1e8e8b4-5b2e-4c8b-8c7c-5c1c6c1e4d17" mode="Opaque" x="201" y="274" width="50" height="15" backcolor="#F0F0F0" fontSize="10.0" bold="true">
+			<text><![CDATA[ Castrado:]]></text>
+			<box>
+				<pen lineWidth="0.5"/>
+			</box>
+		</element>
+		<element kind="staticText" uuid="8402c1c7-aa44-4b66-a46e-b313b8e053df" x="1" y="204" width="554" height="40" fontSize="10.0" bold="true">
+			<text><![CDATA[ Assinatura do Responssável:]]></text>
+			<box>
+				<pen lineWidth="0.5"/>
+			</box>
+		</element>
+		<element kind="staticText" uuid="5ed45561-6d71-4c1e-9c52-7dc9140c9f4c" x="101" y="129" width="5" height="15">
+			<text><![CDATA[ ]]></text>
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			<box>
+				<topPen lineWidth="0.5"/>
+				<bottomPen lineWidth="0.5"/>
+			</box>
+		</element>
+		<element kind="staticText" uuid="f290bdba-e7cf-41e9-8a59-64ed130a0a08" x="101" y="144" width="5" height="15">
+			<text><![CDATA[ ]]></text>
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			<box>
+				<topPen lineWidth="0.5"/>
+				<bottomPen lineWidth="0.5"/>
+			</box>
+		</element>
+		<element kind="staticText" uuid="8c0f4fa6-6bb9-4e50-95fa-b081a88a4b82" x="101" y="159" width="5" height="15">
+			<text><![CDATA[ ]]></text>
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			<box>
+				<topPen lineWidth="0.5"/>
+				<bottomPen lineWidth="0.5"/>
+			</box>
+		</element>
+		<element kind="staticText" uuid="450d3530-491c-4ab2-a682-2fc88894561d" x="101" y="174" width="5" height="15">
+			<text><![CDATA[ ]]></text>
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			<box>
+				<topPen lineWidth="0.5"/>
+				<bottomPen lineWidth="0.5"/>
+			</box>
+		</element>
+		<element kind="staticText" uuid="92529d85-a3a5-43fe-a3d0-ee0f496db591" x="101" y="189" width="5" height="15">
+			<text><![CDATA[ ]]></text>
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			<box>
+				<topPen lineWidth="0.5"/>
+				<bottomPen lineWidth="0.5"/>
+			</box>
+		</element>
+		<element kind="staticText" uuid="806ce1e5-25ce-4928-8c1e-2a3ca112e496" x="360" y="174" width="5" height="15">
+			<text><![CDATA[ ]]></text>
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			<box>
+				<topPen lineWidth="0.5"/>
+				<bottomPen lineWidth="0.5"/>
+			</box>
+		</element>
+		<element kind="staticText" uuid="88cc882b-a134-4174-8942-29ee77058921" x="360" y="189" width="5" height="15">
+			<text><![CDATA[ ]]></text>
+			<box>
+				<topPen lineWidth="0.5"/>
+				<bottomPen lineWidth="0.5"/>
+			</box>
+		</element>
+		<element kind="textField" uuid="d09b5c73-539c-4a5a-951c-8824607c053d" x="106" y="129" width="449" height="15">
+			<expression><![CDATA[ $F{idAnimal}]]></expression>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			<box>
+				<topPen lineWidth="0.5"/>
+				<bottomPen lineWidth="0.5"/>
+				<rightPen lineWidth="0.5"/>
+			</box>
+		</element>
+		<element kind="textField" uuid="68fe8e1d-ef1a-4beb-8433-cac00adc059e" x="251" y="274" width="304" height="15">
+			<expression><![CDATA[" " + $F{castradoStr}]]></expression>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<box>
+				<topPen lineWidth="0.5"/>
+				<leftPen lineWidth="0.5"/>
+				<bottomPen lineWidth="0.5"/>
+				<rightPen lineWidth="0.5"/>
+			</box>
+		</element>
+	</title>
+	<detail>
+		<band height="152" splitType="Stretch">
+			<element kind="staticText" uuid="f1e8e8b4-5b2e-4c8b-8c7c-5c1c6c1e4d19" mode="Opaque" x="1" y="0" width="139" height="24" backcolor="#B0B0B0" fontSize="12.0" bold="true" vTextAlign="Middle">
+				<text><![CDATA[ HISTÓRICO CLÍNICO:]]></text>
+				<box>
+					<pen lineWidth="0.5"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="21e8e8b4-5b2e-4c8b-8c7c-5c1c6c1e4d21" mode="Opaque" x="405" y="0" width="150" height="24" backcolor="#B0B0B0" fontSize="12.0" bold="true" vTextAlign="Middle">
+				<expression><![CDATA[" " + $F{data}]]></expression>
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<leftPen lineWidth="0.0"/>
+				</box>
+			</element>
+			<element kind="staticText" uuid="8f6e7a9e-e6aa-42a0-b60a-fb0c0901d01c" mode="Opaque" x="354" y="0" width="51" height="24" backcolor="#B0B0B0" fontSize="12.0" bold="true" vTextAlign="Middle">
+				<text><![CDATA[ DATA:]]></text>
+				<box>
+					<pen lineWidth="0.5"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="c80b7cc7-0b2f-49c7-a676-1d3c77fad782" mode="Opaque" x="41" y="24" width="50" height="16" backcolor="#B0B0B0">
+				<expression><![CDATA[$F{peso} + " kg"]]></expression>
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="staticText" uuid="dd50dc4e-6b1f-4987-8329-e0260dfd0b18" mode="Opaque" x="1" y="24" width="40" height="16" backcolor="#B0B0B0" bold="true">
+				<text><![CDATA[ Peso:]]></text>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="92835d3d-bd56-4f7e-be06-8c6a88f70693" mode="Opaque" x="181" y="24" width="90" height="16" backcolor="#B0B0B0">
+				<expression><![CDATA[$F{escoreCorporal}]]></expression>
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="staticText" uuid="cfd8f19f-fae5-43b0-b290-b5d09d061d72" mode="Opaque" x="91" y="24" width="90" height="16" backcolor="#B0B0B0" bold="true">
+				<text><![CDATA[ Escore Corporal:]]></text>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="staticText" uuid="17721a65-1233-4233-9cfa-34d8a6f3e7a7" mode="Opaque" x="271" y="24" width="27" height="16" backcolor="#B0B0B0" bold="true">
+				<text><![CDATA[ FC:]]></text>
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="34bd2de4-f550-4cbb-8347-e49c71773136" mode="Opaque" x="298" y="24" width="40" height="16" backcolor="#B0B0B0">
+				<expression><![CDATA[$F{fc}]]></expression>
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="staticText" uuid="7e9647df-bb9f-44c5-9bc1-7d62331b9e57" mode="Opaque" x="338" y="24" width="27" height="16" backcolor="#B0B0B0" bold="true">
+				<text><![CDATA[ FR:]]></text>
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="b04cd110-c6e8-45f8-8b32-6af462473dd4" mode="Opaque" x="365" y="24" width="36" height="16" backcolor="#B0B0B0">
+				<expression><![CDATA[$F{fr}]]></expression>
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="7ba6a9fe-358e-48bc-b1f8-f12d54218dab" mode="Opaque" x="471" y="24" width="84" height="16" backcolor="#B0B0B0">
+				<expression><![CDATA[$F{temperatura}]]></expression>
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="staticText" uuid="981c534e-de66-4af0-92dd-7edbbfd4304f" mode="Opaque" x="401" y="24" width="70" height="16" backcolor="#B0B0B0" bold="true">
+				<text><![CDATA[ Temperatura:]]></text>
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="ae1067d5-a509-4834-8b66-5a53b659d36f" x="10" y="60" width="545" height="92" markup="html">
+				<expression><![CDATA[$F{diagnostico}]]></expression>
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<box>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="staticText" uuid="6c566657-4b9b-4fb0-b4b9-7e38ec81f6c3" x="1" y="40" width="135" height="20" forecolor="#030303" bold="true">
+				<text><![CDATA[ Sinais Clínicos/Tratamento:]]></text>
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<box>
+					<pen lineColor="#030303"/>
+					<leftPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="c3328210-7ede-4890-acf1-77487decb0d5" mode="Opaque" x="140" y="0" width="214" height="24" backcolor="#B0B0B0" fontSize="12.0" bold="true" vTextAlign="Middle">
+				<expression><![CDATA[$F{tipoAtendimento}]]></expression>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="aef3416d-6587-4282-820a-eb138582a2e1" mode="Transparent" x="390" y="40" width="165" height="90" backcolor="#B0B0B0" hTextAlign="Left" vTextAlign="Top">
+				<expression><![CDATA[$F{tipoAtendimento} != null && $F{tipoAtendimento}.toUpperCase().contains("CASTRACAO") ?  $F{procedimento} : "Sem Procedimento"]]></expression>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+			</element>
+			<element kind="staticText" uuid="34a614cd-3fff-44bd-a486-0584fa37183f" x="1" y="60" width="9" height="92">
+				<text><![CDATA[]]></text>
+				<box>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="staticText" uuid="16fb169c-65b1-4739-b187-286dd1a6aa17" x="310" y="40" width="245" height="20" forecolor="#030303" bold="true">
+				<text><![CDATA[ Procedimentos:]]></text>
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<box>
+					<pen lineColor="#030303"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="c0db5a98-54db-4830-8f9b-294b0798c605" x="136" y="40" width="174" height="20">
+				<expression><![CDATA[$F{tratamento}]]></expression>
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<box>
+					<rightPen lineWidth="0.0"/>
+				</box>
+			</element>
+		</band>
+	</detail>
+	<pageFooter height="88">
+		<element kind="textField" uuid="11e8e8b4-5b2e-4c8b-8c7c-5c1c6c1e4d16" x="0" y="45" width="350" height="15" fontSize="8.0" pattern="dd/MM/yyyy 'às' HH:mm" hTextAlign="Left">
+			<expression><![CDATA["Emitido em: " + new java.text.SimpleDateFormat("dd/MM/yyyy 'às' HH:mm").format(new java.util.Date())]]></expression>
+		</element>
+		<element kind="textField" uuid="21e8e8b4-5b2e-4c8b-8c7c-5c1c6c1e4d17" x="350" y="45" width="205" height="15" fontSize="8.0" hTextAlign="Right">
+			<expression><![CDATA["Página " + $V{PAGE_NUMBER} + " de " + $V{PAGE_COUNT}]]></expression>
+		</element>
+		<element kind="staticText" uuid="31e8e8b4-5b2e-4c8b-8c7c-5c1c6c1e4d18" mode="Opaque" x="0" y="65" width="555" height="15" backcolor="#DEDEDE" fontSize="8.0" italic="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Sistema Animalys - Gestão Veterinária]]></text>
+		</element>
+	</pageFooter>
+</jasperReport>

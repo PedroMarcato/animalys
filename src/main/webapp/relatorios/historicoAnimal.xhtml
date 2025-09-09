@@ -12,9 +12,13 @@
                 <h1 class="aw-page-title">Ficha Clínica: <span
                         style="color: red;">#{historicoAnimalBean.nomeAnimal}</span></h1>
 
-                <!-- Botão de Impressão -->
+                <!-- Botão de Impressão 
                 <p:commandButton value="Imprimir Ficha Clínica" icon="fa fa-file-pdf-o" styleClass="ui-button-info"
-                    style="margin-bottom: 10px;" action="#{historicoAnimalBean.imprimirFichaClinica}" ajax="false" />
+                    style="margin-bottom: 10px;" action="#{historicoAnimalBean.imprimirFichaClinica}" ajax="false" /> -->
+                
+                <!-- Botão de Impressão com JasperSoft -->
+                <p:commandButton value="Imprimir com JasperSoft" icon="fa fa-print" styleClass="ui-button-success"
+                    style="margin-bottom: 10px; margin-left: 10px;" action="#{historicoAnimalBean.imprimirFichaClinicaJasper}" ajax="false" />
 
             </div>
             <!-- Botão de Impressão Simples 
@@ -91,7 +95,7 @@
                                     rendered="#{empty historicoAnimalBean.fichaClinica.numeroMicrochip}" />
                             </h:panelGroup>
                             <h:outputText value="Castrado:" styleClass="destaque-topico" />
-                            <h:outputText value="#{historicoAnimalBean.animalCastrado ? 'Sim' : 'Não'}" />
+                            <h:outputText value="#{historicoAnimalBean.fichaClinica.castradoStr}" />
 
                             <h:outputText value="" />
                             <h:outputText value="" />
@@ -233,7 +237,7 @@
                                 rendered="#{not empty historico.tipoAtendimento}" />
 
 
-                            <h:outputText value="Procedimento:" styleClass="destaque-topico"
+                            <h:outputText value="Procedimentos:" styleClass="destaque-topico"
                                 rendered="#{not empty historico.procedimento}" />
                             <h:outputText value="#{historico.procedimento}"
                                 rendered="#{not empty historico.procedimento}" />
@@ -256,17 +260,17 @@
 
                             <h:outputText value="FC:" styleClass="destaque-topico"
                                 rendered="#{not empty historico.fc}" />
-                            <h:outputText value="#{historico.fc} bpm" rendered="#{not empty historico.fc}" />
+                            <h:outputText value="#{historico.fc}" rendered="#{not empty historico.fc}" />
 
 
                             <h:outputText value="FR:" styleClass="destaque-topico"
                                 rendered="#{not empty historico.fr}" />
-                            <h:outputText value="#{historico.fr} irpm" rendered="#{not empty historico.fr}" />
+                            <h:outputText value="#{historico.fr}" rendered="#{not empty historico.fr}" />
 
 
                             <h:outputText value="Temperatura:" styleClass="destaque-topico"
                                 rendered="#{not empty historico.temperatura}" />
-                            <h:outputText value="#{historico.temperatura} °C"
+                            <h:outputText value="#{historico.temperatura}"
                                 rendered="#{not empty historico.temperatura}" />
 
 

@@ -72,6 +72,11 @@ public class Animais implements Serializable {
 		List<Predicate> predicates = new ArrayList<Predicate>();
 
 		Root<Animal> animalRoot = criteriaQuery.from(Animal.class);
+		// Fetch join para evitar LazyInitializationException
+		@SuppressWarnings("unused")
+		Fetch<Animal, Raca> racaRoot = animalRoot.fetch("raca", JoinType.LEFT);
+		// Se quiser garantir especie também, descomente a linha abaixo
+		// racaRoot.fetch("especie", JoinType.LEFT);
 		Fetch<Animal, Proprietario> proprietarioRoot = animalRoot.fetch("proprietario", JoinType.INNER);
 		proprietarioRoot.fetch("contato", JoinType.INNER);
 		proprietarioRoot.fetch("endereco", JoinType.INNER);

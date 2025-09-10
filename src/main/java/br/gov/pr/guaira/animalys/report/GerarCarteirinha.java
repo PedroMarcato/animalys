@@ -1,9 +1,18 @@
+
 package br.gov.pr.guaira.animalys.report;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.qrcode.QRCodeWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import java.awt.image.BufferedImage;
+
 import java.io.Serializable;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.io.InputStream;
 
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletResponse;
@@ -24,19 +33,68 @@ public class GerarCarteirinha implements Serializable{
 	
 		try {  
 			
-			List<Animal> lista = new ArrayList<Animal>();
-			lista.add(solicitacao);
-            System.out.println("entrou no visualizar relatorio"); 
-            
-            HashMap<String, Object> parameters = new HashMap<String, Object>();
-            
-            String caminho = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/arquivos/relatorios/carteirinhaNova.jrxml");
-			JasperReport jasperReport = JasperCompileManager.compileReport(caminho);
-//            String logo = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/arquivos/relatorios/logo.png");
-//            parameters.put("logo", logo);
-			
-            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, new JRBeanCollectionDataSource(lista));  
-            byte[] b = JasperExportManager.exportReportToPdf(jasperPrint);  
+            System.out.println("[DEBUG] Entrou no método gerar do GerarCarteirinha");
+            List<Animal> lista = new ArrayList<>();
+            lista.add(solicitacao);
+            System.out.println("[DEBUG] Animal recebido: " + solicitacao);
+            System.out.println("[DEBUG] Lista de animais para o relatório: " + lista);
+
+
+            HashMap<String, Object> parameters = new HashMap<>();
+            // Geração do QRCode usando ZXing
+            try {
+                String conteudoQRCode = solicitacao.getNumeroMicrochip(); // ou qualquer informação desejada
+                if (conteudoQRCode != null && !conteudoQRCode.isEmpty()) {
+                    QRCodeWriter qrCodeWriter = new QRCodeWriter();
+                    BitMatrix bitMatrix = qrCodeWriter.encode(conteudoQRCode, BarcodeFormat.QR_CODE, 120, 120);
+                    BufferedImage qrImage = MatrixToImageWriter.toBufferedImage(bitMatrix);
+                    parameters.put("qrCodeImage", qrImage);
+                    System.out.println("[DEBUG] QRCode gerado e adicionado aos parâmetros.");
+                }
+            } catch (Exception e) {
+                System.out.println("[ERRO] Falha ao gerar QRCode: " + e.getMessage());
+                e.printStackTrace();
+            }
+            System.out.println("[DEBUG] Parâmetros do relatório: " + parameters);
+
+            // Usar classpath para garantir compatibilidade com JasperReports 7.x
+            InputStream reportStream = getClass().getResourceAsStream("/arquivos/relatorios/carteirinhaNova.jrxml");
+            System.out.println("[DEBUG] Tentando carregar o arquivo do relatório do classpath: /arquivos/relatorios/carteirinhaNova.jrxml");
+            System.out.println("[DEBUG] reportStream é nulo? " + (reportStream == null));
+            if (reportStream == null) {
+                throw new RuntimeException("Arquivo do relatório não encontrado no classpath: /arquivos/relatorios/carteirinhaNova.jrxml");
+            }
+            JasperReport jasperReport = null;
+            try {
+                jasperReport = JasperCompileManager.compileReport(reportStream);
+                System.out.println("[DEBUG] Compilação do relatório .jrxml realizada com sucesso.");
+            } catch (Exception e) {
+                System.out.println("[ERRO] Falha ao compilar o relatório .jrxml: " + e.getMessage());
+                e.printStackTrace();
+                throw e;
+            }
+            // Se precisar de logo:
+            // InputStream logoStream = getClass().getResourceAsStream("/arquivos/relatorios/logo.png");
+            // parameters.put("logo", logoStream);
+
+            JasperPrint jasperPrint = null;
+            try {
+                jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, new JRBeanCollectionDataSource(lista));
+                System.out.println("[DEBUG] Preenchimento do relatório realizado com sucesso.");
+            } catch (Exception e) {
+                System.out.println("[ERRO] Falha ao preencher o relatório: " + e.getMessage());
+                e.printStackTrace();
+                throw e;
+            }
+            byte[] b = null;
+            try {
+                b = JasperExportManager.exportReportToPdf(jasperPrint);
+                System.out.println("[DEBUG] Exportação do relatório para PDF realizada com sucesso.");
+            } catch (Exception e) {
+                System.out.println("[ERRO] Falha ao exportar o relatório para PDF: " + e.getMessage());
+                e.printStackTrace();
+                throw e;
+            }
             
             
             
@@ -46,9 +104,9 @@ public class GerarCarteirinha implements Serializable{
   
             HttpServletResponse res = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();  
             res.setContentType("application/pdf");  
-            //C�digo abaixo gerar o relat�rio e disponibiliza diretamente na p�gina   
+            //C�digo abaixo gerar o relat�rio e disponibiliza diretamente na p�gina   
             res.setHeader("Content-disposition", "inline;filename=arquivo.pdf");  
-            //C�digo abaixo gerar o relat�rio e disponibiliza para o cliente baixar ou salvar   
+            //C�digo abaixo gerar o relat�rio e disponibiliza para o cliente baixar ou salvar   
             //res.setHeader("Content-disposition", "attachment;filename=arquivo.pdf");  
             res.getOutputStream().write(b);  
             res.getCharacterEncoding();  

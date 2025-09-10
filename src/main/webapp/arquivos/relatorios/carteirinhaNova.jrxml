@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.5.1.final using JasperReports Library version 6.5.1  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="carteirinha" pageWidth="306" pageHeight="195" orientation="Landscape" columnWidth="306" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="ab40e610-c853-4edb-9a3d-5c7a23295376">
+<!-- Created with Jaspersoft Studio version 7.0.3.final using JasperReports Library version 7.0.3-41034ca841d452f3305ba55b9042260aaa1ab5dd  -->
+<jasperReport name="carteirinha" language="java" pageWidth="306" pageHeight="195" orientation="Landscape" columnWidth="306" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="ab40e610-c853-4edb-9a3d-5c7a23295376">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
@@ -11,6 +10,7 @@
 	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="qrCodeImage" class="java.awt.image.BufferedImage"/>
 	<field name="idAnimal" class="java.lang.Integer"/>
 	<field name="nome" class="java.lang.String"/>
 	<field name="raca" class="br.gov.pr.guaira.animalys.entity.Raca"/>
@@ -18,182 +18,94 @@
 	<field name="dataCastracao" class="java.util.Calendar"/>
 	<field name="sexo" class="br.gov.pr.guaira.animalys.entity.Sexo"/>
 	<field name="proprietario" class="br.gov.pr.guaira.animalys.entity.Proprietario"/>
-	<background>
-		<band splitType="Stretch"/>
-	</background>
+	<background splitType="Stretch"/>
 	<detail>
 		<band height="195" splitType="Stretch">
-			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-			<rectangle radius="10">
-				<reportElement positionType="Float" mode="Opaque" x="5" y="2" width="297" height="190" isRemoveLineWhenBlank="true" backcolor="rgba(255, 255, 255, 0.14117648)" uuid="d21ddc15-7fad-4a3a-84c9-db8c0a6b4684">
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
-				</reportElement>
-				<graphicElement>
-					<pen lineWidth="1.0" lineStyle="Solid"/>
-				</graphicElement>
-			</rectangle>
-			<staticText>
-				<reportElement x="2" y="4" width="238" height="26" forecolor="#0D164F" uuid="7475f624-d771-4a16-b84c-d977ec1ef7b1"/>
+			<element kind="rectangle" uuid="d21ddc15-7fad-4a3a-84c9-db8c0a6b4684" positionType="Float" mode="Opaque" x="5" y="2" width="297" height="190" backcolor="rgba(255, 255, 255, 0.14117648)" radius="10" removeLineWhenBlank="true">
+				<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				<pen lineWidth="1.0" lineStyle="Solid"/>
+			</element>
+			<element kind="staticText" uuid="7475f624-d771-4a16-b84c-d977ec1ef7b1" x="2" y="4" width="238" height="26" forecolor="#0D164F" fontName="Arial" fontSize="19.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+				<text><![CDATA[Secretaria de Saúde]]></text>
 				<box>
 					<pen lineWidth="0.0" lineStyle="Solid"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" size="19" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Secretaria de Saúde]]></text>
-			</staticText>
-			<componentElement>
-				<reportElement positionType="FixRelativeToBottom" x="240" y="4" width="60" height="44" uuid="d142a7eb-3fe8-4e6f-9386-8b33aa5b3c84"/>
-				<jr:QRCode xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<jr:codeExpression><![CDATA["Código: " + $F{idAnimal} + " "+ "Nome: " +  $F{nome} + " " + " Proprietário: "+$F{proprietario}.getNome() + "Contato: " + $F{proprietario}.getContato()]]></jr:codeExpression>
-				</jr:QRCode>
-			</componentElement>
-			<frame>
-				<reportElement x="5" y="48" width="295" height="35" uuid="75c97755-52c7-4e19-802a-5b2a21e5fd9a"/>
-				<box>
-					<pen lineWidth="0.25"/>
-				</box>
-				<textField isBlankWhenNull="true">
-					<reportElement positionType="Float" mode="Transparent" x="3" y="16" width="67" height="14" isPrintInFirstWholeBand="true" uuid="edcdeef4-74f6-40d7-aa03-1601dd3f278a"/>
-					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="8"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{nome}]]></textFieldExpression>
-				</textField>
-				<staticText>
-					<reportElement x="3" y="7" width="67" height="8" uuid="72b1984e-e472-41fe-91b7-f3a2cd8fd74d"/>
-					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="5" isBold="true"/>
-					</textElement>
+			</element>
+			<element kind="frame" uuid="75c97755-52c7-4e19-802a-5b2a21e5fd9a" x="5" y="48" width="295" height="35">
+				<element kind="textField" uuid="edcdeef4-74f6-40d7-aa03-1601dd3f278a" positionType="Float" mode="Transparent" x="3" y="16" width="67" height="14" fontName="Arial" fontSize="8.0" blankWhenNull="true" printInFirstWholeBand="true" vTextAlign="Middle">
+					<expression><![CDATA[$F{nome}]]></expression>
+				</element>
+				<element kind="staticText" uuid="72b1984e-e472-41fe-91b7-f3a2cd8fd74d" x="3" y="7" width="67" height="8" fontName="Arial" fontSize="5.0" bold="true" vTextAlign="Middle">
 					<text><![CDATA[Nome:]]></text>
-				</staticText>
-				<staticText>
-					<reportElement positionType="Float" x="70" y="7" width="106" height="8" uuid="274ae453-89d7-417c-aa2c-2df2f5a8e3ac"/>
-					<textElement textAlignment="Left" verticalAlignment="Middle">
-						<font fontName="Arial" size="6" isBold="true"/>
-					</textElement>
+				</element>
+				<element kind="staticText" uuid="274ae453-89d7-417c-aa2c-2df2f5a8e3ac" positionType="Float" x="70" y="7" width="106" height="8" fontName="Arial" fontSize="6.0" bold="true" hTextAlign="Left" vTextAlign="Middle">
 					<text><![CDATA[Espécie / Raça:]]></text>
-				</staticText>
-				<textField>
-					<reportElement positionType="Float" x="70" y="16" width="106" height="14" uuid="3fccd971-004c-41bb-a42f-890a9a885e74"/>
-					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="6"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{raca}.getEspecie().getNome() + " / " + $F{raca}.getNome()]]></textFieldExpression>
-				</textField>
-				<staticText>
-					<reportElement positionType="Float" x="176" y="7" width="45" height="8" uuid="de961db7-230b-47b1-9456-d20dfca2e77b"/>
-					<textElement textAlignment="Left" verticalAlignment="Middle">
-						<font fontName="Arial" size="6" isBold="true"/>
-					</textElement>
+				</element>
+				<element kind="textField" uuid="3fccd971-004c-41bb-a42f-890a9a885e74" positionType="Float" x="70" y="16" width="106" height="14" fontName="Arial" fontSize="6.0" vTextAlign="Middle">
+					<expression><![CDATA[$F{raca}.getEspecie().getNome() + " / " + $F{raca}.getNome()]]></expression>
+				</element>
+				<element kind="staticText" uuid="de961db7-230b-47b1-9456-d20dfca2e77b" positionType="Float" x="176" y="7" width="45" height="8" fontName="Arial" fontSize="6.0" bold="true" hTextAlign="Left" vTextAlign="Middle">
 					<text><![CDATA[Sexo:]]></text>
-				</staticText>
-				<textField>
-					<reportElement positionType="Float" x="176" y="16" width="45" height="14" uuid="c1fe9bd0-c442-4ee6-a4c8-ef9a15e4b79e"/>
-					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="6"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{sexo}.getDescricao()]]></textFieldExpression>
-				</textField>
-				<staticText>
-					<reportElement positionType="Float" x="221" y="7" width="63" height="8" uuid="f2a3f183-0076-4a2a-8a97-e1757213544f"/>
-					<textElement textAlignment="Left" verticalAlignment="Middle">
-						<font fontName="Arial" size="6" isBold="true"/>
-					</textElement>
+				</element>
+				<element kind="textField" uuid="c1fe9bd0-c442-4ee6-a4c8-ef9a15e4b79e" positionType="Float" x="176" y="16" width="45" height="14" fontName="Arial" fontSize="6.0" vTextAlign="Middle">
+					<expression><![CDATA[$F{sexo}.getDescricao()]]></expression>
+				</element>
+				<element kind="staticText" uuid="f2a3f183-0076-4a2a-8a97-e1757213544f" positionType="Float" x="221" y="7" width="63" height="8" fontName="Arial" fontSize="6.0" bold="true" hTextAlign="Left" vTextAlign="Middle">
 					<text><![CDATA[Microchip:]]></text>
-				</staticText>
-				<textField>
-					<reportElement positionType="Float" x="221" y="16" width="63" height="14" uuid="1cc0f5b0-dacb-46ed-b2ea-97f69c229c57"/>
-					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="6"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{numeroMicrochip}]]></textFieldExpression>
-				</textField>
-			</frame>
-			<frame>
-				<reportElement x="5" y="88" width="295" height="54" uuid="cfefb42d-77a9-43b3-a7d1-9be7d370e30c"/>
+				</element>
+				<element kind="textField" uuid="1cc0f5b0-dacb-46ed-b2ea-97f69c229c57" positionType="Float" x="221" y="16" width="63" height="14" fontName="Arial" fontSize="6.0" vTextAlign="Middle">
+					<expression><![CDATA[$F{numeroMicrochip}]]></expression>
+				</element>
 				<box>
 					<pen lineWidth="0.25"/>
 				</box>
-				<staticText>
-					<reportElement positionType="Float" x="3" y="3" width="138" height="10" uuid="dfe7a67d-94c7-434a-beeb-8ef91fa86796"/>
-					<textElement textAlignment="Left" verticalAlignment="Middle">
-						<font fontName="Arial" size="6" isBold="true"/>
-					</textElement>
+			</element>
+			<element kind="frame" uuid="cfefb42d-77a9-43b3-a7d1-9be7d370e30c" x="5" y="88" width="295" height="54">
+				<element kind="staticText" uuid="dfe7a67d-94c7-434a-beeb-8ef91fa86796" positionType="Float" x="3" y="3" width="138" height="10" fontName="Arial" fontSize="6.0" bold="true" hTextAlign="Left" vTextAlign="Middle">
 					<text><![CDATA[Proprietário:]]></text>
-				</staticText>
-				<textField>
-					<reportElement positionType="Float" x="3" y="13" width="138" height="13" uuid="ecb00896-16e5-4535-a1e6-694ec0288e3b"/>
-					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="8"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{proprietario}.getNome()]]></textFieldExpression>
-				</textField>
-				<staticText>
-					<reportElement positionType="Float" x="3" y="30" width="138" height="10" uuid="bb15261d-f0ff-4a82-a1a6-bb13aa331480"/>
-					<textElement textAlignment="Left" verticalAlignment="Middle">
-						<font fontName="Arial" size="6" isBold="true"/>
-					</textElement>
+				</element>
+				<element kind="textField" uuid="ecb00896-16e5-4535-a1e6-694ec0288e3b" positionType="Float" x="3" y="13" width="138" height="13" fontName="Arial" fontSize="8.0" vTextAlign="Middle">
+					<expression><![CDATA[$F{proprietario}.getNome()]]></expression>
+				</element>
+				<element kind="staticText" uuid="bb15261d-f0ff-4a82-a1a6-bb13aa331480" positionType="Float" x="3" y="30" width="138" height="10" fontName="Arial" fontSize="6.0" bold="true" hTextAlign="Left" vTextAlign="Middle">
 					<text><![CDATA[Endereço:]]></text>
-				</staticText>
-				<textField>
-					<reportElement positionType="Float" x="3" y="40" width="138" height="14" uuid="68287275-3395-44f3-8023-13fc0f2cfae6"/>
-					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="6"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{proprietario}.getEndereco()]]></textFieldExpression>
-				</textField>
-				<staticText>
-					<reportElement positionType="Float" x="141" y="30" width="142" height="10" uuid="5b57fe4d-5fa7-40b4-8657-4891c1563d5c"/>
-					<textElement textAlignment="Left" verticalAlignment="Middle">
-						<font fontName="Arial" size="6" isBold="true"/>
-					</textElement>
+				</element>
+				<element kind="textField" uuid="68287275-3395-44f3-8023-13fc0f2cfae6" positionType="Float" x="3" y="40" width="138" height="14" fontName="Arial" fontSize="6.0" vTextAlign="Middle">
+					<expression><![CDATA[$F{proprietario}.getEndereco()]]></expression>
+				</element>
+				<element kind="staticText" uuid="5b57fe4d-5fa7-40b4-8657-4891c1563d5c" positionType="Float" x="141" y="30" width="142" height="10" fontName="Arial" fontSize="6.0" bold="true" hTextAlign="Left" vTextAlign="Middle">
 					<text><![CDATA[Contato:]]></text>
-				</staticText>
-				<textField>
-					<reportElement positionType="Float" x="141" y="40" width="142" height="9" uuid="7190c176-fcee-47a4-9c5f-da622e678caf"/>
-					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="6"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{proprietario}.getContato()]]></textFieldExpression>
-				</textField>
-			</frame>
-			<frame>
-				<reportElement x="5" y="145" width="295" height="25" uuid="38911b41-dfc0-423f-9d59-fb3ec6664419"/>
+				</element>
+				<element kind="textField" uuid="7190c176-fcee-47a4-9c5f-da622e678caf" positionType="Float" x="141" y="40" width="142" height="9" fontName="Arial" fontSize="6.0" vTextAlign="Middle">
+					<expression><![CDATA[$F{proprietario}.getContato()]]></expression>
+				</element>
 				<box>
 					<pen lineWidth="0.25"/>
 				</box>
-				<staticText>
-					<reportElement positionType="Float" x="0" y="6" width="150" height="14" uuid="a9021118-a189-4e23-b9fb-3c635a0433d7"/>
-					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" size="8" isBold="true"/>
-					</textElement>
+			</element>
+			<element kind="frame" uuid="38911b41-dfc0-423f-9d59-fb3ec6664419" x="5" y="145" width="295" height="25">
+				<element kind="staticText" uuid="a9021118-a189-4e23-b9fb-3c635a0433d7" positionType="Float" x="0" y="6" width="150" height="14" fontName="Arial" fontSize="8.0" bold="true" hTextAlign="Right" vTextAlign="Middle">
 					<text><![CDATA[Castração realizada em:]]></text>
-				</staticText>
-				<textField pattern="dd/MM/yyyy">
-					<reportElement positionType="Float" x="151" y="6" width="134" height="14" uuid="188f0658-c94a-4c74-b383-30739443ac28"/>
-					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="8"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{dataCastracao}.getTime()]]></textFieldExpression>
-				</textField>
-			</frame>
-			<staticText>
-				<reportElement x="4" y="172" width="295" height="18" forecolor="#040C40" uuid="b4a3f271-a00a-4c80-bfd0-f85f638ad9c4"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" size="9" isBold="true"/>
-				</textElement>
+				</element>
+				<element kind="textField" uuid="188f0658-c94a-4c74-b383-30739443ac28" positionType="Float" x="151" y="6" width="134" height="14" fontName="Arial" fontSize="8.0" pattern="dd/MM/yyyy" vTextAlign="Middle">
+					<expression><![CDATA[$F{dataCastracao}.getTime()]]></expression>
+				</element>
+				<box>
+					<pen lineWidth="0.25"/>
+				</box>
+			</element>
+			<element kind="staticText" uuid="b4a3f271-a00a-4c80-bfd0-f85f638ad9c4" x="4" y="172" width="295" height="18" forecolor="#040C40" fontName="Arial" fontSize="9.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
 				<text><![CDATA[Programa Municipal de Controle Populacional de Cães e Gatos]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="2" y="30" width="238" height="18" forecolor="#08114D" uuid="20cf1109-f8b0-4721-afcb-a8736b6c695a"/>
-				<textElement textAlignment="Center">
-					<font fontName="Arial" size="13" isBold="true"/>
-				</textElement>
+			</element>
+			<element kind="staticText" uuid="20cf1109-f8b0-4721-afcb-a8736b6c695a" x="2" y="30" width="238" height="18" forecolor="#08114D" fontName="Arial" fontSize="13.0" bold="true" hTextAlign="Center">
 				<text><![CDATA[Departamento de Vigilância Sanitária]]></text>
-			</staticText>
+			</element>
+			<element kind="image" uuid="4e666ee1-9d0f-4c34-9793-0d50085863c9" x="245" y="4" width="50" height="44">
+				<expression><![CDATA[$P{qrCodeImage}]]></expression>
+			</element>
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 		</band>
 	</detail>
 </jasperReport>

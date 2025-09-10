@@ -165,11 +165,11 @@ public class HistoricoAnimalDTO {
     public java.util.Calendar getDataEntrada() { return dataEntrada; }
     public String getFotoAnimal() { return fotoAnimal; }
     public String getNumeroMicrochip() { return numeroMicrochip != null ? numeroMicrochip : ""; }
-    public String getEscoreCorporal() { return escoreCorporal != null ? escoreCorporal : "0.0"; }
-    public Double getPeso() { return peso != null ? peso : 0.0; }
-    public String getFc() { return fc != null && !fc.trim().isEmpty() ? fc + " bpm" : "0"; }
-    public String getFr() { return fr != null && !fr.trim().isEmpty() ? fr + " irpm" : "0"; }
-    public String getTemperatura() { return temperatura != null && !temperatura.trim().isEmpty() ? temperatura + " °C" : "0"; }
+    public String getEscoreCorporal() { return escoreCorporal != null ? escoreCorporal : ""; }
+    public String getPeso() { return peso != null ? peso + " kg" : ""; }
+    public String getFc() { return fc != null && !fc.trim().isEmpty() ? fc + " bpm" : ""; }
+    public String getFr() { return fr != null && !fr.trim().isEmpty() ? fr + " irpm" : ""; }
+    public String getTemperatura() { return temperatura != null && !temperatura.trim().isEmpty() ? temperatura + " °C" : ""; }
     public String getTratamento() { return tratamento != null ? tratamento : ""; }
     
     // Getters específicos para o JRXML com tratamento e formatação

@@ -22,7 +22,7 @@
 	<field name="dataEntrada" class="java.util.Calendar"/>
 	<field name="numeroMicrochip" class="java.lang.String"/>
 	<field name="escoreCorporal" class="java.lang.String"/>
-	<field name="peso" class="java.lang.Double"/>
+	<field name="peso" class="java.lang.String"/>
 	<field name="fc" class="java.lang.String"/>
 	<field name="fr" class="java.lang.String"/>
 	<field name="temperatura" class="java.lang.String"/>
@@ -355,7 +355,7 @@
 				</box>
 			</element>
 			<element kind="textField" uuid="c80b7cc7-0b2f-49c7-a676-1d3c77fad782" mode="Opaque" x="41" y="24" width="50" height="16" backcolor="#B0B0B0">
-				<expression><![CDATA[$F{peso} + " kg"]]></expression>
+				<expression><![CDATA[$F{peso}]]></expression>
 				<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				<box>
 					<topPen lineWidth="0.5"/>
@@ -495,6 +495,15 @@
 				<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				<box>
 					<rightPen lineWidth="0.0"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="54568c20-99cd-4b92-aa88-faa2b1b462b8" mode="Opaque" x="421" y="130" width="134" height="22" backcolor="#B0B0B0" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{responsavel}]]></expression>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
 				</box>
 			</element>
 		</band>

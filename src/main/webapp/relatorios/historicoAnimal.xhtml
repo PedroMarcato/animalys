@@ -10,14 +10,10 @@
 
                 <!-- Título -->
                 <h1 class="aw-page-title">Ficha Clínica: <span
-                        style="color: red;">#{historicoAnimalBean.nomeAnimal}</span></h1>
-
-                <!-- Botão de Impressão 
-                <p:commandButton value="Imprimir Ficha Clínica" icon="fa fa-file-pdf-o" styleClass="ui-button-info"
-                    style="margin-bottom: 10px;" action="#{historicoAnimalBean.imprimirFichaClinica}" ajax="false" /> -->
+                        style="color: red;">#{historicoAnimalBean.nomeAnimal}</span></h1>        
                 
                 <!-- Botão de Impressão com JasperSoft -->
-                <p:commandButton value="Imprimir com JasperSoft" icon="fa fa-print" styleClass="ui-button-success"
+                <p:commandButton value="Imprimir" icon="fa fa-print" styleClass="ui-button-success"
                     style="margin-bottom: 10px; margin-left: 10px;" action="#{historicoAnimalBean.imprimirFichaClinicaJasper}" ajax="false" />
 
             </div>
@@ -255,7 +251,7 @@
 
                             <h:outputText value="Peso:" styleClass="destaque-topico"
                                 rendered="#{not empty historico.peso}" />
-                            <h:outputText value="#{historico.peso} kg" rendered="#{not empty historico.peso}" />
+                            <h:outputText value="#{historico.peso}" rendered="#{not empty historico.peso}" />
 
 
                             <h:outputText value="FC:" styleClass="destaque-topico"

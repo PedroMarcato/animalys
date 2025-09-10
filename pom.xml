@@ -196,7 +196,18 @@
         <groupId>org.primefaces.extensions</groupId>
         <artifactId>primefaces-extensions</artifactId>
         <version>4.0.0</version>
-    </dependency>
+	</dependency>
+	<!-- ZXing para geração de QRCode -->
+	<dependency>
+		<groupId>com.google.zxing</groupId>
+		<artifactId>core</artifactId>
+		<version>3.5.3</version>
+	</dependency>
+	<dependency>
+		<groupId>com.google.zxing</groupId>
+		<artifactId>javase</artifactId>
+		<version>3.5.3</version>
+	</dependency>
 		<dependency>
 			<groupId>commons-fileupload</groupId>
 			<artifactId>commons-fileupload</artifactId>
@@ -215,6 +226,12 @@
 			<artifactId>itext7-core</artifactId>
 			<version>7.1.17</version>
 			<type>pom</type>
+		</dependency>
+
+		<dependency>
+    		<groupId>net.sf.jasperreports</groupId>
+    		<artifactId>jasperreports</artifactId>
+    		<version>7.0.3</version>
 		</dependency>
 
 	</dependencies>

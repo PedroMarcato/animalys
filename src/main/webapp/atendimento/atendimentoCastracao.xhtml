@@ -37,9 +37,9 @@
 					<p:outputLabel value="Proprietário: " style="font-weight: bold" />
 					<p:outputLabel
 						value="#{atendimentoCastracaoBean.animal.proprietario.nome}" />
-					<p:outputLabel value=" CPF: " style="font-weight: bold" />
+					<p:outputLabel value="#{atendimentoCastracaoBean.animal.proprietario.nome eq 'Centro De Controle Animal' ? 'CNPJ: ' : 'CPF: '}" style="font-weight: bold" />
 					<p:outputLabel
-						value="#{atendimentoCastracaoBean.animal.proprietario.cpf}" />
+						value="#{atendimentoCastracaoBean.animal.proprietario.nome eq 'Centro De Controle Animal' ? atendimentoCastracaoBean.animal.proprietario.cnpj : atendimentoCastracaoBean.animal.proprietario.cpf}" />
 				</h:panelGroup>
 				<p:outputLabel />
 				<h:panelGroup id="panelAnimal">

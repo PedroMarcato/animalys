@@ -47,8 +47,8 @@
                                     <h:outputText value="#{historicoAnimalBean.fichaClinica.nomeProprietario}" />
                                 </div>
                                 <div class="item">
-                                    <h:outputText value="CPF: " styleClass="destaque-topico" />
-                                    <h:outputText value="#{historicoAnimalBean.fichaClinica.cpfProprietario}" />
+                                                                     <h:outputText value="#{historicoAnimalBean.fichaClinica.nomeProprietario eq 'Centro De Controle Animal' ? 'CNPJ: ' : 'CPF: '}" styleClass="destaque-topico" />
+                                                                     <h:outputText value="#{historicoAnimalBean.fichaClinica.nomeProprietario eq 'Centro De Controle Animal' ? historicoAnimalBean.fichaClinica.cnpjProprietario : historicoAnimalBean.fichaClinica.cpfProprietario}" />
                                 </div>
                             </div>
                             <div class="columns" style="margin-left: 50px;">

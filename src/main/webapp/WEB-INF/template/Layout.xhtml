@@ -59,21 +59,21 @@
 						<p:menuitem value="Proprietários" icon="fa fa-users"
 							outcome="/cadastros/pesquisaProprietario" />
 						<p:menuitem value="Espécie" outcome="/cadastros/pesquisaEspecie" icon="fa fa-weibo" />
-						<p:menuitem value="Fornecedor" outcome="/cadastros/pesquisaFornecedor" icon="fa fa-truck" />
-						<p:menuitem value="Marca" outcome="/cadastros/pesquisaMarca" icon="fa fa-trello" />
+						<p:menuitem rendered="false" value="Fornecedor" outcome="/cadastros/pesquisaFornecedor" icon="fa fa-truck" />
+						<p:menuitem rendered="false" value="Marca" outcome="/cadastros/pesquisaMarca" icon="fa fa-trello" />
 						<p:menuitem value="Profissional" outcome="/cadastros/pesquisaProfissional"
 							icon="fa fa-user-plus" />
 						<p:menuitem value="Procedimento" outcome="/cadastros/pesquisaProcedimento"
 							icon="fa fa-drupal" />
 						<p:menuitem value="Tratamento" outcome="/cadastros/pesquisaTratamento" icon="fa fa-medkit" />
-						<p:menuitem value="Produto" outcome="/cadastros/pesquisaProduto" icon="fa fa-steam" />
+						<p:menuitem rendered="false" value="Produto" outcome="/cadastros/pesquisaProduto" icon="fa fa-steam" />
 						<p:menuitem value="Raça" outcome="/cadastros/pesquisaRaca" icon="fa fa-weixin" />
-						<p:menuitem value="Tipo Produto" outcome="/cadastros/pesquisaTipoProduto"
+						<p:menuitem rendered="false" value="Tipo Produto" outcome="/cadastros/pesquisaTipoProduto"
 							icon="fa fa-meanpath" />
-						<p:menuitem value="Tipo Acerto" outcome="/cadastros/pesquisaTipoAcerto" icon="fa fa-empire" />
+						<p:menuitem rendered="false" value="Tipo Acerto" outcome="/cadastros/pesquisaTipoAcerto" icon="fa fa-empire" />
 					</p:submenu>
 
-					<p:submenu label="Estoque">
+					<p:submenu rendered="false" label="Estoque">
 						<p:menuitem value="Acerto de Estoque" icon="fa fa-cart-plus"
 							outcome="/estoque/pesquisaAcertoEstoque" />
 						<p:menuitem value="Entrada" outcome="/estoque/entradaProdutos" icon="fa fa-cart-plus" />

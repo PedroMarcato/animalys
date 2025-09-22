@@ -62,6 +62,8 @@ public class CadastroAnimalNovoBean implements Serializable {
 	private Date dataAgendaCastracao;
 	private boolean edicao = false;
 	private String fotoBase64Preview;
+	private Boolean animalDeRua = false;
+	private boolean proprietarioDesabilitado = false;
 	
 	// Para pesquisa de proprietário
 	private String nomeProprietarioFiltro;
@@ -72,6 +74,8 @@ public class CadastroAnimalNovoBean implements Serializable {
 	public void inicializar() {
 		limpar();
 		carregarListas();
+		this.animalDeRua = false;
+		this.proprietarioDesabilitado = false;
 		
 		// Verificar se está editando
 		String idParam = FacesContext.getCurrentInstance()
@@ -122,6 +126,21 @@ public class CadastroAnimalNovoBean implements Serializable {
 		this.edicao = false;
 		this.racasCadastradas = null;
 		this.fotoBase64Preview = null;
+		this.animalDeRua = false;
+		this.proprietarioDesabilitado = false;
+	}
+	// Listener para mudança do campo Animal de Rua
+	public void onAnimalDeRuaChange() {
+		if (Boolean.TRUE.equals(animalDeRua)) {
+			Proprietario proprietarioRua = proprietarios.porId(2219);
+			if (proprietarioRua != null) {
+				animal.setProprietario(proprietarioRua);
+				proprietarioDesabilitado = true;
+			}
+		} else {
+			proprietarioDesabilitado = false;
+			animal.setProprietario(null);
+		}
 	}
 
 	public void carregarListas() {
@@ -155,7 +174,9 @@ public class CadastroAnimalNovoBean implements Serializable {
 	}
 
 	public void selecionarProprietario(Proprietario proprietario) {
-		this.animal.setProprietario(proprietario);
+ 		if (!Boolean.TRUE.equals(animalDeRua)) {
+ 			this.animal.setProprietario(proprietario);
+ 		}
 	}
 
 	public void limparFiltroProprietario() {
@@ -272,6 +293,18 @@ public class CadastroAnimalNovoBean implements Serializable {
 	// Getters e Setters
 	public Animal getAnimal() {
 		return animal;
+	}
+
+	public Boolean getAnimalDeRua() {
+		return animalDeRua;
+	}
+
+	public void setAnimalDeRua(Boolean animalDeRua) {
+		this.animalDeRua = animalDeRua;
+	}
+
+	public boolean isProprietarioDesabilitado() {
+		return proprietarioDesabilitado;
 	}
 
 	public void setAnimal(Animal animal) {

@@ -29,6 +29,8 @@ public class Proprietario implements Serializable{
 	private String nome;
 	@Column
 	private String cpf;
+    @Column
+    private String cnpj;
 	@Column
 	private String rg;
 	@Column
@@ -56,6 +58,14 @@ public class Proprietario implements Serializable{
 	public void setCpf(String cpf) {
 		this.cpf = cpf.toUpperCase();
 	}
+
+    public String getCnpj() {
+        return cnpj;
+    }
+
+    public void setCnpj(String cnpj) {
+        this.cnpj = cnpj != null ? cnpj.toUpperCase() : null;
+    }
 	public String getRg() {
 		return rg;
 	}

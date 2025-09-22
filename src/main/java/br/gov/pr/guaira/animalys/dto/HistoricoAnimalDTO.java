@@ -4,10 +4,12 @@ import java.util.List;
 import br.gov.pr.guaira.animalys.entity.ItemLoteAtendimento;
 
 public class HistoricoAnimalDTO {
+    // Novo campo para CNPJ do proprietário
+    private String cnpjProprietario;
 
     // Construtor exato exigido pelo Hibernate/HQL
     public HistoricoAnimalDTO(int idAtendimento, String data, String procedimento, String responsavel, String nomeAnimal, String tipoAtendimento, String diagnostico, String modalidadeSolicitante, br.gov.pr.guaira.animalys.entity.Status status,
-                              String idade, String sexo, String cor, String raca, String especie, String nomeProprietario, String cpfProprietario, String enderecoProprietario, String numeroEndereco, String bairroProprietario, String contatoProprietario, java.util.Calendar dataEntrada, String fotoAnimal,
+                              String idade, String sexo, String cor, String raca, String especie, String nomeProprietario, String cpfProprietario, String cnpjProprietario, String enderecoProprietario, String numeroEndereco, String bairroProprietario, String contatoProprietario, java.util.Calendar dataEntrada, String fotoAnimal,
                               String escoreCorporal, double peso, String fc, String fr, String temperatura, String tratamento, Integer idAnimal) {
         this.idAtendimento = idAtendimento;
         this.data = data;
@@ -25,10 +27,11 @@ public class HistoricoAnimalDTO {
         this.especie = especie;
         this.nomeProprietario = nomeProprietario;
         this.cpfProprietario = cpfProprietario;
-        this.enderecoProprietario = enderecoProprietario;
-        this.numeroEndereco = numeroEndereco;
-        this.bairroProprietario = bairroProprietario;
-        this.contatoProprietario = contatoProprietario;
+    this.cnpjProprietario = cnpjProprietario;
+    this.enderecoProprietario = enderecoProprietario;
+    this.numeroEndereco = numeroEndereco;
+    this.bairroProprietario = bairroProprietario;
+    this.contatoProprietario = contatoProprietario;
         this.dataEntrada = dataEntrada;
         this.fotoAnimal = fotoAnimal;
         this.escoreCorporal = escoreCorporal;
@@ -94,7 +97,7 @@ public class HistoricoAnimalDTO {
 
     // Construtor exigido pelo JPQL
     public HistoricoAnimalDTO(Integer idAtendimento, String data, String procedimento, String responsavel, String nomeAnimal, String tipoAtendimento, String diagnostico, String modalidadeSolicitante, String status,
-                              String idade, String sexo, String cor, String raca, String especie, String nomeProprietario, String cpfProprietario, String enderecoProprietario, String numeroEndereco, String bairroProprietario, String contatoProprietario, java.util.Calendar dataEntrada, String fotoAnimal,
+                              String idade, String sexo, String cor, String raca, String especie, String nomeProprietario, String cpfProprietario, String cnpjProprietario, String enderecoProprietario, String numeroEndereco, String bairroProprietario, String contatoProprietario, java.util.Calendar dataEntrada, String fotoAnimal,
                               String numeroMicrochip, String escoreCorporal, Double peso, String fc, String fr, String temperatura, String tratamento, Integer idAnimal) {
         this.idAtendimento = idAtendimento;
         this.data = (data != null) ? data : "Sem registros";
@@ -113,10 +116,11 @@ public class HistoricoAnimalDTO {
         this.especie = especie;
         this.nomeProprietario = nomeProprietario;
         this.cpfProprietario = cpfProprietario;
-        this.enderecoProprietario = enderecoProprietario;
-        this.numeroEndereco = numeroEndereco;
-        this.bairroProprietario = bairroProprietario;
-        this.contatoProprietario = contatoProprietario;
+    this.cnpjProprietario = cnpjProprietario;
+    this.enderecoProprietario = enderecoProprietario;
+    this.numeroEndereco = numeroEndereco;
+    this.bairroProprietario = bairroProprietario;
+    this.contatoProprietario = contatoProprietario;
     this.dataEntrada = dataEntrada;
     this.fotoAnimal = fotoAnimal;
     this.numeroMicrochip = numeroMicrochip;
@@ -219,5 +223,14 @@ public class HistoricoAnimalDTO {
 
     public void setIdAnimal(Integer idAnimal) {
         this.idAnimal = idAnimal;
+    }
+
+    // Getter e Setter para cnpjProprietario
+    public String getCnpjProprietario() {
+        return cnpjProprietario != null ? cnpjProprietario : "";
+    }
+
+    public void setCnpjProprietario(String cnpjProprietario) {
+        this.cnpjProprietario = cnpjProprietario;
     }
 }

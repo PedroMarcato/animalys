@@ -28,27 +28,35 @@
                 <!-- Coluna principal com os campos -->
                 <div class="animal-form-main" style="flex: 2;">
                     <p:panelGrid columns="2" id="painel-animal" style="width: 100%"
-                        columnClasses="rotulo, campo">
+                        columnClasses="rotulo, campo">                        
 
                         <p:outputLabel value="N°" for="codigo" />
                         <p:inputText id="codigo" size="20" readonly="true" value="#{cadastroAnimalNovoBean.animal.idAnimal}" />
+
+                        <p:outputLabel value="Animal de Rua ?" for="animalDeRua" />
+                        <p:selectOneRadio id="animalDeRua" value="#{cadastroAnimalNovoBean.animalDeRua}" layout="lineDirection">
+                                <f:selectItem itemLabel="Sim" itemValue="true" />
+                                <f:selectItem itemLabel="Não" itemValue="false" />
+                                <p:ajax listener="#{cadastroAnimalNovoBean.onAnimalDeRuaChange}" update="painel-proprietario" />
+                        </p:selectOneRadio>
 
                         <p:outputLabel value="Nome" for="nome" />
                         <p:inputText id="nome" size="60" maxlength="80" required="true"
                             value="#{cadastroAnimalNovoBean.animal.nome}" />
 
                 <p:outputLabel value="Proprietário" for="proprietario" />
-                <h:panelGroup id="painel-proprietario">
-                    <p:selectOneMenu id="proprietario" value="#{cadastroAnimalNovoBean.animal.proprietario}"
-                        converter="proprietarioConverter" required="true" style="width: 300px;"
-                        disabled="#{cadastroAnimalNovoBean.edicao}" 
-                        styleClass="#{cadastroAnimalNovoBean.edicao ? 'disabled-field' : ''}">
+                <h:panelGroup id="painel-proprietario">                                                    
+                            <p:selectOneMenu id="proprietario" value="#{cadastroAnimalNovoBean.animal.proprietario}"
+                               converter="proprietarioConverter" required="true" style="width: 300px;"
+                               disabled="#{cadastroAnimalNovoBean.proprietarioDesabilitado or cadastroAnimalNovoBean.edicao}"
+                               styleClass="#{cadastroAnimalNovoBean.proprietarioDesabilitado or cadastroAnimalNovoBean.edicao ? 'disabled-field' : ''}">
                         <f:selectItem itemLabel="Selecione o proprietário" />
                         <f:selectItems value="#{cadastroAnimalNovoBean.proprietariosCadastrados}" var="proprietario"
-                            itemValue="#{proprietario}" itemLabel="#{proprietario.nome} - CPF: #{proprietario.cpf}" />
+                            itemValue="#{proprietario}"
+                            itemLabel="#{cadastroAnimalNovoBean.animalDeRua ? proprietario.nome : proprietario.nome.concat(' - CPF: ').concat(proprietario.cpf)}" />
                     </p:selectOneMenu>
                     <p:commandButton value="Pesquisar" type="button" onclick="PF('dlgPesquisaProprietario').show();"
-                        style="margin-left: 10px;" rendered="#{!cadastroAnimalNovoBean.edicao}" />
+                        style="margin-left: 10px;" rendered="#{!cadastroAnimalNovoBean.edicao and !cadastroAnimalNovoBean.proprietarioDesabilitado}" />
                 </h:panelGroup>
 
                 <p:outputLabel value="Espécie" for="especie" />
@@ -80,7 +88,8 @@
                     placeholder="Ex: 2 anos, 6 meses" />
 
                 <p:outputLabel value="Cor/Pelagem" for="cor" />
-                <p:inputText id="cor" size="30" maxlength="50" value="#{cadastroAnimalNovoBean.animal.cor}" />
+                <p:inputText id="cor" size="30" maxlength="50" value="#{cadastroAnimalNovoBean.animal.cor}"
+                    placeholder="Ex: Preto, Malhado" />
 
                 <p:outputLabel value="Data de Entrada" for="dataEntrada" />
                 <p:calendar id="dataEntrada" value="#{cadastroAnimalNovoBean.dataEntrada}" 

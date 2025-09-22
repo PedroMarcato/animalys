@@ -50,6 +50,8 @@ public class CadastroFichaClinicaBean implements Serializable {
     private List<Animal> animaisDoProprietario;
     private List<Atendimento> atendimentosDoAnimal;
     
+        // Animal de Rua
+        private Boolean animalDeRua = false;
     // Formulário de atendimento
     private Atendimento novoAtendimento;
     private boolean mostrarFormularioAtendimento = false;
@@ -139,6 +141,14 @@ public class CadastroFichaClinicaBean implements Serializable {
             mostrarFormularioAtendimento = false;
             
             FacesUtil.addInfoMessage("Proprietário encontrado: " + proprietarioSelecionado.getNome());
+                        // Se animalDeRua estiver marcado, força proprietário 2219
+                        if (Boolean.TRUE.equals(animalDeRua)) {
+                            Proprietario proprietarioRua = proprietarios.porId(2219);
+                            if (proprietarioRua != null) {
+                                proprietarioSelecionado = proprietarioRua;
+                                animaisDoProprietario = animais.animaisPorProprietario(proprietarioRua);
+                            }
+                        }
             
         } catch (NoResultException e) {
             FacesUtil.addErrorMessage("Proprietário não encontrado com o CPF informado!");
@@ -335,6 +345,30 @@ public class CadastroFichaClinicaBean implements Serializable {
     }
 
     // Getters e Setters
+    // Listener para mudança do campo Animal de Rua
+    public void onAnimalDeRuaChange() {
+        if (Boolean.TRUE.equals(animalDeRua)) {
+            Proprietario proprietarioRua = proprietarios.porId(2219);
+            if (proprietarioRua != null) {
+                proprietarioSelecionado = proprietarioRua;
+                animaisDoProprietario = animais.animaisPorProprietario(proprietarioRua);
+            }
+        } else {
+            proprietarioSelecionado = null;
+            animaisDoProprietario = new ArrayList<>();
+        }
+        animalSelecionado = null;
+        atendimentosDoAnimal = new ArrayList<>();
+        mostrarFormularioAtendimento = false;
+    }
+    
+    public Boolean getAnimalDeRua() {
+        return animalDeRua;
+    }
+
+    public void setAnimalDeRua(Boolean animalDeRua) {
+        this.animalDeRua = animalDeRua;
+    }
     public String getCpfPesquisa() {
         return cpfPesquisa;
     }

@@ -11,7 +11,7 @@
     <ui:define name="content">
         <h:form id="form">
             <h1 class="aw-page-title">Cadastro de Ficha Clínica</h1>
-
+            
             <p:messages id="msg" closable="true" />
 
             <p:toolbar>
@@ -37,22 +37,34 @@
                 </p:toolbarGroup>
             </p:toolbar>
 
-            <!-- Etapa 1: Pesquisa do Proprietário -->
+            <!-- Etapa 1: Pesquisa do Proprietário -->             
             <p:fieldset legend="1. Pesquisar Proprietário" style="margin-top: 20px;">
                 <p:panelGrid columns="3" layout="grid" 
                            columnClasses="ui-grid-col-2, ui-grid-col-1, ui-grid-col-1"
                            styleClass="panelgrid-noborder">
                     
-                    <p:outputLabel value="CPF do Proprietário:" for="cpfPesquisa" />
+                    <p:outputLabel value="CPF do Proprietário:" for="cpfPesquisa" rendered="#{!cadastroFichaClinicaBean.animalDeRua}" />
                     <p:inputMask id="cpfPesquisa" 
                                 value="#{cadastroFichaClinicaBean.cpfPesquisa}"
                                 mask="999.999.999-99" 
                                 placeholder="000.000.000-00"
-                                style="width: 120px;" />
+                                style="width: 120px;"
+                                disabled="#{cadastroFichaClinicaBean.animalDeRua}"
+                                rendered="#{!cadastroFichaClinicaBean.animalDeRua}" />
                     <p:commandButton value="Pesquisar" 
                                    icon="fa fa-search"
                                    action="#{cadastroFichaClinicaBean.pesquisarProprietarioPorCpf}"
-                                   update="@form" />
+                                   update="@form"
+                                   disabled="#{cadastroFichaClinicaBean.animalDeRua}"
+                                   rendered="#{!cadastroFichaClinicaBean.animalDeRua}" />
+                    
+                    <p:outputLabel value="Animal de Rua?" for="animalDeRua" />
+                    <p:selectOneRadio id="animalDeRua" value="#{cadastroFichaClinicaBean.animalDeRua}" layout="lineDirection" style="width: 150px;">
+                        <f:selectItem itemLabel="Sim" itemValue="true" />
+                        <f:selectItem itemLabel="Não" itemValue="false" />
+                        <p:ajax listener="#{cadastroFichaClinicaBean.onAnimalDeRuaChange}" update="form" />
+                    </p:selectOneRadio>
+            
                 </p:panelGrid>
 
                 <!-- Dados do Proprietário Encontrado -->
@@ -65,8 +77,10 @@
                     <p:outputLabel value="Proprietário:" style="font-weight: bold" />
                     <p:outputLabel value="#{cadastroFichaClinicaBean.proprietarioSelecionado.nome}" />
                     
-                    <p:outputLabel value="CPF:" style="font-weight: bold" />
-                    <p:outputLabel value="#{cadastroFichaClinicaBean.proprietarioSelecionado.cpf}" />
+                    <p:outputLabel value="CPF:" style="font-weight: bold" rendered="#{!cadastroFichaClinicaBean.animalDeRua}" />
+                    <p:outputLabel value="#{cadastroFichaClinicaBean.proprietarioSelecionado.cpf}" rendered="#{!cadastroFichaClinicaBean.animalDeRua}" />
+                    <p:outputLabel value="CNPJ:" style="font-weight: bold" rendered="#{cadastroFichaClinicaBean.animalDeRua}" />
+                    <p:outputLabel value="#{cadastroFichaClinicaBean.proprietarioSelecionado.cnpj}" rendered="#{cadastroFichaClinicaBean.animalDeRua}" />
                 </p:panelGrid>
             </p:fieldset>
 

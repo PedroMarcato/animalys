@@ -30,9 +30,9 @@
 				<p:outputLabel value="Proprietário: " style="font-weight: bold" />
 				<p:outputLabel
 					value="#{newAtendimentoBean.solicitacao.proprietario.nome}" />
-				<p:outputLabel value=" CPF: " style="font-weight: bold" />
+				<p:outputLabel value="#{newAtendimentoBean.solicitacao.proprietario.nome eq 'Centro De Controle Animal' ? 'CNPJ: ' : 'CPF: '}" style="font-weight: bold" />
 				<p:outputLabel
-					value="#{newAtendimentoBean.solicitacao.proprietario.cpf}" />
+					value="#{newAtendimentoBean.solicitacao.proprietario.nome eq 'Centro De Controle Animal' ? newAtendimentoBean.solicitacao.proprietario.cnpj : newAtendimentoBean.solicitacao.proprietario.cpf}" />
 
 			</p:panelGrid>
 

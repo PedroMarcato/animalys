@@ -12,14 +12,14 @@
 
 	<ui:define name="content">
 		<h:form id="form">
-			<h1 class="aw-page-title">Cadastro de animais para a Consulta</h1>
+			<h1 class="aw-page-title">Cadastro de animais para a Consultas e Castrações</h1>
 
 			<p:messages closable="true" id="msgs" />
 
 			<div class="ui-fluid">
 
-				<h1 style="padding-left: 25px">Informações do responsável pelo
-					animal</h1>
+				<h1 style="padding-left: 25px">Informações do Responsável pelo
+					Animal</h1>
 
 				<h1 style="padding-left: 25px">Dados Pessoais</h1>
 
@@ -33,11 +33,10 @@
 					<p:selectOneMenu id="modalidade"
 						value="#{cadastroAnimalBean.solicitacao.modalidade}"
 						required="true"
-						requiredMessage="Informe a modalidade do cadastro!">
+						requiredMessage="Informe a modalidade do cadastro!"
+						converter="modalidadeSolicitanteConverter">
 						<f:selectItem itemLabel="Selecione a modalidade" itemValue=""/>
-						<f:selectItems
-							value="#{cadastroAnimalBean.modalidadesSolicitante}" var="moda"
-							itemValue="#{moda}" itemLabel="#{moda.descricao}" />
+						<f:selectItem itemLabel="Pessoa Física" itemValue="PESSOA_FISICA" />
 					</p:selectOneMenu>
 
 					<p:outputLabel />

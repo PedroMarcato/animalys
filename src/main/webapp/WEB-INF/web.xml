@@ -60,5 +60,32 @@
   		<param-name>javax.faces.DEFAULT_CHARSET</param-name>
   		<param-value>UTF-8</param-value>
 	</context-param>
-	
+
+	<!-- Servlet para servir documentos do diretório externo -->
+	<servlet>
+		<servlet-name>DocumentosServlet</servlet-name>
+		<servlet-class>org.apache.catalina.servlets.DefaultServlet</servlet-class>
+		<init-param>
+			<param-name>debug</param-name>
+			<param-value>0</param-value>
+		</init-param>
+		<init-param>
+			<param-name>listings</param-name>
+			<param-value>false</param-value>
+		</init-param>
+		<init-param>
+			<param-name>readonly</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<init-param>
+			<param-name>docBase</param-name>
+			<param-value>C:/animalys/documentos</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>DocumentosServlet</servlet-name>
+		<url-pattern>/uploads/documentos/*</url-pattern>
+	</servlet-mapping>
+
 </web-app>

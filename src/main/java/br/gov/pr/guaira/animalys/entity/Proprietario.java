@@ -45,6 +45,10 @@ public class Proprietario implements Serializable{
 	private Contato contato;
 	@OneToMany(cascade=CascadeType.MERGE, fetch=FetchType.LAZY, mappedBy="proprietario")
 	private List<Animal> animais;
+
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @JoinColumn(name = "documentos", referencedColumnName = "id_documentos")
+    private DocumentosPessoais documentos;
 	
 	public String getNome() {
 		return nome;
@@ -168,6 +172,14 @@ public class Proprietario implements Serializable{
 	@Override
 	public String toString() {
 		return "Proprietario [idProprietario=" + idProprietario + ", cpf=" + cpf + ", rg=" + rg + "]";
+	}
+
+	public DocumentosPessoais getDocumentos() {
+		return documentos;
+	}
+
+	public void setDocumentos(DocumentosPessoais documentos) {
+		this.documentos = documentos;
 	}
 	
 	

@@ -75,7 +75,7 @@ public class Proprietarios implements Serializable {
 	}
 
 	public Proprietario proprietarioPorCPF(String cpf) {
-		return this.manager.createQuery("from Proprietario where cpf =:cpf order by nome asc ", Proprietario.class)
+		return this.manager.createQuery("from Proprietario p left join fetch p.contato left join fetch p.endereco left join fetch p.documentos where p.cpf =:cpf order by p.nome asc ", Proprietario.class)
 				.setParameter("cpf", cpf).getSingleResult();
 	}
 
@@ -89,6 +89,7 @@ public class Proprietarios implements Serializable {
 		// Fazer eager loading das entidades relacionadas
 		proprietarioRoot.fetch("contato", javax.persistence.criteria.JoinType.LEFT);
 		proprietarioRoot.fetch("endereco", javax.persistence.criteria.JoinType.LEFT);
+		proprietarioRoot.fetch("documentos", javax.persistence.criteria.JoinType.LEFT);
 
 		if (idProprietario != null) {
 			predicates.add(builder.equal(proprietarioRoot.get("idProprietario"), idProprietario));

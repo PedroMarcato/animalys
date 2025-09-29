@@ -26,6 +26,8 @@ public class PesquisaProprietarioBean implements Serializable {
 	
 	@Inject
 	private Proprietarios proprietarios;
+	
+	private Proprietario proprietarioSelecionado;
 		
 	public ProprietarioFilter getProprietarioFilter() {
 		return proprietarioFilter;
@@ -39,7 +41,41 @@ public class PesquisaProprietarioBean implements Serializable {
 		return proprietariosFiltrados;
 	}
 	
+	public Proprietario getProprietarioSelecionado() {
+		return proprietarioSelecionado;
+	}
+	
+	public void setProprietarioSelecionado(Proprietario proprietarioSelecionado) {
+		this.proprietarioSelecionado = proprietarioSelecionado;
+	}
+	
 	public void pesquisar() {
 		this.proprietariosFiltrados = this.proprietarios.filtrados(this.proprietarioFilter);
+	}
+	
+	public boolean proprietarioTemDocumentos(Proprietario proprietario) {
+		if (proprietario == null || proprietario.getIdProprietario() == null) {
+			return false;
+		}
+
+		// Verifica se já tem documentos carregados
+		if (proprietario.getDocumentos() != null) {
+			br.gov.pr.guaira.animalys.entity.DocumentosPessoais docs = proprietario.getDocumentos();
+			return (docs.getCardUnico() != null && !docs.getCardUnico().trim().isEmpty()) ||
+				   (docs.getDocumentoComFoto() != null && !docs.getDocumentoComFoto().trim().isEmpty()) ||
+				   (docs.getComprovanteEndereco() != null && !docs.getComprovanteEndereco().trim().isEmpty());
+		}
+
+		return false;
+	}
+	
+	public void selecionarProprietario(Proprietario proprietario) {
+		if (proprietario != null && proprietario.getIdProprietario() != null) {
+			this.proprietarioSelecionado = proprietarios.porId(proprietario.getIdProprietario());
+		}
+	}
+	
+	public boolean proprietarioSelecionadoTemDocumentos() {
+		return proprietarioTemDocumentos(this.proprietarioSelecionado);
 	}
 }

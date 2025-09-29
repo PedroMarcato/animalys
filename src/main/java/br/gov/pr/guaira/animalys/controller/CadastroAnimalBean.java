@@ -11,11 +11,13 @@ import java.util.List;
 //import java.nio.file.*;
 
 import javax.annotation.PostConstruct;
+import javax.faces.context.FacesContext;
 //import javax.faces.application.FacesMessage;
 //import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 
 import br.gov.pr.guaira.animalys.repository.*;
@@ -26,6 +28,7 @@ import org.primefaces.model.UploadedFile;
 
 import br.gov.pr.guaira.animalys.entity.Animal;
 import br.gov.pr.guaira.animalys.entity.Contato;
+import br.gov.pr.guaira.animalys.entity.DocumentosPessoais;
 import br.gov.pr.guaira.animalys.entity.Endereco;
 import br.gov.pr.guaira.animalys.entity.Especie;
 import br.gov.pr.guaira.animalys.entity.ModalidadeSolicitante;
@@ -58,6 +61,9 @@ public class CadastroAnimalBean implements Serializable {
 		this.cpf = "";
 		this.habilitaCampos = true;
 		this.solicitacao = new Solicitacao();
+		this.cardUnicoFile = null;
+		this.documentoComFotoFile = null;
+		this.comprovanteEnderecoFile = null;
 	}
 
 	@PostConstruct
@@ -89,6 +95,11 @@ public class CadastroAnimalBean implements Serializable {
 	private UploadedFile arquivoFoto;
 	private UploadedFile fotoUpload;
 
+	// Lista para armazenar os nomes dos arquivos enviados
+	private String cardUnicoFile;
+	private String documentoComFotoFile;
+	private String comprovanteEnderecoFile;
+
 	@Inject
 	private Racas racas;
 	@Inject
@@ -107,6 +118,8 @@ public class CadastroAnimalBean implements Serializable {
 	private FotoService fotoService;
 	@Inject
 	private AnimalDAO animalDAO;
+	@Inject
+	private EntityManager manager;
 
 	public Animal getAnimal() {
 		return animal;
@@ -236,6 +249,71 @@ public class CadastroAnimalBean implements Serializable {
 		this.protocolo = protocolo;
 	}
 
+	// Método para logar os nomes dos arquivos enviados
+	public void logArquivosDocumentos() {
+		System.out.println("[LOG] Card Único: " + (cardUnicoFile != null ? cardUnicoFile : "NÃO ENVIADO"));
+		System.out.println("[LOG] Comprovante de Endereço: " + (comprovanteEnderecoFile != null ? comprovanteEnderecoFile : "NÃO ENVIADO"));
+		System.out.println("[LOG] Documento com Foto: " + (documentoComFotoFile != null ? documentoComFotoFile : "NÃO ENVIADO"));
+	}
+
+	public String getCardUnicoFile() {
+		return cardUnicoFile;
+	}
+
+	public void setCardUnicoFile(String cardUnicoFile) {
+		this.cardUnicoFile = cardUnicoFile;
+	}
+
+	public String getDocumentoComFotoFile() {
+		return documentoComFotoFile;
+	}
+
+	public void setDocumentoComFotoFile(String documentoComFotoFile) {
+		this.documentoComFotoFile = documentoComFotoFile;
+	}
+
+	public String getComprovanteEnderecoFile() {
+		return comprovanteEnderecoFile;
+	}
+
+	public void setComprovanteEnderecoFile(String comprovanteEnderecoFile) {
+		this.comprovanteEnderecoFile = comprovanteEnderecoFile;
+	}
+
+	// Métodos para processar upload de cada documento
+	public void handleCardUnicoUpload(org.primefaces.event.FileUploadEvent event) {
+		System.out.println("[LOG] handleCardUnicoUpload chamado");
+		String fileName = salvarArquivoUpload(event, "Card Único");
+		if (fileName != null) {
+			this.cardUnicoFile = fileName;
+			System.out.println("[DEBUG] cardUnicoFile setado: " + this.cardUnicoFile);
+		} else {
+			System.out.println("[DEBUG] cardUnicoFile NÃO setado (null)");
+		}
+	}
+
+	public void handleDocumentoComFotoUpload(org.primefaces.event.FileUploadEvent event) {
+		System.out.println("[LOG] handleDocumentoComFotoUpload chamado");
+		String fileName = salvarArquivoUpload(event, "Documento com Foto");
+		if (fileName != null) {
+			this.documentoComFotoFile = fileName;
+			System.out.println("[DEBUG] documentoComFotoFile setado: " + this.documentoComFotoFile);
+		} else {
+			System.out.println("[DEBUG] documentoComFotoFile NÃO setado (null)");
+		}
+	}
+
+	public void handleComprovanteEnderecoUpload(org.primefaces.event.FileUploadEvent event) {
+		System.out.println("[LOG] handleComprovanteEnderecoUpload chamado");
+		String fileName = salvarArquivoUpload(event, "Comprovante de Endereço");
+		if (fileName != null) {
+			this.comprovanteEnderecoFile = fileName;
+			System.out.println("[DEBUG] comprovanteEnderecoFile setado: " + this.comprovanteEnderecoFile);
+		} else {
+			System.out.println("[DEBUG] comprovanteEnderecoFile NÃO setado (null)");
+		}
+	}
+
 	public ModalidadeSolicitante[] getModalidadesSolicitante() {
 		return ModalidadeSolicitante.values();
 	}
@@ -296,52 +374,237 @@ public class CadastroAnimalBean implements Serializable {
 		this.fotoUpload = fotoUpload;
 	}
 
+
 	public void salvar() {
-
-		if (!verificaSolicitacoesEmAberto()) {
-
-			if (!this.animaisAdicionados.isEmpty()) {
-				this.solicitacao.setProprietario(this.proprietario);
-				this.solicitacao.setData(this.dataAtual);
-
-				this.solicitacao.setAnimais(this.animaisAdicionados);
-				this.solicitacao.setStatus(Status.SOLICITADO);
-
-				this.endereco.setCidade(this.cidades.porId(2888));
-				this.endereco.setCep("85980-000");
-
-				this.proprietario.setCpf(this.cpf);
-				this.proprietario.setEndereco(this.endereco);
-				this.proprietario.setContato(this.contato);
-				this.proprietario.setAnimais(this.animaisAdicionados);
-				this.dataNascimentoCalendar.setTime(this.dataNascimento);
-				this.proprietario.setDataNascimento(this.dataNascimentoCalendar);
-				this.solicitacao = this.solicitacaoService.salvar(this.solicitacao);
-
-				this.protocolo = this.solicitacao.getIdSolicitacao();
-				FacesUtil.addInfoMessage("Animal cadastrado com sucesso!");
-
-				this.chamaDialogComprovante();
-
-				if (this.usuarioLogado.getUsuarioLogado() == null) {
-					this.geraComprovante();
-				}
-
-				limpar();
-				this.cpf = "";
-				this.habilitaCampos = true;
-			} else {
-				FacesUtil.addErrorMessage("Adicione um animal!");
+		Proprietario propAtual;
+		// Busca o proprietário pelo CPF, se existir
+		if (cpf != null && !cpf.trim().isEmpty()) {
+			try {
+				propAtual = proprietarios.proprietarioPorCPF(cpf);
+				System.out.println("[LOG] Proprietario encontrado: id=" + propAtual.getIdProprietario());
+			} catch (Exception e) {
+				System.out.println("[LOG] Proprietario não encontrado, usando objeto do bean");
+				propAtual = proprietario;
 			}
-
 		} else {
-
-			this.habilitaCampos = true;
-			this.animaisAdicionados.clear();
-			FacesUtil.addErrorMessage("Este CPF já possui uma solicitação em aberto!");
-			FacesUtil.addErrorMessage("É permitido uma solicitação por CPF!");
+			System.out.println("[LOG] CPF vazio, usando objeto do bean");
+			propAtual = proprietario;
 		}
 
+		try {
+			manager.getTransaction().begin();
+
+			// Associar contato e endereço do formulário ao proprietário atual (para novos e existentes)
+			propAtual.setContato(this.contato);
+			propAtual.setEndereco(this.endereco);
+
+			// Se o contato está vazio, remove do proprietário para evitar erro de referência transiente
+			if (propAtual.getContato() != null) {
+				boolean contatoVazio = true;
+				if (propAtual.getContato().getEmail() != null && !propAtual.getContato().getEmail().trim().isEmpty())
+					contatoVazio = false;
+				if (propAtual.getContato().getTelefone() != null && !propAtual.getContato().getTelefone().trim().isEmpty())
+					contatoVazio = false;
+				if (propAtual.getContato().getCelular() != null && !propAtual.getContato().getCelular().trim().isEmpty())
+					contatoVazio = false;
+				if (!contatoVazio && propAtual.getContato().getIdContato() == null) {
+					manager.persist(propAtual.getContato());
+					manager.flush();
+					System.out.println("[LOG] Contato persistido: id=" + propAtual.getContato().getIdContato() + ", Email: " + propAtual.getContato().getEmail() + ", Telefone: " + propAtual.getContato().getTelefone() + ", Celular: " + propAtual.getContato().getCelular());
+					Contato contatoGerenciado = manager.find(Contato.class, propAtual.getContato().getIdContato());
+					propAtual.setContato(contatoGerenciado);
+				} else if (contatoVazio) {
+					propAtual.setContato(null);
+					System.out.println("[LOG] Contato vazio removido do proprietário.");
+				}
+			}
+			// Persistir endereço antes do proprietário se novo
+			if (propAtual.getEndereco() != null && propAtual.getEndereco().getIdEndereco() == null) {
+				// Validação básica para endereço (campos obrigatórios)
+				if (propAtual.getEndereco().getLogradouro() == null || propAtual.getEndereco().getLogradouro().trim().isEmpty()) {
+					throw new NegocioException("O logradouro é obrigatório.");
+				}
+				if (propAtual.getEndereco().getNumero() == null || propAtual.getEndereco().getNumero().trim().isEmpty()) {
+					throw new NegocioException("O número do endereço é obrigatório.");
+				}
+				if (propAtual.getEndereco().getBairro() == null || propAtual.getEndereco().getBairro().trim().isEmpty()) {
+					throw new NegocioException("O bairro é obrigatório.");
+				}
+				manager.persist(propAtual.getEndereco());
+				manager.flush();
+				System.out.println("[LOG] Endereço persistido: id=" + propAtual.getEndereco().getIdEndereco() + ", Logradouro: " + propAtual.getEndereco().getLogradouro() + ", Numero: " + propAtual.getEndereco().getNumero() + ", Bairro: " + propAtual.getEndereco().getBairro());
+				Endereco enderecoGerenciado = manager.find(Endereco.class, propAtual.getEndereco().getIdEndereco());
+				propAtual.setEndereco(enderecoGerenciado);
+			}
+
+			// Set dataNascimento for both new and existing owners
+			if (dataNascimento != null) {
+				dataNascimentoCalendar.setTime(dataNascimento);
+				propAtual.setDataNascimento(dataNascimentoCalendar);
+			}
+
+			// Persistir ou atualizar proprietário (antes dos animais)
+			boolean isNovoProprietario = (propAtual.getIdProprietario() == null);
+			if (isNovoProprietario) {
+				// Validações manuais para novos proprietários para evitar campos nulos no banco
+				if (propAtual.getNome() == null || propAtual.getNome().trim().isEmpty()) {
+					throw new NegocioException("O nome do proprietário é obrigatório.");
+				}
+				if (propAtual.getRg() == null || propAtual.getRg().trim().isEmpty()) {
+					throw new NegocioException("O RG do proprietário é obrigatório.");
+				}
+				if (dataNascimento == null) {
+					throw new NegocioException("A data de nascimento é obrigatória.");
+				}
+				// NIS é opcional, não validar
+				System.out.println("[LOG] Validações para novo proprietário passadas. Nome: " + propAtual.getNome() + ", RG: " + propAtual.getRg() + ", DataNascimento: " + propAtual.getDataNascimento());
+				manager.persist(propAtual);
+				manager.flush();
+				System.out.println("[LOG] Proprietário persistido. id=" + propAtual.getIdProprietario());
+			} else {
+				// Para proprietário existente, atualiza campos do formulário (embora desabilitados, para consistência)
+				propAtual.setNome(this.proprietario.getNome());
+				propAtual.setRg(this.proprietario.getRg());
+				propAtual.setNis(this.proprietario.getNis());
+				propAtual = manager.merge(propAtual);
+				manager.flush();
+				System.out.println("[LOG] Proprietário existente atualizado. id=" + propAtual.getIdProprietario());
+			}
+
+			// Garantir que todos os animais adicionados referenciem o proprietário gerenciado
+			List<Animal> animaisGerenciados = new ArrayList<>();
+			for (Animal a : animaisAdicionados) {
+				// Set proprietário gerenciado
+				a.setProprietario(propAtual);
+				Animal animalGerenciado;
+				if (a.getIdAnimal() != null) {
+					animalGerenciado = manager.merge(a);  // Merge se já tem ID
+				} else {
+					manager.persist(a);
+					animalGerenciado = a;
+				}
+				manager.flush();
+				animaisGerenciados.add(animalGerenciado);
+				System.out.println("[LOG] Animal gerenciado: id=" + animalGerenciado.getIdAnimal());
+			}
+
+			if (!verificaSolicitacoesEmAberto()) {
+				System.out.println("[LOG] Nenhuma solicitação em aberto");
+				propAtual.setCpf(cpf);
+				propAtual.setAnimais(animaisGerenciados);
+				System.out.println("[LOG] Proprietario pronto para salvar: id=" + propAtual.getIdProprietario());
+				solicitacao.setProprietario(propAtual);
+				solicitacao.setData(dataAtual);
+				solicitacao.setAnimais(animaisGerenciados);
+				solicitacao.setStatus(Status.SOLICITADO);
+				endereco.setCidade(cidades.porId(2888));
+				endereco.setCep("85980-000");
+				System.out.println("[LOG] Salvando solicitação...");
+				solicitacao = solicitacaoService.salvar(solicitacao);
+				protocolo = solicitacao.getIdSolicitacao();
+				System.out.println("[LOG] Solicitação salva: id=" + protocolo);
+
+				// Validação e persistência de documentos apenas para novos proprietários ou sem docs existentes
+				if (isNovoProprietario || propAtual.getDocumentos() == null) {
+					// Validação: Requer todos os documentos para novos proprietários
+					if (isNovoProprietario && (cardUnicoFile == null || documentoComFotoFile == null || comprovanteEnderecoFile == null)) {
+						throw new NegocioException("Todos os documentos pessoais (Card Único, Documento com Foto e Comprovante de Endereço) são obrigatórios para novos proprietários.");
+					}
+
+					// Logs detalhados dos arquivos enviados
+					logArquivosDocumentos();
+
+					System.out.println("[LOG] Criando objeto DocumentosPessoais...");
+					DocumentosPessoais documentos = new DocumentosPessoais();
+					documentos.setCardUnico(cardUnicoFile);
+					documentos.setComprovanteEndereco(comprovanteEnderecoFile);
+					documentos.setDocumentoComFoto(documentoComFotoFile);
+					System.out.println("[LOG] Salvando DocumentosPessoais...");
+					manager.persist(documentos);
+					manager.flush();
+					System.out.println("[LOG] DocumentosPessoais persistido: id=" + documentos.getId());
+					propAtual.setDocumentos(documentos);
+					System.out.println("[LOG] Documentos pessoais associados ao proprietário.");
+					manager.merge(propAtual);
+					System.out.println("[LOG] Proprietário atualizado com documentos pessoais.");
+
+					// Limpar campos de documentos após sucesso
+					cardUnicoFile = null;
+					documentoComFotoFile = null;
+					comprovanteEnderecoFile = null;
+				} else {
+					System.out.println("[LOG] Proprietário existente já possui documentos; pulando criação.");
+				}
+
+				FacesUtil.addInfoMessage("Animal cadastrado com sucesso!");
+				chamaDialogComprovante();
+				if (usuarioLogado.getUsuarioLogado() == null) {
+					System.out.println("[LOG] Gerando comprovante...");
+					geraComprovante();
+				}
+				limpar();
+				cpf = "";
+				habilitaCampos = true;
+			} else {
+				System.out.println("[LOG] Solicitação em aberto detectada, não irá salvar");
+				habilitaCampos = true;
+				animaisAdicionados.clear();
+				FacesUtil.addErrorMessage("Este CPF já possui uma solicitação em aberto!");
+				FacesUtil.addErrorMessage("É permitido uma solicitação por CPF!");
+			}
+
+			manager.getTransaction().commit();
+			System.out.println("[LOG] Transação commitada com sucesso");
+		} catch (Exception e) {
+			System.out.println("[LOG] Erro ao salvar: " + e.getMessage());
+			if (manager.getTransaction().isActive()) {
+				manager.getTransaction().rollback();
+				System.out.println("[LOG] Rollback executado");
+				// Opcional: Limpar arquivos salvos em caso de erro (manual cleanup recomendado)
+				if (cardUnicoFile != null) {
+					new java.io.File("C:\\animalys\\documentos\\" + cardUnicoFile).delete();
+				}
+				if (documentoComFotoFile != null) {
+					new java.io.File("C:\\animalys\\documentos\\" + documentoComFotoFile).delete();
+				}
+				if (comprovanteEnderecoFile != null) {
+					new java.io.File("C:\\animalys\\documentos\\" + comprovanteEnderecoFile).delete();
+				}
+			}
+			FacesUtil.addErrorMessage("Erro ao salvar: " + e.getMessage());
+		}
+	}
+
+	// Função utilitária para salvar o arquivo
+	private String salvarArquivoUpload(org.primefaces.event.FileUploadEvent event, String tipo) {
+		try {
+			// Use absolute path as specified
+			String basePath = "C:\\animalys\\documentos";
+			java.io.File dir = new java.io.File(basePath);
+			if (!dir.exists()) {
+				boolean created = dir.mkdirs();
+				if (!created) {
+					System.out.println("[LOG] Falha ao criar diretório: " + basePath);
+					return null;
+				}
+			}
+			String fileName = System.currentTimeMillis() + "_" + event.getFile().getFileName();
+			java.io.File dest = new java.io.File(dir, fileName);
+			try (java.io.InputStream in = event.getFile().getInputstream();
+					java.io.FileOutputStream out = new java.io.FileOutputStream(dest)) {
+				byte[] buffer = new byte[1024];
+				int len;
+				while ((len = in.read(buffer)) > 0) {
+					out.write(buffer, 0, len);
+				}
+				System.out.println("[LOG] " + tipo + " salvo em: " + dest.getAbsolutePath());
+				return fileName;
+			}
+		} catch (Exception e) {
+			System.out.println("[LOG] Erro ao salvar " + tipo + ": " + e.getMessage());
+			e.printStackTrace(); // For better debugging
+			return null;
+		}
 	}
 
 	public void limpar() {
@@ -354,7 +617,9 @@ public class CadastroAnimalBean implements Serializable {
 		this.animaisAdicionados = new ArrayList<>();
 		this.dataNascimento = null;
 		this.dataNascimentoCalendar = Calendar.getInstance();
-
+		this.cardUnicoFile = null;
+		this.documentoComFotoFile = null;
+		this.comprovanteEnderecoFile = null;
 	}
 
 	private void carregaEspecies() {
@@ -372,7 +637,8 @@ public class CadastroAnimalBean implements Serializable {
 	public void adicionarAnimal() {
 		try {
 
-			System.out.println("METODO: adicionarAnimal() DIZ: - FotoUpload: " + (fotoUpload != null ? fotoUpload.getFileName() : "null"));
+			System.out.println("METODO: adicionarAnimal() DIZ: - FotoUpload: "
+					+ (fotoUpload != null ? fotoUpload.getFileName() : "null"));
 
 			this.animal.setProprietario(this.proprietario);
 			this.animal.setStatus(Status.SOLICITADO);
@@ -381,37 +647,38 @@ public class CadastroAnimalBean implements Serializable {
 			if (this.fotoUpload != null && this.fotoUpload.getSize() > 0) {
 
 				System.out.println("METODO: adicionarAnimal() DIZ: BLOCO DE UPLOAD DE FOTO CHAMADO");
-				System.out.println("METODO: adicionarAnimal() DIZ: Upload recebido: " + (fotoUpload != null ? fotoUpload.getFileName() : "null"));
+				System.out.println("METODO: adicionarAnimal() DIZ: Upload recebido: "
+						+ (fotoUpload != null ? fotoUpload.getFileName() : "null"));
 
 				// Chama o serviço para salvar a foto fisicamente
 				System.out.println("METODO: adicionarAnimal() DIZ: SERVICO SALVAR SALVAR FOTO FISICAMENTE CHAMADO");
 				FotoAnimal foto = fotoService.salvarFoto(this.fotoUpload, this.animal);
 				this.animal.adicionarFoto(foto); // Adiciona a foto à lista de fotos do animal
 				this.animal.setFoto(foto.getNomeArquivo()); // Define o nome do arquivo da foto principal no campo
-				
+
 			} else {
 				System.out.println("METODO: adicionarAnimal() DIZ: FOTO NAO SELECIONADA");
 			}
 
-			// Adiciona à lista antes de salvar
+			// Adiciona à lista (persistência completa em salvar())
+			System.out.println("METODO: adicionarAnimal() DIZ: NOME DA FOTO ANTES DE ADICIONAR: " + this.animal.getFoto());
 			if (this.solicitacao.getModalidade().equals(ModalidadeSolicitante.PESSOA_FISICA)) {
-				System.out.println("METODO: adicionarAnimal() DIZ: ADCIONANDO A LISTA ANTES DE SALVAR");
-				this.adicionaAnimaisPessoaFisica();
+				System.out.println("METODO: adicionarAnimal() DIZ: ADCIONANDO A LISTA");
+				if (!this.animaisAdicionados.contains(this.animal)) {
+					this.animaisAdicionados.add(this.animal);
+				}
 			} else if (this.solicitacao.getModalidade().equals(ModalidadeSolicitante.PROTETOR_INDIVIUAL_ANIMAIS)) {
-				this.adicionaAnimaisProtetores();
+				if (!this.animaisAdicionados.contains(this.animal)) {
+					this.animaisAdicionados.add(this.animal);
+				}
 			}
-
-			// Agora salva o animal no banco
-			System.out.println("METODO: adicionarAnimal() DIZ: NOME DA FOTO ANTES DE SALVAR: " + this.animal.getFoto());
-			System.out.println("METODO: adicionarAnimal() DIZ: SALVANDO ANIMAL AO BANCO DE DADOS");
-			this.animal = animalDAO.guardar(this.animal);
 
 			System.out.println("METODO: adicionarAnimal() DIZ: CHAMANDO METODO: limparCamposFoto()");
 			this.limparCamposFoto();
 
 		} catch (NegocioException | IOException e) {
 			e.printStackTrace();
-			FacesUtil.addErrorMessage("METODO: adicionarAnimal() DIZ: Erro ao salvar animal/foto: " + e.getMessage());
+			FacesUtil.addErrorMessage("METODO: adicionarAnimal() DIZ: Erro ao processar animal/foto: " + e.getMessage());
 		}
 		System.out.println("METODO: adicionarAnimal() EXECUTADO");
 	}
@@ -428,23 +695,34 @@ public class CadastroAnimalBean implements Serializable {
 	public void buscaCadastroPeloCPF() {
 
 		if (!this.cpf.equals("___.___.___-__")) {
+			// Preservar modalidade atual antes de carregar dados do proprietário
+			ModalidadeSolicitante modalidadeAtual = this.solicitacao.getModalidade();
 
 			try {
-
 				this.proprietario = this.proprietarios.proprietarioPorCPF(this.cpf);
-				this.contato = this.proprietario.getContato();
-				this.endereco = this.proprietario.getEndereco();
+				System.out
+						.println("[LOG] Proprietario buscado: idProprietario=" + this.proprietario.getIdProprietario());
+				System.out.println("[LOG] Documentos do proprietario: " + (this.proprietario.getDocumentos() != null ? "carregados com ID " + this.proprietario.getDocumentos().getId() : "NULL"));
+				this.contato = this.proprietario.getContato() != null ? this.proprietario.getContato() : new Contato();
+				this.endereco = this.proprietario.getEndereco() != null ? this.proprietario.getEndereco() : new Endereco();
 				this.animaisAtendidos = this.proprietario.getAnimais();
 				this.dataNascimento = this.proprietario.getDataNascimento().getTime();
-				this.habilitaCampos = false;
-
+				this.animaisAdicionados.clear();
+				this.animaisAdicionados.addAll(this.proprietario.getAnimais());
+				this.habilitaCampos = false; // Desabilitar campos para proprietário existente (pré-preenchidos)
+				// Restaurar modalidade preservada
+				this.solicitacao.setModalidade(modalidadeAtual);
+				FacesUtil.addInfoMessage("Proprietário encontrado.");
 			} catch (NoResultException e) {
 				e.printStackTrace();
-				System.out.println("CPF não encontrado!");
-				this.habilitaCampos = false;
+				System.out.println("[LOG] CPF não encontrado!");
 				limpar();
+				this.proprietario.setCpf(this.cpf);
+				this.habilitaCampos = true; // Habilitar campos para novo cadastro
+				// Restaurar modalidade também para novo proprietário
+				this.solicitacao.setModalidade(modalidadeAtual);
+				FacesUtil.addInfoMessage("CPF não encontrado. Faça o Cadastro.");
 			}
-
 		} else {
 			FacesUtil.addErrorMessage("Informe o CPF!");
 		}
@@ -520,6 +798,82 @@ public class CadastroAnimalBean implements Serializable {
 	private void chamaDialogComprovante() {
 
 		PrimeFaces.current().executeScript("PF(\'dlgSucesso\').show()");
+
+	}
+
+	// Métodos para remoção de documentos individuais
+	public void removerCardUnico() {
+		setCardUnicoFile(null);
+	}
+
+	public void removerDocumentoComFoto() {
+		setDocumentoComFotoFile(null);
+	}
+
+	public void removerComprovanteEndereco() {
+		setComprovanteEnderecoFile(null);
+	}
+
+	// Método para limpar todos os documentos
+	public void limparTodosDocumentos() {
+		setCardUnicoFile(null);
+		setDocumentoComFotoFile(null);
+		setComprovanteEnderecoFile(null);
+	}
+	
+	// Método para verificar se o proprietário atual tem documentos preenchidos
+	public boolean proprietarioTemDocumentos() {
+		// Verifica se o proprietário está carregado
+		if (proprietario == null || proprietario.getIdProprietario() == null) {
+			return false;
+		}
+		
+		// Verifica se o proprietário tem documentos
+		if (proprietario.getDocumentos() == null) {
+			// Tentar recarregar o proprietário com documentos
+			try {
+				Proprietario recarregado = proprietarios.porId(proprietario.getIdProprietario());
+				if (recarregado != null && recarregado.getDocumentos() != null) {
+					this.proprietario = recarregado;
+				} else {
+					return false;
+				}
+			} catch (Exception e) {
+				return false;
+			}
+		}
+		
+		DocumentosPessoais docs = proprietario.getDocumentos();
+		if (docs == null) {
+			return false;
+		}
+		
+		// Verifica se pelo menos um documento está preenchido
+		boolean temCardUnico = docs.getCardUnico() != null && !docs.getCardUnico().trim().isEmpty();
+		boolean temDocComFoto = docs.getDocumentoComFoto() != null && !docs.getDocumentoComFoto().trim().isEmpty();
+		boolean temComprovante = docs.getComprovanteEndereco() != null && !docs.getComprovanteEndereco().trim().isEmpty();
+		
+		return temCardUnico || temDocComFoto || temComprovante;
+	}
+	
+	// Método para verificar se há um proprietário carregado
+	public boolean temProprietarioCarregado() {
+		return proprietario != null && proprietario.getIdProprietario() != null;
+	}
+	
+	// Método para forçar refresh do estado dos documentos (para debug)
+	public void refreshDocumentos() {
+		if (proprietario != null && proprietario.getIdProprietario() != null) {
+			try {
+				Proprietario recarregado = proprietarios.porId(proprietario.getIdProprietario());
+				if (recarregado != null) {
+					this.proprietario = recarregado;
+					System.out.println("[REFRESH] Proprietário recarregado. Tem documentos: " + proprietarioTemDocumentos());
+				}
+			} catch (Exception e) {
+				System.out.println("[REFRESH] Erro ao recarregar: " + e.getMessage());
+			}
+		}
 	}
 
 }

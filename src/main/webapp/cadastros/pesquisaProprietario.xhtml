@@ -84,12 +84,130 @@
 				</p:column>
 				
 				<p:column headerText="Ações" style="width: 100px; text-align: center;">
-					<p:button outcome="/cadastros/cadastroProprietario" icon="fa fa-pencil" title="Editar">
+					<p:button outcome="/cadastros/cadastroProprietario" icon="fa fa-pencil" title="Editar"
+						style="margin-right: 5px;">
 						<f:param name="proprietario" value="#{prop.idProprietario}" />
 					</p:button>
+					<p:commandButton icon="fa fa-file-text-o" title="Ver Documentos"
+						disabled="#{!pesquisaProprietarioBean.proprietarioTemDocumentos(prop)}"
+						action="#{pesquisaProprietarioBean.selecionarProprietario(prop)}"
+						oncomplete="PF('dlgVisualizarDocumentos').show();"
+						update=":formPesquisa:dlgVisualizarDocumentos"
+						styleClass="#{pesquisaProprietarioBean.proprietarioTemDocumentos(prop) ? 'ui-button-success' : 'ui-button-secondary'}" />
 				</p:column>
 				
 			</p:dataTable>
+
+			<!-- Dialog para visualizar documentos pessoais do proprietário -->
+			<p:dialog id="dlgVisualizarDocumentos" header="Documentos do Proprietário: #{pesquisaProprietarioBean.proprietarioSelecionado.nome}" 
+				widgetVar="dlgVisualizarDocumentos" modal="true" resizable="false" width="95%" 
+				visible="false" style="max-width: 1250px;" styleClass="ui-fluid">
+				
+				<h:panelGroup rendered="#{pesquisaProprietarioBean.proprietarioSelecionadoTemDocumentos()}">
+					<p:panelGrid columns="3" layout="grid" styleClass="ui-fluid" style="margin: 10px;">
+
+						<p:panel header="Card Único" styleClass="ui-widget-shadow"
+							style="text-align: center; margin: 5px; padding: 10px; background: #fff; border: 2px solid #0056b3; border-radius: 12px; box-shadow: 0 2px 8px #0056b355; opacity: 1;">
+							
+							<h:panelGroup rendered="#{not empty pesquisaProprietarioBean.proprietarioSelecionado.documentos.cardUnico}">
+								<ui:fragment rendered="#{pesquisaProprietarioBean.proprietarioSelecionado.documentos.cardUnico.endsWith('.pdf')}">
+									<div style="display: flex; flex-direction: column; align-items: center; gap: 15px;">
+										<i class="fa fa-file-pdf-o" style="font-size: 4em; color: #dc3545;"></i>
+										<p:commandButton value="Visualizar PDF" icon="fa fa-external-link" 
+											styleClass="ui-button-danger" 
+											onclick="window.open('/uploads/documentos/#{pesquisaProprietarioBean.proprietarioSelecionado.documentos.cardUnico}', '_blank'); return false;"
+											style="padding: 8px 16px; font-weight: bold;" />
+									</div>
+								</ui:fragment>
+								<ui:fragment rendered="#{pesquisaProprietarioBean.proprietarioSelecionado.documentos.cardUnico.endsWith('.jpg') or pesquisaProprietarioBean.proprietarioSelecionado.documentos.cardUnico.endsWith('.jpeg') or pesquisaProprietarioBean.proprietarioSelecionado.documentos.cardUnico.endsWith('.png')}">
+									<img src="/uploads/documentos/#{pesquisaProprietarioBean.proprietarioSelecionado.documentos.cardUnico}"
+										alt="Card Único"
+										style="max-width: 250px; max-height: 350px; border: 2px solid #ddd; border-radius: 8px; margin: 5px auto; cursor: pointer;"
+										preview="true" previewWidth="600" previewHeight="450" />
+								</ui:fragment>
+							</h:panelGroup>
+							
+							<h:panelGroup rendered="#{empty pesquisaProprietarioBean.proprietarioSelecionado.documentos.cardUnico}">
+								<img src="/uploads/documentos/no_doc.jpg" alt="Card Único não encontrado" 
+									style="max-width: 250px; max-height: 350px; border: 2px solid #ddd; border-radius: 8px; margin: 5px 0;" />
+								<p style="color: #888; font-weight: bold; font-size: 1em;">Card Único não encontrado</p>
+							</h:panelGroup>
+							
+						</p:panel>
+
+						<p:panel header="Documento com Foto" styleClass="ui-widget-shadow"
+							style="text-align: center; margin: 5px; padding: 10px; background: #fff; border: 2px solid #218838; border-radius: 12px; box-shadow: 0 2px 8px #21883855; opacity: 1;">
+							
+							<h:panelGroup rendered="#{not empty pesquisaProprietarioBean.proprietarioSelecionado.documentos.documentoComFoto}">
+								<ui:fragment rendered="#{pesquisaProprietarioBean.proprietarioSelecionado.documentos.documentoComFoto.endsWith('.pdf')}">
+									<div style="display: flex; flex-direction: column; align-items: center; gap: 15px;">
+										<i class="fa fa-file-pdf-o" style="font-size: 4em; color: #dc3545;"></i>
+										<p:commandButton value="Visualizar PDF" icon="fa fa-external-link" 
+											styleClass="ui-button-danger" 
+											onclick="window.open('/uploads/documentos/#{pesquisaProprietarioBean.proprietarioSelecionado.documentos.documentoComFoto}', '_blank'); return false;"
+											style="padding: 8px 16px; font-weight: bold;" />
+									</div>
+								</ui:fragment>
+								<ui:fragment rendered="#{pesquisaProprietarioBean.proprietarioSelecionado.documentos.documentoComFoto.endsWith('.jpg') or pesquisaProprietarioBean.proprietarioSelecionado.documentos.documentoComFoto.endsWith('.jpeg') or pesquisaProprietarioBean.proprietarioSelecionado.documentos.documentoComFoto.endsWith('.png')}">
+									<img src="/uploads/documentos/#{pesquisaProprietarioBean.proprietarioSelecionado.documentos.documentoComFoto}"
+										alt="Documento com Foto"
+										style="max-width: 250px; max-height: 350px; border: 2px solid #ddd; border-radius: 8px; margin: 5px auto; cursor: pointer;"
+										preview="true" previewWidth="600" previewHeight="450" />
+								</ui:fragment>
+							</h:panelGroup>
+							
+							<h:panelGroup rendered="#{empty pesquisaProprietarioBean.proprietarioSelecionado.documentos.documentoComFoto}">
+								<img src="/uploads/documentos/no_doc.jpg" alt="Documento com Foto não encontrado" 
+									style="max-width: 250px; max-height: 350px; border: 2px solid #ddd; border-radius: 8px; margin: 5px 0;" />
+								<p style="color: #888; font-weight: bold; font-size: 1em;">Documento com Foto não encontrado</p>
+							</h:panelGroup>
+							
+						</p:panel>
+
+						<p:panel header="Comprovante de Endereço" styleClass="ui-widget-shadow"
+							style="text-align: center; margin: 5px; padding: 10px; background: #fff; border: 2px solid #ffc107; border-radius: 12px; box-shadow: 0 2px 8px #ffc10799; opacity: 1;">
+							
+							<h:panelGroup rendered="#{not empty pesquisaProprietarioBean.proprietarioSelecionado.documentos.comprovanteEndereco}">
+								<ui:fragment rendered="#{pesquisaProprietarioBean.proprietarioSelecionado.documentos.comprovanteEndereco.endsWith('.pdf')}">
+									<div style="display: flex; flex-direction: column; align-items: center; gap: 15px;">
+										<i class="fa fa-file-pdf-o" style="font-size: 4em; color: #dc3545;"></i>
+										<p:commandButton value="Visualizar PDF" icon="fa fa-external-link" 
+											styleClass="ui-button-danger" 
+											onclick="window.open('/uploads/documentos/#{pesquisaProprietarioBean.proprietarioSelecionado.documentos.comprovanteEndereco}', '_blank'); return false;"
+											style="padding: 8px 16px; font-weight: bold;" />
+									</div>
+								</ui:fragment>
+								<ui:fragment rendered="#{pesquisaProprietarioBean.proprietarioSelecionado.documentos.comprovanteEndereco.endsWith('.jpg') or pesquisaProprietarioBean.proprietarioSelecionado.documentos.comprovanteEndereco.endsWith('.jpeg') or pesquisaProprietarioBean.proprietarioSelecionado.documentos.comprovanteEndereco.endsWith('.png')}">
+									<img src="/uploads/documentos/#{pesquisaProprietarioBean.proprietarioSelecionado.documentos.comprovanteEndereco}"
+										alt="Comprovante de Endereço"
+										style="max-width: 250px; max-height: 350px; border: 2px solid #ddd; border-radius: 8px; margin: 5px auto; cursor: pointer;"
+										preview="true" previewWidth="600" previewHeight="450" />
+								</ui:fragment>
+							</h:panelGroup>
+							
+							<h:panelGroup rendered="#{empty pesquisaProprietarioBean.proprietarioSelecionado.documentos.comprovanteEndereco}">
+								<img src="/uploads/documentos/no_doc.jpg" alt="Comprovante de Endereço não encontrado" 
+									style="max-width: 250px; max-height: 350px; border: 2px solid #ddd; border-radius: 8px; margin: 5px 0;" />
+								<p style="color: #888; font-weight: bold; font-size: 1em;">Comprovante de Endereço não encontrado</p>
+							</h:panelGroup>
+							
+						</p:panel>
+					</p:panelGrid>
+				</h:panelGroup>
+				
+				<h:panelGroup rendered="#{!pesquisaProprietarioBean.proprietarioSelecionadoTemDocumentos()}">
+					<div style="text-align: center; padding: 50px;">
+						<i class="fa fa-exclamation-triangle" style="font-size: 4em; color: #ffc107; margin-bottom: 20px;"></i>
+						<h3 style="color: #6c757d;">Nenhum documento encontrado</h3>
+						<p style="color: #6c757d;">Este proprietário não possui documentos cadastrados no sistema.</p>
+					</div>
+				</h:panelGroup>
+				
+				<f:facet name="footer">
+					<p:commandButton value="Fechar" icon="fa fa-times" onclick="PF('dlgVisualizarDocumentos').hide();"
+						styleClass="ui-button-info" />
+				</f:facet>
+			</p:dialog>
 		</h:form>
 	</ui:define>
 </ui:composition>

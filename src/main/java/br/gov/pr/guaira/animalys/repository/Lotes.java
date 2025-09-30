@@ -42,7 +42,7 @@ public class Lotes implements Serializable {
 			manager.flush();
 		} catch (PersistenceException e) {
 			e.printStackTrace();
-			throw new NegocioException("Este Lote não pode ser excluído!");
+			throw new NegocioException("Este Lote nï¿½o pode ser excluï¿½do!");
 		}
 	}
 
@@ -91,7 +91,7 @@ public class Lotes implements Serializable {
 				.setParameter("produto", produto).setParameter("dataAtual", dataAtual).getResultList();
 	}
 	
-	//USADO NO ACERTO DE ESTOQUE, ASSIM TRÁS TODOS OS ESTOQUES POSITIVOS DO BANCO
+	//USADO NO ACERTO DE ESTOQUE, ASSIM TRï¿½S TODOS OS ESTOQUES POSITIVOS DO BANCO
 	public List<Lote> porProdutoAcerto(Produto produto) {
 		return this.manager
 				.createQuery("select l from Lote l inner join fetch l.produto p "
@@ -132,5 +132,26 @@ public class Lotes implements Serializable {
 
 		TypedQuery<Lote> query = manager.createQuery(criteriaQuery);
 		return query.getSingleResult();
+	}
+
+	public List<Lote> lotesComEstoque() {
+		Calendar dataAtual = Calendar.getInstance();
+		return this.manager
+				.createQuery("SELECT l FROM Lote l INNER JOIN FETCH l.produto p " +
+						"WHERE l.quantidade > 0 AND l.validade > :dataAtual " +
+						"ORDER BY p.nome, l.validade ASC", Lote.class)
+				.setParameter("dataAtual", dataAtual)
+				.getResultList();
+	}
+
+	public List<Lote> porNomeProdutoComEstoque(String nome) {
+		Calendar dataAtual = Calendar.getInstance();
+		return this.manager
+				.createQuery("SELECT l FROM Lote l INNER JOIN FETCH l.produto p " +
+						"WHERE p.nome LIKE :nome AND l.quantidade > 0 AND l.validade > :dataAtual " +
+						"ORDER BY p.nome, l.validade ASC", Lote.class)
+				.setParameter("nome", "%" + nome.toUpperCase() + "%")
+				.setParameter("dataAtual", dataAtual)
+				.getResultList();
 	}
 }

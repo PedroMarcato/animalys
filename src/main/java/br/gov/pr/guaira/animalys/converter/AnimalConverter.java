@@ -12,21 +12,25 @@ import br.gov.pr.guaira.animalys.util.cdi.CDIServiceLocator;
 @FacesConverter(value = "animalConverter", forClass = Animal.class)
 public class AnimalConverter implements Converter{
 	
-	private Animais animais;
+	private Animais animaisRepository;
 
 	public AnimalConverter() {
-		animais = CDIServiceLocator.getBean(Animais.class);
+		animaisRepository = CDIServiceLocator.getBean(Animais.class);
 	}
 
 	public Object getAsObject(FacesContext context, UIComponent component, String value) {
 		Animal retorno = null;
 
-		if (value != null && !value.trim().isEmpty()) {
+		if (value != null && !value.trim().isEmpty() && !value.equals("null")) {
 			try {
 				int id = Integer.parseInt(value);
-				retorno = animais.porId(id);
+				// Usar o repositório para buscar o animal completo com fetch joins
+				retorno = animaisRepository.porId(id);
 			} catch (NumberFormatException e) {
 				// Retorna null se não conseguir converter
+				return null;
+			} catch (Exception e) {
+				// Retorna null se houver qualquer outro erro
 				return null;
 			}
 		}

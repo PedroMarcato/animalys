@@ -73,10 +73,9 @@ public class Animais implements Serializable {
 
 		Root<Animal> animalRoot = criteriaQuery.from(Animal.class);
 		// Fetch join para evitar LazyInitializationException
-		@SuppressWarnings("unused")
 		Fetch<Animal, Raca> racaRoot = animalRoot.fetch("raca", JoinType.LEFT);
-		// Se quiser garantir especie também, descomente a linha abaixo
-		// racaRoot.fetch("especie", JoinType.LEFT);
+		// Garantir que a espécie seja carregada junto com a raça
+		racaRoot.fetch("especie", JoinType.LEFT);
 		Fetch<Animal, Proprietario> proprietarioRoot = animalRoot.fetch("proprietario", JoinType.INNER);
 		proprietarioRoot.fetch("contato", JoinType.INNER);
 		proprietarioRoot.fetch("endereco", JoinType.INNER);
@@ -324,6 +323,22 @@ public class Animais implements Serializable {
 		return manager.createQuery(jpql, Animal.class)
 				.setParameter("idSolicitacao", idSolicitacao)
 				.getResultList();
+	}
+
+	/**
+	 * Busca um animal apenas pelo ID, sem fazer FETCH de relacionamentos
+	 * para evitar LazyInitializationException no converter
+	 */
+	public Animal buscarPorIdSimples(Integer idAnimal) {
+		if (idAnimal == null) {
+			return null;
+		}
+		
+		try {
+			return manager.find(Animal.class, idAnimal);
+		} catch (Exception e) {
+			return null;
+		}
 	}
 
 }

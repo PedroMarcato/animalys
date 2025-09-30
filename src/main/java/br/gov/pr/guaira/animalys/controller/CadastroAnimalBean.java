@@ -700,6 +700,8 @@ public class CadastroAnimalBean implements Serializable {
 
 			try {
 				this.proprietario = this.proprietarios.proprietarioPorCPF(this.cpf);
+				
+				// Se chegou aqui, o proprietário foi encontrado
 				System.out
 						.println("[LOG] Proprietario buscado: idProprietario=" + this.proprietario.getIdProprietario());
 				System.out.println("[LOG] Documentos do proprietario: " + (this.proprietario.getDocumentos() != null ? "carregados com ID " + this.proprietario.getDocumentos().getId() : "NULL"));

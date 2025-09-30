@@ -75,8 +75,38 @@ public class Proprietarios implements Serializable {
 	}
 
 	public Proprietario proprietarioPorCPF(String cpf) {
-		return this.manager.createQuery("from Proprietario p left join fetch p.contato left join fetch p.endereco left join fetch p.documentos where p.cpf =:cpf order by p.nome asc ", Proprietario.class)
-				.setParameter("cpf", cpf).getSingleResult();
+		// Primeiro tenta buscar com o CPF exatamente como veio
+		List<Proprietario> resultados = this.manager.createQuery("from Proprietario p left join fetch p.contato left join fetch p.endereco left join fetch p.documentos where p.cpf =:cpf order by p.nome asc ", Proprietario.class)
+				.setParameter("cpf", cpf).getResultList();
+		
+		if (!resultados.isEmpty()) {
+			return resultados.get(0);
+		}
+		
+		// Se não encontrou, tenta com formatação (se o CPF veio apenas com números)
+		if (cpf != null && cpf.matches("\\d{11}")) {
+			String cpfFormatado = cpf.replaceFirst("(\\d{3})(\\d{3})(\\d{3})(\\d{2})", "$1.$2.$3-$4");
+			resultados = this.manager.createQuery("from Proprietario p left join fetch p.contato left join fetch p.endereco left join fetch p.documentos where p.cpf =:cpf order by p.nome asc ", Proprietario.class)
+					.setParameter("cpf", cpfFormatado).getResultList();
+			
+			if (!resultados.isEmpty()) {
+				return resultados.get(0);
+			}
+		}
+		
+		// Se o CPF veio formatado, tenta apenas com números
+		if (cpf != null && cpf.contains(".")) {
+			String cpfSemFormatacao = cpf.replaceAll("[^0-9]", "");
+			resultados = this.manager.createQuery("from Proprietario p left join fetch p.contato left join fetch p.endereco left join fetch p.documentos where p.cpf =:cpf order by p.nome asc ", Proprietario.class)
+					.setParameter("cpf", cpfSemFormatacao).getResultList();
+			
+			if (!resultados.isEmpty()) {
+				return resultados.get(0);
+			}
+		}
+		
+		// Se chegou até aqui, não encontrou o CPF - lança exception para manter compatibilidade
+		throw new javax.persistence.NoResultException("CPF não encontrado: " + cpf);
 	}
 
 	public Proprietario porId(Integer idProprietario) {

@@ -1,0 +1,103 @@
+<ui:composition template="/WEB-INF/template/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="titulo">Pesquisa de Retiradas de Medicamentos</ui:define>
+
+	<ui:define name="content">
+		<h:form id="formPesquisa">
+			<h1 class="aw-page-title">Pesquisa de Retiradas de Medicamentos</h1>
+
+			<p:messages closable="true" />
+			
+			<p:toolbar>
+				<p:toolbarGroup>
+					<p:commandButton value="Pesquisar" icon="fa fa-search"
+						action="#{pesquisaRetiradaMedicamentoBean.pesquisar()}" 
+						update="@form" />
+				</p:toolbarGroup>
+				<p:toolbarGroup align="right">
+					<p:button value="Nova Retirada" icon="fa fa-plus"
+						outcome="/estoque/retiradaMedicamento" />
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<div class="ui-fluid">
+				<p:panelGrid columns="2" layout="grid"
+					columnClasses="ui-grid-col-2, ui-grid-col-6"
+					styleClass="panelgrid-noborder">
+
+					<p:outputLabel value="CPF do Proprietário" for="cpfFiltro" />
+					<p:inputMask id="cpfFiltro" mask="999.999.999-99"
+						value="#{pesquisaRetiradaMedicamentoBean.cpfProprietario}" />
+
+					<p:outputLabel value="Nome do Animal" for="nomeAnimalFiltro" />
+					<p:inputText id="nomeAnimalFiltro"
+						value="#{pesquisaRetiradaMedicamentoBean.nomeAnimal}" />
+
+					<p:outputLabel value="Medicamento" for="medicamentoFiltro" />
+					<p:inputText id="medicamentoFiltro"
+						value="#{pesquisaRetiradaMedicamentoBean.nomeMedicamento}" />
+
+				</p:panelGrid>
+			</div>
+			
+			<p:dataTable id="retiradasTable" 
+				emptyMessage="Nenhuma retirada encontrada" 
+				rows="20"
+				paginator="true" 
+				paginatorAlwaysVisible="false"
+				paginatorPosition="bottom" 
+				reflow="true"
+				value="#{pesquisaRetiradaMedicamentoBean.retiradasFiltradas}" 
+				var="retirada">
+				
+				<p:column headerText="Data/Hora">
+					<h:outputText value="#{retirada.dataRetirada.time}">
+						<f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="America/Sao_Paulo" />
+					</h:outputText>
+				</p:column>
+				
+				<p:column headerText="Proprietário">
+					<h:outputText value="#{retirada.proprietario.nome}" />
+				</p:column>
+
+				<p:column headerText="CPF">
+					<h:outputText value="#{retirada.proprietario.cpf}" />
+				</p:column>
+				
+				<p:column headerText="Para o Animal">
+					<h:outputText value="#{retirada.animal.nome}" />
+				</p:column>
+				
+				<p:column headerText="Idade do Animal">
+					<h:outputText value="#{retirada.animal.idade}" 
+						rendered="#{not empty retirada.animal.idade}" />
+					<h:outputText value="Não informada" styleClass="text-muted"
+						rendered="#{empty retirada.animal.idade}" />
+				</p:column>
+				
+				<p:column headerText="Medicamento">
+					<h:outputText value="#{retirada.nomeMedicamento}" />
+				</p:column>
+				
+				<p:column headerText="Quantidade">
+					<h:outputText value="#{retirada.quantidade}" />
+				</p:column>
+				
+				<p:column headerText="Observações">
+					<h:outputText value="#{retirada.observacoes}" 
+						rendered="#{not empty retirada.observacoes}" />
+					<h:outputText value="-" styleClass="text-muted" 
+						rendered="#{empty retirada.observacoes}" />
+				</p:column>
+				
+			</p:dataTable>
+			
+		</h:form>
+	</ui:define>
+
+</ui:composition>

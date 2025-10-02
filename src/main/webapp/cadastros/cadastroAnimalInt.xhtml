@@ -1,6 +1,10 @@
-<ui:composition template="/WEB-INF/template/Layout.xhtml" xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui">
+<ui:composition template="/WEB-INF/template/Layout.xhtml" 
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html" 
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets" 
+	xmlns:p="http://primefaces.org/ui" 
+	xmlns:o="http://omnifaces.org/ui">
 
 	<f:metadata>
 		<f:viewAction action="#{cadastroAnimalBean.inicializar()}" />
@@ -25,11 +29,12 @@
 					styleClass="panelgrid-noborder" style="margin-top: 20px; margin-left: 20px;">
 
 					<p:outputLabel value="Modalidade" for="modalidade" style="font-weight: bold;" />
-					<p:selectOneMenu id="modalidade" value="#{cadastroAnimalBean.solicitacao.modalidade}"
-						required="true" requiredMessage="Informe a modalidade do cadastro!"
-						converter="modalidadeSolicitanteConverter">
+					<p:selectOneMenu id="modalidade"
+					    value="#{cadastroAnimalBean.solicitacao.modalidade}"
+						required="true" 
+						requiredMessage="Informe a modalidade do cadastro!">
 						<f:selectItem itemLabel="Selecione a modalidade" itemValue="" />
-						<f:selectItem itemLabel="Pessoa Física" itemValue="PESSOA_FISICA" />
+						<f:selectItems value="#{cadastroAnimalBean.modalidadesSolicitante}" var="moda" itemValue="#{moda}" itemLabel="#{moda.descricao}" />
 					</p:selectOneMenu>
 
 					<p:outputLabel />
@@ -531,7 +536,7 @@
 								itemLabel="#{sexo.descricao}" />
 						</p:selectOneMenu>
 
-						<p:outputLabel value="Cor" for="cor" />
+						<p:outputLabel value="Pelagem" for="cor" />
 						<p:inputText id="cor" value="#{cadastroAnimalBean.animal.cor}" maxlength="30"
 							placeholder="Ex: Branco, Preto, Caramelo..." />
 

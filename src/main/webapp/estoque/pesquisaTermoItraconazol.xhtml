@@ -1,0 +1,161 @@
+<ui:composition template="/WEB-INF/template/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="titulo">Pesquisa de Retiradas de Itraconazol</ui:define>
+
+	<ui:define name="content">
+		<h:form id="formPesquisa">
+			<h1 class="aw-page-title">Pesquisa de Retiradas de Itraconazol</h1>
+
+			<p:messages id="messages" closable="true" />
+			
+			<p:toolbar>
+				<p:toolbarGroup>
+					<p:commandButton value="Pesquisar" icon="fa fa-search"
+						action="#{pesquisaTermoItraconazolBean.pesquisar()}" 
+						update="@form" />
+				</p:toolbarGroup>
+				<p:toolbarGroup align="right">
+					<p:button value="Nova Retirada" icon="fa fa-plus"
+						outcome="/estoque/termoItraconazol" />
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<div class="ui-fluid">
+				<p:panelGrid columns="2" layout="grid"
+					columnClasses="ui-grid-col-2, ui-grid-col-6"
+					styleClass="panelgrid-noborder">
+
+					<p:outputLabel value="CPF do Proprietário" for="cpfFiltro" />
+					<p:inputMask id="cpfFiltro" mask="999.999.999-99"
+						value="#{pesquisaTermoItraconazolBean.cpfProprietario}" />
+
+					<p:outputLabel value="Nome do Animal" for="nomeAnimalFiltro" />
+					<p:inputText id="nomeAnimalFiltro"
+						value="#{pesquisaTermoItraconazolBean.nomeAnimal}" />
+
+					<p:outputLabel value="Medicamento" for="medicamentoFiltro" />
+					<p:inputText id="medicamentoFiltro"
+						value="#{pesquisaTermoItraconazolBean.nomeMedicamento}" readonly="true" />
+
+				</p:panelGrid>
+			</div>
+
+			
+			<p:dataTable id="termosTable" 
+				emptyMessage="Nenhum termo encontrado" 
+				rows="20"
+				paginator="true" 
+				paginatorAlwaysVisible="false"
+				paginatorPosition="bottom" 
+				reflow="true"
+				value="#{pesquisaTermoItraconazolBean.termosFiltrados}" 
+				var="termo">
+				
+				<p:column headerText="1° Retirada">
+					<h:outputText value="#{termo.dataRetirada.time}">
+						<f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="America/Sao_Paulo" />
+					</h:outputText>
+				</p:column>
+				
+				<p:column headerText="Proprietário">
+					<h:outputText value="#{termo.animal.proprietario.nome}" />
+				</p:column>
+
+				<p:column headerText="CPF">
+					<h:outputText value="#{termo.animal.proprietario.cpf}" />
+				</p:column>
+				
+				<p:column headerText="Animal">
+					<h:outputText value="#{termo.animal.nome}" />
+				</p:column>
+				
+				<p:column headerText="Porte">
+					<h:outputText value="#{termo.porteAnimal}" 
+						rendered="#{not empty termo.porteAnimal}" />
+					<h:outputText value="Não informado" styleClass="text-muted"
+						rendered="#{empty termo.porteAnimal}" />
+				</p:column>
+				
+				<p:column headerText="Medicamento">
+					<h:outputText value="Itraconazol" />
+				</p:column>
+				
+				<p:column headerText="Quantidade">
+					<h:outputText value="#{termo.quantidadeRetirada}" />
+				</p:column>
+				
+				<p:column headerText="Observações">
+					<h:outputText value="#{termo.observacoes}" 
+						rendered="#{not empty termo.observacoes}" />
+					<h:outputText value="-" styleClass="text-muted" 
+						rendered="#{empty termo.observacoes}" />
+				</p:column>
+				
+				<p:column headerText="Último Acompanhamento">
+					<h:outputText value="#{termo.data7Mes}" 
+						rendered="#{not empty termo.data7Mes}">
+						<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Sao_Paulo" />
+					</h:outputText>
+					<h:outputText value="#{termo.data6Mes}" 
+						rendered="#{empty termo.data7Mes and not empty termo.data6Mes}">
+						<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Sao_Paulo" />
+					</h:outputText>
+					<h:outputText value="#{termo.data5Mes}" 
+						rendered="#{empty termo.data7Mes and empty termo.data6Mes and not empty termo.data5Mes}">
+						<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Sao_Paulo" />
+					</h:outputText>
+					<h:outputText value="#{termo.data4Mes}" 
+						rendered="#{empty termo.data7Mes and empty termo.data6Mes and empty termo.data5Mes and not empty termo.data4Mes}">
+						<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Sao_Paulo" />
+					</h:outputText>
+					<h:outputText value="#{termo.data3Mes}" 
+						rendered="#{empty termo.data7Mes and empty termo.data6Mes and empty termo.data5Mes and empty termo.data4Mes and not empty termo.data3Mes}">
+						<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Sao_Paulo" />
+					</h:outputText>
+					<h:outputText value="#{termo.data2Mes}" 
+						rendered="#{empty termo.data7Mes and empty termo.data6Mes and empty termo.data5Mes and empty termo.data4Mes and empty termo.data3Mes and not empty termo.data2Mes}">
+						<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Sao_Paulo" />
+					</h:outputText>
+					<h:outputText value="#{termo.data1Mes}" 
+						rendered="#{empty termo.data7Mes and empty termo.data6Mes and empty termo.data5Mes and empty termo.data4Mes and empty termo.data3Mes and empty termo.data2Mes and not empty termo.data1Mes}">
+						<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Sao_Paulo" />
+					</h:outputText>
+					<h:outputText value="Não realizado" styleClass="text-muted" 
+						rendered="#{empty termo.data1Mes and empty termo.data2Mes and empty termo.data3Mes and empty termo.data4Mes and empty termo.data5Mes and empty termo.data6Mes and empty termo.data7Mes}" />
+				</p:column>
+				
+				<p:column headerText="Ações" width="80" styleClass="text-center">
+					<p:button icon="fa fa-pencil" title="Editar"
+						outcome="/estoque/termoItraconazol" styleClass="btn-sm" style="margin-left: 5px;">
+						<f:param name="termo" value="#{termo.idTermoItraconazol}" />
+					</p:button>
+					<p:commandButton icon="fa fa-trash" title="Excluir" 
+						styleClass="btn-sm ui-button-danger"
+						actionListener="#{pesquisaTermoItraconazolBean.prepararExclusao(termo)}"
+						process="@this"
+						oncomplete="PF('confirmExclusao').show()">
+					</p:commandButton>
+				</p:column>
+				
+			</p:dataTable>
+			
+			<p:confirmDialog message="Tem certeza que deseja excluir este Registro de itraconazol?"
+				header="Confirmação de Exclusão" severity="alert" 
+				widgetVar="confirmExclusao">
+				<p:commandButton value="Sim" 
+					action="#{pesquisaTermoItraconazolBean.confirmarExclusao()}"
+					update="termosTable messages"
+					oncomplete="PF('confirmExclusao').hide()" />
+				<p:commandButton value="Não" type="button" 
+					onclick="PF('confirmExclusao').hide()" />
+			</p:confirmDialog>
+			
+		</h:form>
+	</ui:define>
+
+</ui:composition>

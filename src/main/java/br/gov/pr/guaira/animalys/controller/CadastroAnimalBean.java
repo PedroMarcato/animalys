@@ -536,7 +536,7 @@ public class CadastroAnimalBean implements Serializable {
 					System.out.println("[LOG] Proprietário existente já possui documentos; pulando criação.");
 				}
 
-				FacesUtil.addInfoMessage("Animal cadastrado com sucesso!");
+				FacesUtil.addInfoMessage("Solicitação enviada com sucesso! Protocolo: " + protocolo);
 				chamaDialogComprovante();
 				if (usuarioLogado.getUsuarioLogado() == null) {
 					System.out.println("[LOG] Gerando comprovante...");

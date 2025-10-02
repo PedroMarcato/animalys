@@ -154,4 +154,31 @@ public class Lotes implements Serializable {
 				.setParameter("dataAtual", dataAtual)
 				.getResultList();
 	}
+
+	public List<Lote> lotesValidosPorProduto(String nomeProduto) {
+		Calendar dataAtual = Calendar.getInstance();
+		return this.manager
+				.createQuery("SELECT l FROM Lote l INNER JOIN FETCH l.produto p " +
+						"WHERE LOWER(p.nome) LIKE :nome AND l.quantidade > 0 AND l.validade > :dataAtual " +
+						"ORDER BY p.nome, l.validade ASC", Lote.class)
+				.setParameter("nome", "%" + nomeProduto.toLowerCase() + "%")
+				.setParameter("dataAtual", dataAtual)
+				.getResultList();
+	}
+
+	public Integer quantidadeRetiradaDoLote(Integer idLote) {
+		// Soma as quantidades retiradas através de RetiradaMedicamento
+		Long quantidadeRetiradaMedicamento = this.manager
+				.createQuery("SELECT COALESCE(SUM(rm.quantidade), 0) FROM RetiradaMedicamento rm WHERE rm.lote.idLote = :idLote", Long.class)
+				.setParameter("idLote", idLote)
+				.getSingleResult();
+
+		// Soma as quantidades retiradas através de TermoItraconazol
+		Long quantidadeRetiradaTermo = this.manager
+				.createQuery("SELECT COALESCE(SUM(ti.quantidadeRetirada), 0) FROM TermoItraconazol ti WHERE ti.lote.idLote = :idLote", Long.class)
+				.setParameter("idLote", idLote)
+				.getSingleResult();
+
+		return Integer.valueOf((int)(quantidadeRetiradaMedicamento + quantidadeRetiradaTermo));
+	}
 }

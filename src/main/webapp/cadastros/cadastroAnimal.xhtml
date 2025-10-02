@@ -1,118 +1,397 @@
-<ui:composition template="/WEB-INF/template/LayoutExterno.xhtml"
+<ui:composition template="/WEB-INF/template/LayoutExterno.xhtml" 
 	xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:h="http://java.sun.com/jsf/html" 
 	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui">
+	xmlns:ui="http://java.sun.com/jsf/facelets" 
+	xmlns:p="http://primefaces.org/ui" 
+	xmlns:o="http://omnifaces.org/ui">
 
 	<f:metadata>
-
 		<f:viewAction action="#{cadastroAnimalBean.inicializar()}" />
 	</f:metadata>
 	<ui:define name="titulo">Cadastro de animais!</ui:define>
 
 	<ui:define name="content">
 		<h:form id="form">
-			<h1 class="aw-page-title">Cadastro de animais para castração</h1>
+			<h1 class="aw-page-title">Cadastro de animais para a Consultas e Castrações</h1>
 
 			<p:messages closable="true" id="msgs" />
 
 			<div class="ui-fluid">
 
-				<h1 style="padding-left: 25px">Informações do responsável pelo
-					animal</h1>
+				<h1 style="padding-left: 25px">Informações do Responsável pelo
+					Animal</h1>
 
 				<h1 style="padding-left: 25px">Dados Pessoais</h1>
 
 				<p:panelGrid columns="4" id="painel" layout="grid"
 					columnClasses="ui-grid-col-1, ui-grid-col-4, ui-grid-col-1, ui-grid-col-4"
-					styleClass="panelgrid-noborder"
-					style="margin-top: 20px; margin-left: 20px;">
+					styleClass="panelgrid-noborder" style="margin-top: 20px; margin-left: 20px;">
 
-					<p:outputLabel value="Modalidade" for="modalidade" style="font-weight: bold;"/>
-					<p:selectOneMenu id="modalidade" 
-						value="#{cadastroAnimalBean.solicitacao.modalidade}"
-						required="true"
-						requiredMessage="Informe a modalidade do cadastro!">
-						<f:selectItem itemLabel="Selecione a modalidade" />
-						<f:selectItems value="#{cadastroAnimalBean.modalidadesSolicitante}" var="moda" itemValue="#{moda}" itemLabel="#{moda.descricao}" />
-						<p:ajax update="panelLink" />
+					<p:outputLabel value="Modalidade" for="modalidade" style="font-weight: bold;" />
+					<p:selectOneMenu id="modalidade"
+					    value="#{cadastroAnimalBean.solicitacao.modalidade}"
+						required="true" 
+						requiredMessage="Informe a modalidade do cadastro!"
+						converter="modalidadeSolicitanteConverter">
+						<f:selectItem itemLabel="Selecione a modalidade" itemValue="" />
+						<f:selectItem itemLabel="Pessoa Física" itemValue="PESSOA_FISICA" />
 					</p:selectOneMenu>
 
 					<p:outputLabel />
 					<p:outputLabel />
 
 					<p:outputLabel value="CPF" for="cpf" style="font-weight: bold;" />
-					<p:inputMask id="cpf" mask="999.999.999-99"
-						value="#{cadastroAnimalBean.cpf}" required="true"
-						requiredMessage="Informe o CPF"
-						disabled="#{!cadastroAnimalBean.habilitaCampos}">
+					<p:inputMask id="cpf" mask="999.999.999-99" value="#{cadastroAnimalBean.cpf}" required="true"
+						requiredMessage="Informe o CPF" disabled="#{!cadastroAnimalBean.habilitaCampos}">
 						<p:ajax listener="#{cadastroAnimalBean.buscaCadastroPeloCPF()}"
-							update="rg, nome, dataNascimento, nis, logradouro, numero, bairro, complemento, 
-							telefone, celular, email" event="blur" />
+							update="rg nome dataNascimento logradouro numero bairro complemento telefone celular email msgs botaoAnexarDocumentos botaoVisualizarDocumentos nis tabView:animalTable"
+							event="blur" />
 					</p:inputMask>
 
 					<p:outputLabel value="RG" for="rg" style="font-weight: bold;" />
-					<p:inputText id="rg" value="#{cadastroAnimalBean.proprietario.rg}"
-						required="true" requiredMessage="Informe o RG"
-						disabled="#{cadastroAnimalBean.habilitaCampos}" />
+					<p:inputText id="rg" value="#{cadastroAnimalBean.proprietario.rg}" required="true"
+						requiredMessage="Informe o RG" disabled="#{!cadastroAnimalBean.habilitaCampos}" />
 
 					<p:outputLabel value="Nome" for="nome" style="font-weight: bold;" />
-					<p:inputText id="nome"
-						value="#{cadastroAnimalBean.proprietario.nome}" required="true"
-						requiredMessage="Informe o nome"
-						readonly="#{inscricaoBean.habilitarEdicao}"
-						disabled="#{cadastroAnimalBean.habilitaCampos}" />
+					<p:inputText id="nome" value="#{cadastroAnimalBean.proprietario.nome}" required="true"
+						requiredMessage="Informe o nome" disabled="#{!cadastroAnimalBean.habilitaCampos}" />
 
-					<p:outputLabel value="Data Nascimento" for="dataNascimento"
+					<p:outputLabel value="Data Nascimento" for="dataNascimento" style="font-weight: bold;" />
+					<p:calendar id="dataNascimento" mask="99/99/9999" locale="pt" pattern="dd/MM/yyyy"
+						value="#{cadastroAnimalBean.dataNascimento}" required="true"
+						requiredMessage="Informe a data de nascimento"
+						disabled="#{!cadastroAnimalBean.habilitaCampos}" />
+
+					<p:outputLabel value="NIS" for="nis" title="Número de Identificação Social"
 						style="font-weight: bold;" />
-					<p:calendar id="dataNascimento" mask="99/99/9999" locale="pt"
-						pattern="dd/MM/yyyy" value="#{cadastroAnimalBean.dataNascimento}"
-						required="true" requiredMessage="Informe a data de nascimento"
-						disabled="#{cadastroAnimalBean.habilitaCampos}" />
-
-					<p:outputLabel value="NIS" for="nis"
-						title="Número de Identificação Social" style="font-weight: bold;" />
-					<p:inputText id="nis"
-						value="#{cadastroAnimalBean.proprietario.nis}"
-						disabled="#{cadastroAnimalBean.habilitaCampos}"
+					<p:inputText id="nis" value="#{cadastroAnimalBean.proprietario.nis}"
+						disabled="#{!cadastroAnimalBean.habilitaCampos}"
 						placeholder="Número de Identificação Social (Se houver)" />
+
+					<p:outputLabel value="Documentos *" for="botaoAnexarDocumentos" style="font-weight: bold;" />
+					<h:panelGroup>
+						<p:commandButton id="botaoAnexarDocumentos" disabled="#{!cadastroAnimalBean.habilitaCampos}"
+							value="Anexar Documentos Pessoais" icon="fa fa-paperclip"
+							onclick="PF('dlgDocumentos').show(); return false;" type="button" style="width: 100%; margin-right: 2%;" />
+						<p:commandButton id="botaoVisualizarDocumentos" 
+							value="Ver Documentos" icon="fa fa-eye"
+							disabled="#{!cadastroAnimalBean.proprietarioTemDocumentos()}"
+							action="#{cadastroAnimalBean.refreshDocumentos()}"
+							oncomplete="PF('dlgVisualizarDocumentos').show();" 
+							update="dlgVisualizarDocumentos"
+							style="width: 100%;" 
+							styleClass="#{cadastroAnimalBean.proprietarioTemDocumentos() ? 'ui-button-success' : 'ui-button-secondary'}" />
+					</h:panelGroup>
 				</p:panelGrid>
+
+				<!-- Botão para abrir dialog de anexos de documentos pessoais -->
+				<div style="margin: 20px 0;">
+					<!-- Dialog para anexar documentos pessoais -->
+					<p:dialog id="dlgDocumentos" header="Anexar Documentos Pessoais" widgetVar="dlgDocumentos"
+						modal="true" resizable="false" width="95%" style="max-width: 1250px; min-height: 800px;"
+						styleClass="ui-fluid">
+						<style>
+							/* Remove qualquer opacidade/filtro que possa ser herdado do tema */
+							.painel-upload-vivo,
+							.ui-dialog-content,
+							.ui-panel,
+							.ui-panelgrid-cell,
+							.ui-panelgrid,
+							.ui-widget-content {
+								opacity: 1 !important;
+								filter: none !important;
+								pointer-events: auto !important;
+								color: inherit !important;
+							}
+
+							/* Remove qualquer overlay esmaecido do dialog */
+							.ui-dialog .ui-dialog-content {
+								background: #fff !important;
+								opacity: 1 !important;
+								filter: none !important;
+							}
+
+							.painel {
+								min-height: 200px;
+							}
+
+							.dialog {
+
+							}
+						</style>
+						<p:panelGrid id="documentosPanel" columns="3" layout="grid" styleClass="ui-fluid"
+							style="margin: 10px;">
+
+							<p:panel header="Card Único" styleClass="ui-widget-shadow painel-upload-vivo"
+								style="text-align: center; margin: 5px; padding: 10px; background: #fff; border: 2px solid #0056b3; border-radius: 12px; box-shadow: 0 2px 8px #0056b355;"
+								toggleable="true">
+								
+								<p:fileUpload id="cardUnico" label="Escolher arquivo" auto="true" mode="advanced"
+									dragDrop="true" showUploadButton="true" sizeLimit="5242880"
+									allowTypes="/(pdf|jpe?g|png)$/"
+									fileUploadListener="#{cadastroAnimalBean.handleCardUnicoUpload}"
+									update="documentosPanel cardPreview msgs" styleClass="ui-fluid"
+									style="margin: 10px 0;" />
+
+								<h:panelGroup id="cardPreview" style="width: 100%; display: inline-grid;" rendered="#{not empty cadastroAnimalBean.cardUnicoFile}">
+									<p:outputLabel value="Arquivo carregado:"
+										style="font-weight: bold; font-size: 0.9em;" />
+									<ui:fragment rendered="#{cadastroAnimalBean.cardUnicoFile.endsWith('.pdf')}">
+										<a href="/uploads/documentos/#{cadastroAnimalBean.cardUnicoFile}"
+											target="_blank" style="color: #007bff;">Visualizar PDF</a>
+									</ui:fragment>
+									<ui:fragment
+										rendered="#{cadastroAnimalBean.cardUnicoFile.endsWith('.jpg') or cadastroAnimalBean.cardUnicoFile.endsWith('.jpeg') or cadastroAnimalBean.cardUnicoFile.endsWith('.png')}">
+										<img src="/uploads/documentos/#{cadastroAnimalBean.cardUnicoFile}"
+											alt="Preview Card Único"
+											style="max-width: 250px; max-height: 350px; border: 2px solid #ddd; border-radius: 8px; margin: 5px auto; cursor: pointer;"
+											preview="true" previewWidth="400" previewHeight="300" />
+									</ui:fragment>
+									<p:commandButton value="Remover" icon="fa fa-trash"
+										action="#{cadastroAnimalBean.removerCardUnico}"
+										update="documentosPanel cardPreview" styleClass="ui-button-danger"
+										style="margin-top: 5px;" />
+								</h:panelGroup>
+								
+								<p:outputPanel rendered="#{empty cadastroAnimalBean.cardUnicoFile}" style="margin-top: 10px; text-align: center;">
+									<img src="/uploads/documentos/no_doc.jpg" alt="Nenhum documento carregado" style="max-width: 250px; max-height: 350px; border: 2px solid #ddd; border-radius: 8px; margin: 5px 0; opacity: 0.7;" />
+									<p style="color: #888; font-weight: bold; font-size: 1em;">Nenhum documento carregado</p>
+								</p:outputPanel>
+
+								<i class="fa fa-id-card" style="font-size: 2em; color: #0056b3; margin-bottom: 10px; margin-top: 25px; font-weight: bold;"></i>
+
+							</p:panel>
+
+							<p:panel header="Documento com Foto" styleClass="ui-widget-shadow painel-upload-vivo"
+								style="text-align: center; margin: 5px; padding: 10px; background: #fff; border: 2px solid #218838; border-radius: 12px; box-shadow: 0 2px 8px #21883855;"
+								toggleable="true">
+								
+								<p:fileUpload id="docFoto" label="Escolher arquivo" auto="true" mode="advanced"
+									dragDrop="true" showUploadButton="true" sizeLimit="5242880"
+									allowTypes="/(pdf|jpe?g|png)$/"
+									fileUploadListener="#{cadastroAnimalBean.handleDocumentoComFotoUpload}"
+									update="documentosPanel docFotoPreview msgs" styleClass="ui-fluid"
+									style="margin: 10px 0;" />
+								<h:panelGroup style="width: 100%; display: inline-grid;" id="docFotoPreview"
+									rendered="#{not empty cadastroAnimalBean.documentoComFotoFile}">
+									<p:outputLabel value="Arquivo carregado:"
+										style="font-weight: bold; font-size: 0.9em;" />
+									<ui:fragment rendered="#{cadastroAnimalBean.documentoComFotoFile.endsWith('.pdf')}">
+										<a href="/uploads/documentos/#{cadastroAnimalBean.documentoComFotoFile}"
+											target="_blank" style="color: #007bff;">Visualizar PDF</a>
+									</ui:fragment>
+									<ui:fragment
+										rendered="#{cadastroAnimalBean.documentoComFotoFile.endsWith('.jpg') or cadastroAnimalBean.documentoComFotoFile.endsWith('.jpeg') or cadastroAnimalBean.documentoComFotoFile.endsWith('.png')}">
+										<img src="/uploads/documentos/#{cadastroAnimalBean.documentoComFotoFile}"
+											alt="Preview Documento com Foto"
+											style="max-width: 250px; max-height: 350px; border: 2px solid #ddd; border-radius: 8px; margin: 5px auto; cursor: pointer;"
+											preview="true" previewWidth="400" previewHeight="300" />
+									</ui:fragment>
+									<p:commandButton value="Remover" icon="fa fa-trash"
+										action="#{cadastroAnimalBean.removerDocumentoComFoto}"
+										update="documentosPanel docFotoPreview" styleClass="ui-button-danger"
+										style="margin-top: 5px;" />
+								</h:panelGroup>
+								<p:outputPanel rendered="#{empty cadastroAnimalBean.documentoComFotoFile}" style="margin-top: 10px; text-align: center;">
+									<img src="/uploads/documentos/no_doc.jpg" alt="Nenhum documento carregado" style="max-width: 250px; max-height: 350px; border: 2px solid #ddd; border-radius: 8px; margin: 5px auto; opacity: 0.7;" />
+									<p style="color: #888; font-weight: bold; font-size: 1em;">Nenhum documento carregado</p>
+								</p:outputPanel>
+
+								<i class="fa fa-id-badge" style="font-size: 2em; color: #218838; margin-bottom: 10px; margin-top: 25px; font-weight: bold;"></i>
+
+							</p:panel>
+
+							<p:panel header="Comprovante de Endereço" styleClass="ui-widget-shadow painel-upload-vivo"
+								style="text-align: center; margin: 5px; padding: 10px; background: #fff; border: 2px solid #ffc107; border-radius: 12px; box-shadow: 0 2px 8px #ffc10799;"
+								toggleable="true">
+								
+								<p:fileUpload id="compEndereco" label="Escolher arquivo" auto="true" mode="advanced"
+									dragDrop="true" showUploadButton="true" sizeLimit="5242880"
+									allowTypes="/(pdf|jpe?g|png)$/"
+									fileUploadListener="#{cadastroAnimalBean.handleComprovanteEnderecoUpload}"
+									update="documentosPanel compEnderecoPreview msgs" styleClass="ui-fluid"
+									style="margin: 10px 0;" />
+								<h:panelGroup id="compEnderecoPreview" style="width: 100%; display: inline-grid;"
+									rendered="#{not empty cadastroAnimalBean.comprovanteEnderecoFile}">
+									<p:outputLabel value="Arquivo carregado:"
+										style="font-weight: bold; font-size: 0.9em;" />
+									<ui:fragment
+										rendered="#{cadastroAnimalBean.comprovanteEnderecoFile.endsWith('.pdf')}">
+										<a href="/uploads/documentos/#{cadastroAnimalBean.comprovanteEnderecoFile}"
+											target="_blank" style="color: #007bff;">Visualizar PDF</a>
+									</ui:fragment>
+									<ui:fragment
+										rendered="#{cadastroAnimalBean.comprovanteEnderecoFile.endsWith('.jpg') or cadastroAnimalBean.comprovanteEnderecoFile.endsWith('.jpeg') or cadastroAnimalBean.comprovanteEnderecoFile.endsWith('.png')}">
+										<img src="/uploads/documentos/#{cadastroAnimalBean.comprovanteEnderecoFile}"
+											alt="Preview Comprovante de Endereço"
+											style="max-width: 250px; max-height: 350px; border: 2px solid #ddd; border-radius: 8px; margin: 5px auto; cursor: pointer;"
+											preview="true" previewWidth="400" previewHeight="300" />
+									</ui:fragment>
+									<p:commandButton value="Remover" icon="fa fa-trash"
+										action="#{cadastroAnimalBean.removerComprovanteEndereco}"
+										update="documentosPanel compEnderecoPreview" styleClass="ui-button-danger"
+										style="margin-top: 5px;" />
+								</h:panelGroup>
+								<p:outputPanel rendered="#{empty cadastroAnimalBean.comprovanteEnderecoFile}" style="margin-top: 10px; text-align: center;">
+									<img src="/uploads/documentos/no_doc.jpg" alt="Nenhum documento carregado" style="max-width: 250px; max-height: 350px; border: 2px solid #ddd; border-radius: 8px; margin: 5px 0; opacity: 0.7;" />
+									<p style="color: #888; font-weight: bold; font-size: 1em;">Nenhum documento carregado</p>
+								</p:outputPanel>
+
+								<i class="fa fa-map-marker" style="font-size: 2em; color: #ffc107; margin-bottom: 10px; margin-top: 25px; font-weight: bold;"></i>
+
+							</p:panel>
+						</p:panelGrid>
+						<f:facet name="footer">
+							<p:commandButton value="Fechar" icon="fa fa-times" onclick="PF('dlgDocumentos').hide();"
+								styleClass="ui-button-info" />
+						</f:facet>
+					</p:dialog>
+
+					<!-- Dialog para visualizar documentos pessoais do proprietário -->
+					<p:dialog id="dlgVisualizarDocumentos" header="Documentos do Proprietário: #{cadastroAnimalBean.proprietario.nome}" 
+						widgetVar="dlgVisualizarDocumentos" modal="true" resizable="false" width="95%" 
+						visible="false" style="max-width: 1250px;" styleClass="ui-fluid .ui-dialog">						
+						
+						<h:panelGroup rendered="#{cadastroAnimalBean.proprietarioTemDocumentos()}">
+							<div style="display: none;">DEBUG: Seção de documentos renderizada - proprietarioTemDocumentos() = true</div>
+							<p:panelGrid columns="3" layout="grid" styleClass="ui-fluid" style="margin: 10px;">
+								
+								
+								<p:panel header="Card Único" styleClass="ui-widget-shadow" class="painel"
+									style="text-align: center; margin: 5px; padding: 10px; background: #fff; border: 2px solid #0056b3; border-radius: 12px; box-shadow: 0 2px 8px #0056b355;">
+									
+									<h:panelGroup rendered="#{not empty cadastroAnimalBean.proprietario.documentos.cardUnico}">
+										<ui:fragment rendered="#{cadastroAnimalBean.proprietario.documentos.cardUnico.endsWith('.pdf')}">
+											<div style="display: flex; flex-direction: column; align-items: center; gap: 30px;">
+												<i class="fa fa-file-pdf-o" style="font-size: 4em; color: #dc3545; margin-top: 30px;"></i>
+												<p:commandButton value="Visualizar PDF" icon="fa fa-external-link" 
+													styleClass="ui-button-danger" 
+													onclick="window.open('/uploads/documentos/#{cadastroAnimalBean.proprietario.documentos.cardUnico}', '_blank'); return false;"
+													style="padding: 8px 16px; font-weight: bold;" />
+											</div>
+										</ui:fragment>
+										<ui:fragment
+											rendered="#{cadastroAnimalBean.proprietario.documentos.cardUnico.endsWith('.jpg') or cadastroAnimalBean.proprietario.documentos.cardUnico.endsWith('.jpeg') or cadastroAnimalBean.proprietario.documentos.cardUnico.endsWith('.png')}">
+											<img src="/uploads/documentos/#{cadastroAnimalBean.proprietario.documentos.cardUnico}"
+												alt="Card Único"
+												style="max-width: 250px; max-height: 350px; border: 2px solid #ddd; border-radius: 8px; margin: 5px auto; cursor: pointer;"
+												preview="true" previewWidth="600" previewHeight="450" />
+										</ui:fragment>
+									</h:panelGroup>
+									
+									<h:panelGroup rendered="#{empty cadastroAnimalBean.proprietario.documentos.cardUnico}">
+										<img src="/uploads/documentos/no_doc.jpg" alt="Card Único não encontrado" 
+											style="max-width: 250px; max-height: 350px; border: 2px solid #ddd; border-radius: 8px; margin: 5px 0; opacity: 0.7;" />
+										<p style="color: #888; font-weight: bold; font-size: 1em;">Card Único não encontrado</p>
+									</h:panelGroup>
+																		
+								</p:panel>
+
+								
+								<p:panel header="Documento com Foto" styleClass="ui-widget-shadow" class="painel"
+									style="text-align: center; margin: 5px; padding: 10px; background: #fff; border: 2px solid #218838; border-radius: 12px; box-shadow: 0 2px 8px #21883855;">
+									
+									<h:panelGroup rendered="#{not empty cadastroAnimalBean.proprietario.documentos.documentoComFoto}">
+										<ui:fragment rendered="#{cadastroAnimalBean.proprietario.documentos.documentoComFoto.endsWith('.pdf')}">
+											<div style="display: flex; flex-direction: column; align-items: center; gap: 30px;">
+												<i class="fa fa-file-pdf-o" style="font-size: 4em; color: #dc3545; margin-top: 30px;"></i>
+												<p:commandButton value="Visualizar PDF" icon="fa fa-external-link" 
+													styleClass="ui-button-danger" 
+													onclick="window.open('/uploads/documentos/#{cadastroAnimalBean.proprietario.documentos.documentoComFoto}', '_blank'); return false;"
+													style="padding: 8px 16px; font-weight: bold;" />
+											</div>
+										</ui:fragment>
+										<ui:fragment
+											rendered="#{cadastroAnimalBean.proprietario.documentos.documentoComFoto.endsWith('.jpg') or cadastroAnimalBean.proprietario.documentos.documentoComFoto.endsWith('.jpeg') or cadastroAnimalBean.proprietario.documentos.documentoComFoto.endsWith('.png')}">
+											<img src="/uploads/documentos/#{cadastroAnimalBean.proprietario.documentos.documentoComFoto}"
+												alt="Documento com Foto"
+												style="max-width: 250px; max-height: 350px; border: 2px solid #ddd; border-radius: 8px; margin: 5px auto; cursor: pointer;"
+												preview="true" previewWidth="600" previewHeight="450" />
+										</ui:fragment>
+									</h:panelGroup>
+									
+									<h:panelGroup rendered="#{empty cadastroAnimalBean.proprietario.documentos.documentoComFoto}">
+										<img src="/uploads/documentos/no_doc.jpg" alt="Documento com Foto não encontrado" 
+											style="max-width: 250px; max-height: 350px; border: 2px solid #ddd; border-radius: 8px; margin: 5px 0; opacity: 0.7;" />
+										<p style="color: #888; font-weight: bold; font-size: 1em;">Documento com Foto não encontrado</p>
+									</h:panelGroup>
+									
+								</p:panel>
+
+								
+								<p:panel header="Comprovante de Endereço" styleClass="ui-widget-shadow" class="painel"
+									style="text-align: center; margin: 5px; padding: 10px; background: #fff; border: 2px solid #ffc107; border-radius: 12px; box-shadow: 0 2px 8px #ffc10799;">
+									
+									<h:panelGroup rendered="#{not empty cadastroAnimalBean.proprietario.documentos.comprovanteEndereco}">
+										<ui:fragment rendered="#{cadastroAnimalBean.proprietario.documentos.comprovanteEndereco.endsWith('.pdf')}">
+											<div style="display: flex; flex-direction: column; align-items: center; gap: 30px;">
+												<i class="fa fa-file-pdf-o" style="font-size: 4em; color: #dc3545; margin-top: 30px;"></i>
+												<p:commandButton value="Visualizar PDF" icon="fa fa-external-link" 
+													styleClass="ui-button-danger" 
+													onclick="window.open('/uploads/documentos/#{cadastroAnimalBean.proprietario.documentos.comprovanteEndereco}', '_blank'); return false;"
+													style="padding: 8px 16px; font-weight: bold;" />
+											</div>
+										</ui:fragment>
+										<ui:fragment
+											rendered="#{cadastroAnimalBean.proprietario.documentos.comprovanteEndereco.endsWith('.jpg') or cadastroAnimalBean.proprietario.documentos.comprovanteEndereco.endsWith('.jpeg') or cadastroAnimalBean.proprietario.documentos.comprovanteEndereco.endsWith('.png')}">
+											<img src="/uploads/documentos/#{cadastroAnimalBean.proprietario.documentos.comprovanteEndereco}"
+												alt="Comprovante de Endereço"
+												style="max-width: 250px; max-height: 350px; border: 2px solid #ddd; border-radius: 8px; margin: 5px auto; cursor: pointer;"
+												preview="true" previewWidth="600" previewHeight="450" />
+										</ui:fragment>
+									</h:panelGroup>
+									
+									<h:panelGroup rendered="#{empty cadastroAnimalBean.proprietario.documentos.comprovanteEndereco}">
+										<img src="/uploads/documentos/no_doc.jpg" alt="Comprovante de Endereço não encontrado" 
+											style="max-width: 250px; max-height: 350px; border: 2px solid #ddd; border-radius: 8px; margin: 5px 0; opacity: 0.7;" />
+										<p style="color: #888; font-weight: bold; font-size: 1em;">Comprovante de Endereço não encontrado</p>
+									</h:panelGroup>
+									
+								</p:panel>
+							</p:panelGrid>
+						</h:panelGroup>
+						
+						<h:panelGroup rendered="#{!cadastroAnimalBean.proprietarioTemDocumentos()}">
+							<div style="display: none;">DEBUG: Seção SEM documentos renderizada - proprietarioTemDocumentos() = false</div>
+							<div style="text-align: center; padding: 50px;">
+								<i class="fa fa-exclamation-triangle" style="font-size: 4em; color: #ffc107; margin-bottom: 20px;"></i>
+								<h3 style="color: #6c757d;">Nenhum documento encontrado</h3>
+								<p style="color: #6c757d;">Este proprietário não possui documentos cadastrados no sistema.</p>
+							</div>
+						</h:panelGroup>
+						
+						<f:facet name="footer">
+							<p:commandButton value="Fechar" icon="fa fa-times" onclick="PF('dlgVisualizarDocumentos').hide();"
+								styleClass="ui-button-info" />
+						</f:facet>
+					</p:dialog>
+				</div>
 
 				<h1 style="padding-left: 25px">Endereço</h1>
 
 				<p:panelGrid columns="4" id="painelEndereco" layout="grid"
 					columnClasses="ui-grid-col-1, ui-grid-col-4, ui-grid-col-1, ui-grid-col-4"
-					styleClass="panelgrid-noborder"
-					style="margin-top: 20px; margin-left: 20px;">
+					styleClass="panelgrid-noborder" style="margin-top: 20px; margin-left: 20px;">
 
-					<p:outputLabel value="Logradouro" for="logradouro"
-						style="font-weight: bold;" />
+					<p:outputLabel value="Logradouro" for="logradouro" style="font-weight: bold;" />
 					<p:inputText id="logradouro" placeholder="Ex: Rua Monjoli"
 						value="#{cadastroAnimalBean.endereco.logradouro}" required="true"
-						requiredMessage="Informe o logradouro"
-						disabled="#{cadastroAnimalBean.habilitaCampos}" />
+						requiredMessage="Informe o logradouro" disabled="#{!cadastroAnimalBean.habilitaCampos}" />
 
-					<p:outputLabel value="Número" for="numero"
-						style="font-weight: bold;" />
-					<p:inputText id="numero"
-						value="#{cadastroAnimalBean.endereco.numero}" required="true"
+					<p:outputLabel value="Número" for="numero" style="font-weight: bold;" />
+					<p:inputText id="numero" value="#{cadastroAnimalBean.endereco.numero}" required="true"
 						requiredMessage="Informe o número" placeholder="Ex: 50 ou S/N"
-						disabled="#{cadastroAnimalBean.habilitaCampos}" />
+						disabled="#{!cadastroAnimalBean.habilitaCampos}" />
 
-					<p:outputLabel value="Bairro" for="bairro"
-						style="font-weight: bold;" />
-					<p:inputText id="bairro"
-						value="#{cadastroAnimalBean.endereco.bairro}" required="true"
+					<p:outputLabel value="Bairro" for="bairro" style="font-weight: bold;" />
+					<p:inputText id="bairro" value="#{cadastroAnimalBean.endereco.bairro}" required="true"
 						requiredMessage="Informe o bairro" placeholder="Ex: Centro"
-						disabled="#{cadastroAnimalBean.habilitaCampos}" />
+						disabled="#{!cadastroAnimalBean.habilitaCampos}" />
 
-					<p:outputLabel value="Complemento" for="complemento"
-						style="font-weight: bold;" />
-					<p:inputText id="complemento"
-						value="#{cadastroAnimalBean.endereco.complemento}"
-						placeholder="Ex: Casa, Apartamento 01..."
-						disabled="#{cadastroAnimalBean.habilitaCampos}" />
+					<p:outputLabel value="Complemento" for="complemento" style="font-weight: bold;" />
+					<p:inputText id="complemento" value="#{cadastroAnimalBean.endereco.complemento}"
+						placeholder="Ex: Casa, Apartamento 01..." disabled="#{!cadastroAnimalBean.habilitaCampos}" />
 
 				</p:panelGrid>
 
@@ -121,172 +400,187 @@
 
 				<p:panelGrid columns="4" id="painelContato" layout="grid"
 					columnClasses="ui-grid-col-1, ui-grid-col-4, ui-grid-col-1, ui-grid-col-4"
-					styleClass="panelgrid-noborder"
-					style="margin-top: 20px; margin-left: 20px;">
+					styleClass="panelgrid-noborder" style="margin-top: 20px; margin-left: 20px;">
 
-					<p:outputLabel value="Telefone Fixo" for="telefone"
-						style="font-weight: bold;" />
-					<p:inputMask id="telefone" mask="(99)9999-9999"
-						value="#{cadastroAnimalBean.contato.telefone}"
-						disabled="#{cadastroAnimalBean.habilitaCampos}" />
+					<p:outputLabel value="Telefone Fixo" for="telefone" style="font-weight: bold;" />
+					<p:inputMask id="telefone" mask="(99)9999-9999" value="#{cadastroAnimalBean.contato.telefone}"
+						disabled="#{!cadastroAnimalBean.habilitaCampos}" />
 
-					<p:outputLabel value="Celular" for="celular"
-						style="font-weight: bold;" />
-					<p:inputMask id="celular" mask="(99)99999-9999"
-						value="#{cadastroAnimalBean.contato.celular}"
-						disabled="#{cadastroAnimalBean.habilitaCampos}" />
+					<p:outputLabel value="Celular" for="celular" style="font-weight: bold;" />
+					<p:inputMask id="celular" mask="(99)99999-9999" value="#{cadastroAnimalBean.contato.celular}"
+						disabled="#{!cadastroAnimalBean.habilitaCampos}" />
 
-					<p:outputLabel value="E-mail" for="email"
-						style="font-weight: bold;" />
+					<p:outputLabel value="E-mail" for="email" style="font-weight: bold;" />
 					<p:inputText id="email" value="#{cadastroAnimalBean.contato.email}"
-						disabled="#{cadastroAnimalBean.habilitaCampos}" />
+						disabled="#{!cadastroAnimalBean.habilitaCampos}" />
 
 				</p:panelGrid>
 				<div class="setores"></div>
 				<h1 style="padding-left: 25px">Clique no link abaixo para
-					cadastrar o(s) animal(is)</h1>
+					cadastrar o animal</h1>
 				<h3>
-				<h:panelGroup id="panelLink">
-				 <p:outputPanel rendered="#{not empty cadastroAnimalBean.solicitacao.modalidade}">
-				 
-					<p:commandLink id="linkAnexo" oncomplete="PF('dlg').show()" update="formAnexo:dlg" value="Clique aqui para adicionar!"
-						style="margin-left: 20px;" />
-						
-				   </p:outputPanel>	
-				  </h:panelGroup>	
+					<p:commandLink id="linkAnexo" oncomplete="PF('dlg').show()" update="formAnexo:dlg"
+						value="Clique aqui para adicionar!" style="margin-left: 20px;" />
 				</h3>
 				<p:tabView style="margin-top: 10px" id="tabView">
 					<p:tab title="Animais">
 
-						<p:dataTable emptyMessage="Nenhum animal cadastrado!"
-							style="margin-top: 10px" id="animalTable"
+						<p:dataTable emptyMessage="Nenhum animal adicionado!" style="margin-top: 10px" id="animalTable"
 							value="#{cadastroAnimalBean.animaisAdicionados}" var="animal">
-							<p:column headerText="Nome">
+							<p:column style="text-align: center;" headerText="Nome">
 								<h:outputText value="#{animal.nome}" />
 							</p:column>
-							<p:column headerText="Raça">
+							<p:column style="text-align: center;" headerText="Raça">
 								<h:outputText value="#{animal.raca.nome}" />
 							</p:column>
-							<p:column headerText="Idade">
+							<p:column style="text-align: center;" headerText="Idade">
 								<h:outputText value="#{animal.idade}" />
 							</p:column>
-							<p:column>
-
+							<p:column style="text-align: center;" headerText="Cor">
+								<h:outputText value="#{animal.cor}" />
+							</p:column>
+							<p:column headerText="Foto" style="width: 100px;">
+								<p:commandLink onclick="PF('imagemDialog').show();"
+									action="#{pesquisaSolicitacoesBean.selecionarImagem(animal.foto)}" process="@this"
+									update="imagemDialogContent">
+									<img src="/uploads/#{not empty animal.foto ? animal.foto : 'no_image.jpg'}"
+										width="100" alt="Foto de #{animal.nome}" style="cursor: pointer;" />
+								</p:commandLink>
+							</p:column>
+							<p:column style="width: 100px;" headerText="Ação">
 								<p:commandButton icon="ui-icon-trash" title="Remover item"
 									oncomplete="PF('confirmacaoExclusao').show()" process="@this"
-									update="form:confirmacaoExclusaoDialog" style="width: 80px">
-									<f:setPropertyActionListener
-										target="#{cadastroAnimalBean.animalSelecionado}"
+									update="form:confirmacaoExclusaoDialog">
+									<f:setPropertyActionListener target="#{cadastroAnimalBean.animalSelecionado}"
 										value="#{animal}" />
 								</p:commandButton>
 							</p:column>
 						</p:dataTable>
 					</p:tab>
 				</p:tabView>
-				<p:confirmDialog header="Remover animal"
-					message="Tem certeza que deseja remover este animal?"
+				<p:confirmDialog header="Remover animal" message="Tem certeza que deseja remover este animal?"
 					widgetVar="confirmacaoExclusao" id="confirmacaoExclusaoDialog">
 					<p:button value="Não" icon="fa fa-close"
 						onclick="PF('confirmacaoExclusao').hide(); return false;" />
-					<p:commandButton value="Sim" icon="fa fa-check"
-						oncomplete="PF('confirmacaoExclusao').hide();"
-						action="#{cadastroAnimalBean.removerAnimal()}" process="@this"
-						update="tabView:animalTable" />
+					<p:commandButton value="Sim" icon="fa fa-check" oncomplete="PF('confirmacaoExclusao').hide();"
+						action="#{cadastroAnimalBean.removerAnimal()}" process="@this" update="tabView:animalTable" />
 				</p:confirmDialog>
 
 			</div>
 			<div class="chamada">
 				<div class="chamada_acao">
-					<p:commandButton value="Enviar Solicitação" icon="fa fa-send"
-						id="botaoSalvar" action="#{cadastroAnimalBean.salvar()}"
-						update="@form" ajax="false"/>
+					<p:commandButton value="Enviar Solicitação" icon="fa fa-send" id="botaoSalvar"
+						action="#{cadastroAnimalBean.salvar()}" update="@form"
+						disabled="#{empty cadastroAnimalBean.solicitacao.modalidade}" />
 				</div>
 			</div>
 
 		</h:form>
-		
+
+
+
+
+		<h:form id="formComprovante">
+			<p:dialog header="Deseja gerar o comprovante de cadastro?" widgetVar="comprovanteDialog" modal="true">
+
+				<p:commandButton value="Sim" icon="ui-icon-check" oncomplete="PF('comprovanteDialog').hide()"
+					onclick="this.form.target='_blank'" action="#{cadastroBean.gerarComprovante()}" ajax="false" />
+
+				<p:commandButton value="Não" icon="ui-icon-close" oncomplete="PF('dlgSucesso').hide()" />
+			</p:dialog>
+		</h:form>
 
 		<h:form id="formAnexo">
 
-			<p:dialog header="Adicionar Animal" widgetVar="dlg" modal="true"
-				resizable="false" responsive="true" id="dlg" width="70%">
+			<p:dialog header="Adicionar Animal" widgetVar="dlg" modal="true" resizable="false" responsive="true"
+				id="dlg" width="70%">
 
 				<div class="ui-fluid">
 					<p:messages autoUpdate="false" />
 					<p:panelGrid columns="4" id="painelCurriculo" layout="grid"
 						columnClasses="ui-grid-col-1, ui-grid-col-4, ui-grid-col-1, ui-grid-col-4, ui-grid-col-1"
-						styleClass="panelgrid-noborder"
-						style="margin-top: 20px; margin-left: 20px;">
+						styleClass="panelgrid-noborder" style="margin-top: 20px; margin-left: 20px;">
 
 						<p:outputLabel value="Espécie" for="especie" />
-						<p:selectOneMenu id="especie"
-							value="#{cadastroAnimalBean.especieSelecionada}" required="true"
+						<p:selectOneMenu id="especie" value="#{cadastroAnimalBean.especieSelecionada}"
+							converter="#{especieConverter}" required="true"
 							requiredMessage="Informe a espécie do animal!">
-							<f:selectItem itemLabel="Selecione a espécie" />
-							<f:selectItems value="#{cadastroAnimalBean.especiesCadastradas}"
-								var="esp" itemValue="#{esp}" itemLabel="#{esp.nome}" />
-							<p:ajax update="raca"
-								listener="#{cadastroAnimalBean.carregaRacasPorEspecie()}" />
+
+							<f:selectItem itemLabel="Selecione a espécie" itemValue="#{null}" />
+							<f:selectItems value="#{cadastroAnimalBean.especiesCadastradas}" var="esp"
+								itemValue="#{esp}" itemLabel="#{esp.nome}" />
+							<p:ajax update="raca" listener="#{cadastroAnimalBean.carregaRacasPorEspecie()}" />
 						</p:selectOneMenu>
 
 						<p:outputLabel value="Raça" for="raca" />
-						<p:selectOneMenu id="raca"
-							value="#{cadastroAnimalBean.animal.raca}" required="true"
-							requiredMessage="Informe a raça do animal!">
-							<f:selectItem itemLabel="Selecione a raça" />
-							<f:selectItems value="#{cadastroAnimalBean.racasCadastradas}"
-								var="raca" itemValue="#{raca}" itemLabel="#{raca.nome}" />
+						<p:selectOneMenu id="raca" value="#{cadastroAnimalBean.animal.raca}"
+							converter="#{racaConverter}" required="true" requiredMessage="Informe a raça do animal!">
+
+							<f:selectItem itemLabel="Selecione a raça" itemValue="#{null}" />
+							<f:selectItems value="#{cadastroAnimalBean.racasCadastradas}" var="raca" itemValue="#{raca}"
+								itemLabel="#{raca.nome}" />
 						</p:selectOneMenu>
 
 						<p:outputLabel value="Nome" for="nome" />
-						<p:inputText id="nome" value="#{cadastroAnimalBean.animal.nome}"
-							required="true" requiredMessage="Informe o nome" />
+						<p:inputText id="nome" value="#{cadastroAnimalBean.animal.nome}" required="true"
+							requiredMessage="Informe o nome" />
 
 						<p:outputLabel value="Idade" for="idade" />
-						<p:inputText id="idade" value="#{cadastroAnimalBean.animal.idade}"
-							required="true" requiredMessage="Informe a idade" />
+						<p:inputText id="idade" value="#{cadastroAnimalBean.animal.idade}" required="true"
+							requiredMessage="Informe a idade" />
 
 						<p:outputLabel value="Sexo" for="sexo" />
-						<p:selectOneMenu id="sexo"
-							value="#{cadastroAnimalBean.animal.sexo}" required="true"
+						<p:selectOneMenu id="sexo" value="#{cadastroAnimalBean.animal.sexo}" required="true"
 							requiredMessage="Informe o sexo do animal!">
 							<f:selectItem itemLabel="Selecione a sexo" />
-							<f:selectItems value="#{cadastroAnimalBean.sexos}" var="sexo"
-								itemValue="#{sexo}" itemLabel="#{sexo.descricao}" />
+							<f:selectItems value="#{cadastroAnimalBean.sexos}" var="sexo" itemValue="#{sexo}"
+								itemLabel="#{sexo.descricao}" />
 						</p:selectOneMenu>
 
+						<p:outputLabel value="Cor" for="cor" />
+						<p:inputText id="cor" value="#{cadastroAnimalBean.animal.cor}" maxlength="30"
+							placeholder="Ex: Branco, Preto, Caramelo..." />
+
+						<p:outputLabel value="Foto" for="foto" />
+						<p:fileUpload id="foto" fileUploadListener="#{cadastroAnimalBean.handleFotoUpload}"
+							mode="advanced" auto="true" label="Selecionar Foto" sizeLimit="5242880"
+							allowTypes="/(\.|\/)(jpe?g|png)$/" />
 					</p:panelGrid>
-					
 
 				</div>
 
 				<p:commandButton value="Salvar" icon="fa fa-send" ajax="false"
-					actionListener="#{cadastroAnimalBean.adicionarAnimal()}"
-					update="form:animalTable" process="@this"
-					oncomplete="PF('dlg').hide()">
+					action="#{cadastroAnimalBean.adicionarAnimal}" update="form:animalTable" process="@this"
+					oncomplete="PF('dlg').hide()" disabled="#{empty cadastroAnimalBean.solicitacao.modalidade}">
 				</p:commandButton>
-				
 			</p:dialog>
-
 
 		</h:form>
 
 		<h:form id="formRelatorio">
 
-			<p:dialog header="Deseja gerar o comprovante da solicitação?"
-				widgetVar="dlgSucesso" modal="true">
+			<p:dialog header="Deseja gerar o comprovante da solicitação?" widgetVar="dlgSucesso" modal="true">
 
-				<p:commandButton value="Sim" icon="fa fa-check"
-					oncomplete="PF('dlgSucesso').hide()" id="dlgSucesso"
-					onclick="this.form.target='_blank'"
-					action="#{cadastroAnimalBean.geraComprovante()}" update="@form"
+				<p:commandButton value="Sim" icon="fa fa-check" oncomplete="PF('dlgSucesso').hide()" id="dlgSucesso"
+					onclick="this.form.target='_blank'" action="#{cadastroAnimalBean.geraComprovante()}" update="@form"
 					ajax="false" />
 
-				<p:commandButton value="Não" icon="fa fa-times"
-					oncomplete="PF('dlgSucesso').hide()" />
+				<p:commandButton value="Não" icon="fa fa-times" oncomplete="PF('dlgSucesso').hide()" />
 			</p:dialog>
 
 		</h:form>
+
+		<p:dialog header="Visualização da Imagem" widgetVar="imagemDialog" hideEffect="fade" showEffect="fade"
+			id="imagemDialog" style="max-width: 700px; min-height: 400px;" modal="true" resizable="true">
+
+			<h:panelGroup id="imagemDialogContent">
+				<div style="text-align: center;">
+					<img src="/uploads/#{not empty pesquisaSolicitacoesBean.imagemSelecionada ? pesquisaSolicitacoesBean.imagemSelecionada : 'no_image.jpg'}"
+						style="max-width: 100%; max-height: 500px;" alt="Imagem ampliada" />
+				</div>
+			</h:panelGroup>
+
+		</p:dialog>
 
 	</ui:define>
 </ui:composition>

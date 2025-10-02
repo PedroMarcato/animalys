@@ -55,7 +55,7 @@
 				value="#{pesquisaRetiradaMedicamentoBean.retiradasFiltradas}" 
 				var="retirada">
 				
-				<p:column headerText="Data/Hora">
+				<p:column headerText="Data/Hora" style="width: 115px;">
 					<h:outputText value="#{retirada.dataRetirada.time}">
 						<f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="America/Sao_Paulo" />
 					</h:outputText>
@@ -65,15 +65,15 @@
 					<h:outputText value="#{retirada.proprietario.nome}" />
 				</p:column>
 
-				<p:column headerText="CPF">
+				<p:column headerText="CPF" style="width: 110px;">
 					<h:outputText value="#{retirada.proprietario.cpf}" />
 				</p:column>
 				
-				<p:column headerText="Para o Animal">
+				<p:column headerText="Para o Animal" style="width: 150px;">
 					<h:outputText value="#{retirada.animal.nome}" />
 				</p:column>
 				
-				<p:column headerText="Idade do Animal">
+				<p:column headerText="Idade do Animal" style="width: 110px;">
 					<h:outputText value="#{retirada.animal.idade}" 
 						rendered="#{not empty retirada.animal.idade}" />
 					<h:outputText value="Não informada" styleClass="text-muted"
@@ -84,7 +84,7 @@
 					<h:outputText value="#{retirada.nomeMedicamento}" />
 				</p:column>
 				
-				<p:column headerText="Quantidade">
+				<p:column headerText="Quantidade" style="width: 100px;">
 					<h:outputText value="#{retirada.quantidade}" />
 				</p:column>
 				

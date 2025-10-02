@@ -41,6 +41,7 @@
         <class>br.gov.pr.guaira.animalys.entity.RetiradaMedicamento</class>
         <class>br.gov.pr.guaira.animalys.entity.Tratamento</class>
         <class>br.gov.pr.guaira.animalys.entity.DocumentosPessoais</class>
+        <class>br.gov.pr.guaira.animalys.entity.TermoItraconazol</class>
 
         <properties>
             <property name="hibernate.event.merge.entity_copy_observer" value="allow"/>

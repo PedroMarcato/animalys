@@ -5,23 +5,23 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
 
-	<ui:define name="titulo">Pesquisa de Retiradas de Medicamentos</ui:define>
+	<ui:define name="titulo">Pesquisa de Retiradas de Ração</ui:define>
 
 	<ui:define name="content">
 		<h:form id="formPesquisa">
-			<h1 class="aw-page-title">Pesquisa de Retiradas de Medicamentos</h1>
+			<h1 class="aw-page-title">Pesquisa de Retiradas de Ração</h1>
 
 			<p:messages id="messages" closable="true" />
 			
 			<p:toolbar>
 				<p:toolbarGroup>
 					<p:commandButton value="Pesquisar" icon="fa fa-search"
-						action="#{pesquisaRetiradaMedicamentoBean.pesquisar()}" 
+						action="#{pesquisaRetiradaRacaoBean.pesquisar()}" 
 						update="@form" />
 				</p:toolbarGroup>
 				<p:toolbarGroup align="right">
 					<p:button value="Nova Retirada" icon="fa fa-plus"
-						outcome="/estoque/retiradaMedicamento" />
+						outcome="/estoque/retiradaRacao" />
 				</p:toolbarGroup>
 			</p:toolbar>
 
@@ -32,30 +32,37 @@
 
 					<p:outputLabel value="CPF do Proprietário" for="cpfFiltro" />
 					<p:inputMask id="cpfFiltro" mask="999.999.999-99"
-						value="#{pesquisaRetiradaMedicamentoBean.cpfProprietario}" />
+						value="#{pesquisaRetiradaRacaoBean.cpfProprietario}" />
 
 					<p:outputLabel value="Nome do Animal" for="nomeAnimalFiltro" />
 					<p:inputText id="nomeAnimalFiltro"
-						value="#{pesquisaRetiradaMedicamentoBean.nomeAnimal}" />
+						value="#{pesquisaRetiradaRacaoBean.nomeAnimal}" />
 
-					<p:outputLabel value="Medicamento" for="medicamentoFiltro" />
-					<p:inputText id="medicamentoFiltro"
-						value="#{pesquisaRetiradaMedicamentoBean.nomeMedicamento}" />
+					<p:outputLabel value="Mês de Referência" for="mesReferenciaFiltro" />
+					<p:selectOneMenu id="mesReferenciaFiltro"
+						value="#{pesquisaRetiradaRacaoBean.mesReferencia}">
+						<f:selectItem itemLabel="Todos os meses" itemValue="#{null}" />
+						<f:selectItems value="#{pesquisaRetiradaRacaoBean.mesesReferencia}"
+							var="mes" 
+							itemValue="#{mes.numero}" 
+							itemLabel="#{mes.nome}" />
+					</p:selectOneMenu>
 
 				</p:panelGrid>
 			</div>
+
 			
-			<p:dataTable id="retiradasTable" 
+			<p:dataTable id="racoesTable" 
 				emptyMessage="Nenhuma retirada encontrada" 
 				rows="20"
 				paginator="true" 
 				paginatorAlwaysVisible="false"
 				paginatorPosition="bottom" 
 				reflow="true"
-				value="#{pesquisaRetiradaMedicamentoBean.retiradasFiltradas}" 
+				value="#{pesquisaRetiradaRacaoBean.retiradasFiltradas}" 
 				var="retirada">
 				
-				<p:column headerText="Data/Hora" style="width: 115px;">
+				<p:column headerText="Data da Retirada" style="width: 115px;">
 					<h:outputText value="#{retirada.dataRetirada.time}">
 						<f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="America/Sao_Paulo" />
 					</h:outputText>
@@ -65,27 +72,22 @@
 					<h:outputText value="#{retirada.proprietario.nome}" />
 				</p:column>
 
-				<p:column headerText="CPF" style="width: 110px;">
+				<p:column headerText="CPF" style="width: 105px;">
 					<h:outputText value="#{retirada.proprietario.cpf}" />
 				</p:column>
 				
-				<p:column headerText="Para o Animal" style="width: 150px;">
+				<p:column headerText="Animal" style="width: 150px;">
 					<h:outputText value="#{retirada.animal.nome}" />
 				</p:column>
 				
-				<p:column headerText="Idade do Animal" style="width: 110px;">
-					<h:outputText value="#{retirada.animal.idade}" 
-						rendered="#{not empty retirada.animal.idade}" />
-					<h:outputText value="Não informada" styleClass="text-muted"
-						rendered="#{empty retirada.animal.idade}" />
+				<p:column headerText="Quantidade (Kg)" style="width: 120px;">
+					<h:outputText value="#{retirada.quantidadeKg}">
+						<f:convertNumber pattern="#0.000" />
+					</h:outputText>
 				</p:column>
 				
-				<p:column headerText="Medicamento">
-					<h:outputText value="#{retirada.nomeMedicamento}" />
-				</p:column>
-				
-				<p:column headerText="Quantidade" style="width: 100px;">
-					<h:outputText value="#{retirada.quantidade}" />
+				<p:column headerText="Mês de Referência" style="width: 130px;">
+					<h:outputText value="#{retirada.mesReferenciaFormatado}" />
 				</p:column>
 				
 				<p:column headerText="Observações">
@@ -97,12 +99,12 @@
 				
 				<p:column headerText="Ações" width="80" styleClass="text-center">
 					<p:button icon="fa fa-pencil" title="Editar"
-						outcome="/estoque/retiradaMedicamento" styleClass="btn-sm" style="margin-left: 5px;">
-						<f:param name="retirada" value="#{retirada.idRetiradaMedicamento}" />
+						outcome="/estoque/retiradaRacao" styleClass="btn-sm" style="margin-left: 5px;">
+						<f:param name="retirada" value="#{retirada.idRetiradaRacao}" />
 					</p:button>
 					<p:commandButton icon="fa fa-trash" title="Excluir" 
 						styleClass="btn-sm ui-button-danger"
-						actionListener="#{pesquisaRetiradaMedicamentoBean.prepararExclusao(retirada)}"
+						actionListener="#{pesquisaRetiradaRacaoBean.prepararExclusao(retirada)}"
 						process="@this"
 						oncomplete="PF('confirmExclusao').show()">
 					</p:commandButton>
@@ -110,19 +112,16 @@
 				
 			</p:dataTable>
 			
-			<p:confirmDialog message="Tem certeza que deseja excluir esta Retirada de medicamento?"
+			<p:confirmDialog message="Tem certeza que deseja excluir esta Retirada de ração?"
 				header="Confirmação de Exclusão" severity="alert" 
 				widgetVar="confirmExclusao">
 				<p:commandButton value="Sim" 
-					action="#{pesquisaRetiradaMedicamentoBean.confirmarExclusao()}"
-					update="retiradasTable formPesquisa:messages"
-					oncomplete="PF('confirmExclusao').hide();" />
-				<p:commandButton value="Não" 
-					onclick="PF('confirmExclusao').hide();"
-					type="button" />
-			</p:confirmDialog>
-			
-		</h:form>
+					action="#{pesquisaRetiradaRacaoBean.confirmarExclusao()}"
+					update="racoesTable messages"
+					oncomplete="PF('confirmExclusao').hide()" />
+				<p:commandButton value="Não" type="button" 
+					onclick="PF('confirmExclusao').hide()" />
+			</p:confirmDialog>		</h:form>
 	</ui:define>
 
 </ui:composition>

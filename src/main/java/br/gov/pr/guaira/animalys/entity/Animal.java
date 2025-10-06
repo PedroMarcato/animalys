@@ -6,6 +6,7 @@ import java.util.Calendar;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import br.gov.pr.guaira.animalys.model.TermoConsulta;
 
 
 @Entity
@@ -109,6 +110,9 @@ public class Animal implements Serializable {
   
   @OneToMany(mappedBy = "animal", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<FotoAnimal> fotos = new ArrayList<>();
+  
+  @OneToMany(mappedBy = "animal", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  private List<TermoConsulta> termosConsulta = new ArrayList<>();
   
   // Getters e Setters
 
@@ -280,6 +284,20 @@ public class Animal implements Serializable {
 	  public void adicionarFoto(FotoAnimal foto) {
 	    foto.setAnimal(this);
 	    this.fotos.add(foto);
+	  }
+
+	  // Getters e Setters para Termos de Consulta
+	  public List<TermoConsulta> getTermosConsulta() {
+		    return termosConsulta;
+	  }
+
+	  public void setTermosConsulta(List<TermoConsulta> termosConsulta) {
+		    this.termosConsulta = termosConsulta;
+	  }
+
+	  public void adicionarTermoConsulta(TermoConsulta termo) {
+		    termo.setAnimal(this);
+		    this.termosConsulta.add(termo);
 	  }
 
   @Override

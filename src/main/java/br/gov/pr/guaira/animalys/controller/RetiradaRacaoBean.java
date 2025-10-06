@@ -2,15 +2,16 @@ package br.gov.pr.guaira.animalys.controller;
 
 import br.gov.pr.guaira.animalys.entity.Animal;
 import br.gov.pr.guaira.animalys.entity.Proprietario;
-import br.gov.pr.guaira.animalys.entity.RetiradaMedicamento;
+import br.gov.pr.guaira.animalys.entity.RetiradaRacao;
 import br.gov.pr.guaira.animalys.repository.AnimalDAO;
 import br.gov.pr.guaira.animalys.repository.Proprietarios;
-import br.gov.pr.guaira.animalys.repository.RetiradasMedicamento;
+import br.gov.pr.guaira.animalys.repository.RetiradasRacao;
 import br.gov.pr.guaira.animalys.service.NegocioException;
-import br.gov.pr.guaira.animalys.service.RetiradaMedicamentoService;
+import br.gov.pr.guaira.animalys.service.RetiradaRacaoService;
 import br.gov.pr.guaira.animalys.util.jsf.FacesUtil;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -24,12 +25,12 @@ import javax.inject.Named;
 
 @Named
 @ViewScoped
-public class RetiradaMedicamentoBean implements Serializable {
+public class RetiradaRacaoBean implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Inject
-    private RetiradaMedicamentoService retiradaService;
+    private RetiradaRacaoService retiradaService;
 
     @Inject
     private Proprietarios proprietarios;
@@ -38,9 +39,9 @@ public class RetiradaMedicamentoBean implements Serializable {
     private AnimalDAO animalDAO;
     
     @Inject
-    private RetiradasMedicamento retiradasMedicamento;
+    private RetiradasRacao retiradasRacao;
 
-    private RetiradaMedicamento retirada;
+    private RetiradaRacao retirada;
     private String cpfProprietario;
     private List<Animal> animaisProprietario;
     private Date dataRetirada;
@@ -53,8 +54,8 @@ public class RetiradaMedicamentoBean implements Serializable {
     
     public void inicializar() {
         // Verificar se há parâmetro de edição
-        javax.faces.context.FacesContext context = javax.faces.context.FacesContext.getCurrentInstance();
-        String retiradaIdParam = context.getExternalContext().getRequestParameterMap().get("retirada");
+        String retiradaIdParam = FacesContext.getCurrentInstance()
+            .getExternalContext().getRequestParameterMap().get("retirada");
             
         if (retiradaIdParam != null && !retiradaIdParam.isEmpty()) {
             try {
@@ -71,7 +72,7 @@ public class RetiradaMedicamentoBean implements Serializable {
 
     private void carregarRetiradaParaEdicao(Integer retiradaId) {
         try {
-            RetiradaMedicamento retiradaExistente = retiradasMedicamento.porId(retiradaId);
+            RetiradaRacao retiradaExistente = retiradasRacao.porId(retiradaId);
             if (retiradaExistente != null) {
                 this.retirada = retiradaExistente;
                 
@@ -83,9 +84,17 @@ public class RetiradaMedicamentoBean implements Serializable {
                     this.animaisProprietario = animalDAO.buscarPorProprietario(
                         retirada.getProprietario().getIdProprietario());
                     
-                    // Definir o ID do animal selecionado
+                    // Debug: Verificar se o animal da retirada está na lista
                     if (retirada.getAnimal() != null) {
+                        System.out.println("DEBUG: Animal da retirada: " + retirada.getAnimal().getNome() + " (ID: " + retirada.getAnimal().getIdAnimal() + ")");
+                        System.out.println("DEBUG: Lista de animais carregada: " + animaisProprietario.size() + " animais");
+                        for (Animal a : animaisProprietario) {
+                            System.out.println("DEBUG: - Animal: " + a.getNome() + " (ID: " + a.getIdAnimal() + ")");
+                        }
+                        
+                        // Definir o ID do animal selecionado para o selectOneMenu
                         this.animalSelecionadoId = retirada.getAnimal().getIdAnimal();
+                        System.out.println("DEBUG: Animal ID definido: " + this.animalSelecionadoId);
                     }
                 }
                 
@@ -106,12 +115,13 @@ public class RetiradaMedicamentoBean implements Serializable {
     }
 
     public void limpar() {
-        this.retirada = new RetiradaMedicamento();
+        this.retirada = new RetiradaRacao();
         this.cpfProprietario = "";
         this.animaisProprietario = new ArrayList<>();
         this.dataRetirada = new Date();
         this.animalSelecionadoId = null;
         this.retirada.setDataRetirada(Calendar.getInstance());
+        this.retirada.setQuantidadeKg(BigDecimal.ZERO);
     }
 
     public void buscarProprietarioPorCpf() {
@@ -160,40 +170,99 @@ public class RetiradaMedicamentoBean implements Serializable {
         }
     }
 
-    // Método removido - não precisamos mais de autocomplete de lotes
-
     public void salvar() {
         try {
             // Converter Date para Calendar
-            if (this.dataRetirada != null) {
+            if (dataRetirada != null) {
                 Calendar cal = Calendar.getInstance();
-                cal.setTime(this.dataRetirada);
-                this.retirada.setDataRetirada(cal);
+                cal.setTime(dataRetirada);
+                retirada.setDataRetirada(cal);
             }
-
-            boolean isEdicao = (retirada.getIdRetiradaMedicamento() != null);
-            this.retiradaService.salvar(this.retirada);
+            
+            // Debug antes de salvar
+            System.out.println("DEBUG SALVAR - Proprietário ID: " + (retirada.getProprietario() != null ? retirada.getProprietario().getIdProprietario() : "null"));
+            System.out.println("DEBUG SALVAR - Animal ID: " + (retirada.getAnimal() != null ? retirada.getAnimal().getIdAnimal() : "null"));
+            System.out.println("DEBUG SALVAR - Animal Proprietário ID: " + (retirada.getAnimal() != null && retirada.getAnimal().getProprietario() != null ? retirada.getAnimal().getProprietario().getIdProprietario() : "null"));
+            
+            boolean isEdicao = (retirada.getIdRetiradaRacao() != null);
+            this.retirada = retiradaService.salvar(this.retirada);
             
             if (isEdicao) {
-                FacesUtil.addInfoMessage("Retirada de medicamento atualizada com sucesso!");
+                FacesUtil.addInfoMessage("Retirada de ração atualizada com sucesso!");
             } else {
-                FacesUtil.addInfoMessage("Retirada de medicamento registrada com sucesso!");
+                FacesUtil.addInfoMessage("Retirada de ração salva com sucesso!");
                 limpar();
             }
-            
-        } catch (NegocioException e) {
-            FacesUtil.addErrorMessage(e.getMessage());
+        } catch (NegocioException ne) {
+            FacesUtil.addErrorMessage(ne.getMessage());
         } catch (Exception e) {
-            FacesUtil.addErrorMessage("Erro inesperado: " + e.getMessage());
+            FacesUtil.addErrorMessage("Erro inesperado ao salvar retirada: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public String getClassificacaoIdade() {
+        if (retirada.getAnimal() == null || retirada.getAnimal().getIdade() == null) {
+            return "";
+        }
+
+        // Retorna a idade já cadastrada no animal
+        return retirada.getAnimal().getIdade();
+    }
+
+    // Lista de meses para o selectOneMenu
+    public List<MesReferencia> getMesesReferencia() {
+        List<MesReferencia> meses = new ArrayList<>();
+        String[] nomesMeses = {
+            "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+            "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+        };
+        
+        for (int i = 0; i < nomesMeses.length; i++) {
+            meses.add(new MesReferencia(i + 1, nomesMeses[i]));
+        }
+        
+        return meses;
+    }
+
+    // Classe interna para representar mês de referência
+    public static class MesReferencia {
+        private Integer numero;
+        private String nome;
+
+        public MesReferencia(Integer numero, String nome) {
+            this.numero = numero;
+            this.nome = nome;
+        }
+
+        public Integer getNumero() {
+            return numero;
+        }
+
+        public void setNumero(Integer numero) {
+            this.numero = numero;
+        }
+
+        public String getNome() {
+            return nome;
+        }
+
+        public void setNome(String nome) {
+            this.nome = nome;
+        }
+
+        @Override
+        public String toString() {
+            return nome;
         }
     }
 
     // Getters e Setters
-    public RetiradaMedicamento getRetirada() {
+    public RetiradaRacao getRetirada() {
         return retirada;
     }
 
-    public void setRetirada(RetiradaMedicamento retirada) {
+    public void setRetirada(RetiradaRacao retirada) {
         this.retirada = retirada;
     }
 
@@ -213,70 +282,12 @@ public class RetiradaMedicamentoBean implements Serializable {
         this.animaisProprietario = animaisProprietario;
     }
 
-    // Removidos métodos de lotes - não são mais necessários
-
     public Date getDataRetirada() {
         return dataRetirada;
     }
 
     public void setDataRetirada(Date dataRetirada) {
         this.dataRetirada = dataRetirada;
-    }
-
-    /**
-     * Classifica a idade do animal selecionado como Adulto, Jovem ou Filhote
-     */
-    public String getClassificacaoIdade() {
-        if (retirada == null || retirada.getAnimal() == null || retirada.getAnimal().getIdade() == null) {
-            return "";
-        }
-        
-        String idade = retirada.getAnimal().getIdade().toLowerCase().trim();
-        
-        // Classificação baseada em palavras-chave comuns
-        if (idade.contains("filhote") || idade.contains("bebe") || idade.contains("bebê") || 
-            idade.contains("recém") || idade.contains("nascido") || idade.contains("semana")) {
-            return "Filhote";
-        } else if (idade.contains("jovem") || idade.contains("adolescente")) {
-            return "Jovem";
-        }
-        
-        // Verificação por números e meses/anos usando lógica mais simples
-        try {
-            // Extrai números da string
-            String[] palavras = idade.split("\\s+");
-            for (int i = 0; i < palavras.length; i++) {
-                String palavra = palavras[i];
-                if (palavra.matches("\\d+")) {
-                    int numero = Integer.parseInt(palavra);
-                    
-                    // Verifica se a próxima palavra indica unidade de tempo
-                    if (i + 1 < palavras.length) {
-                        String unidade = palavras[i + 1];
-                        if (unidade.startsWith("mes") || unidade.startsWith("mês")) {
-                            if (numero <= 2) {
-                                return "Filhote";
-                            } else if (numero <= 11) {
-                                return "Jovem";
-                            } else {
-                                return "Adulto";
-                            }
-                        } else if (unidade.startsWith("ano")) {
-                            if (numero == 1) {
-                                return "Jovem";
-                            } else {
-                                return "Adulto";
-                            }
-                        }
-                    }
-                }
-            }
-        } catch (Exception e) {
-            // Em caso de erro na análise, assume adulto
-        }
-        
-        // Default para adulto se não conseguir classificar
-        return "Adulto";
     }
     
     public Integer getAnimalSelecionadoId() {
@@ -291,11 +302,15 @@ public class RetiradaMedicamentoBean implements Serializable {
             for (Animal animal : animaisProprietario) {
                 if (animal.getIdAnimal().equals(animalSelecionadoId)) {
                     this.retirada.setAnimal(animal);
+                    System.out.println("DEBUG: Animal sincronizado - " + animal.getNome() + 
+                                     " (ID: " + animal.getIdAnimal() + 
+                                     ", Proprietário ID: " + (animal.getProprietario() != null ? animal.getProprietario().getIdProprietario() : "null") + ")");
                     break;
                 }
             }
         } else {
             this.retirada.setAnimal(null);
+            System.out.println("DEBUG: Animal limpo");
         }
     }
 }

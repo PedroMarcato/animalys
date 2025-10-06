@@ -1,0 +1,171 @@
+/* Estilos para a página de assinatura de termo */
+.termo-header {
+    color: #666;
+    margin-bottom: 30px;
+}
+
+.secao-titulo {
+    padding-left: 25px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid;
+}
+
+.secao-titulo.buscar {
+    color: #007bff;
+    border-bottom-color: #007bff;
+}
+
+.secao-titulo.proprietario {
+    color: #28a745;
+    border-bottom-color: #28a745;
+    margin-top: 40px;
+}
+
+.secao-titulo.animal {
+    color: #ffc107;
+    border-bottom-color: #ffc107;
+    margin-top: 40px;
+}
+
+.secao-titulo.termo {
+    color: #dc3545;
+    border-bottom-color: #dc3545;
+    margin-top: 40px;
+}
+
+.secao-icone {
+    margin-right: 10px;
+}
+
+.painel-secao {
+    margin: 20px;
+    padding: 20px;
+}
+
+.campo-label {
+    font-weight: bold;
+}
+
+.campo-label-grande {
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.campo-valor {
+    font-size: 1.1em;
+    color: #333;
+}
+
+.botao-largura-total {
+    width: 100%;
+}
+
+.termo-documento {
+    margin: 20px;
+    padding: 30px;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+}
+
+.termo-cabecalho {
+    text-align: center;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #333;
+    padding-bottom: 20px;
+}
+
+.termo-titulo {
+    margin: 0;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.termo-dados {
+    margin-bottom: 30px;
+    line-height: 1.8;
+}
+
+.termo-linha {
+    margin-bottom: 15px;
+}
+
+.termo-campo {
+    border-bottom: 1px solid #333;
+    padding: 2px 5px;
+    margin: 0 5px;
+}
+
+.termo-label-espaco {
+    margin-left: 20px;
+}
+
+.dados-animal {
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+.dados-animal-titulo {
+    margin-top: 0;
+    color: #007bff;
+}
+
+.dados-animal-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.termo-texto {
+    text-align: justify;
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+.termo-assinatura {
+    margin-top: 50px;
+    text-align: center;
+}
+
+.linha-assinatura {
+    border-top: 2px solid #333;
+    width: 300px;
+    margin: 0 auto;
+    padding-top: 10px;
+}
+
+.termo-rodape {
+    text-align: right;
+    margin-top: 30px;
+    font-size: 0.9em;
+    color: #666;
+}
+
+.botoes-acao {
+    margin: 30px 20px;
+    text-align: center;
+}
+
+.botao-principal {
+    margin-right: 20px;
+    font-size: 1.2em;
+    padding: 12px 30px;
+}
+
+.botao-secundario {
+    font-size: 1.2em;
+    padding: 12px 30px;
+}
+
+.nova-consulta {
+    text-align: center;
+    margin: 50px 0;
+}
+
+.botao-nova-consulta {
+    font-size: 1.1em;
+    padding: 10px 25px;
+}

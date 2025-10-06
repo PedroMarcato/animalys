@@ -1,0 +1,135 @@
+<ui:composition template="/WEB-INF/template/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="titulo">Termo de Consulta</ui:define>
+
+	<ui:define name="styles">
+		<h:outputStylesheet library="css" name="termo-visualizacao.css" />
+	</ui:define>
+
+	<ui:define name="content">
+		<f:metadata>
+			<f:viewParam name="termo" value="#{visualizarTermoBean.termoId}" />
+			<f:viewAction action="#{visualizarTermoBean.inicializar()}" />
+		</f:metadata>
+
+		<h:form id="formTermo" style="padding-top: 10px;">
+			<p:messages id="messages" closable="true" />
+			
+			<p:toolbar>
+				<p:toolbarGroup>
+					<p:button value="Voltar" icon="fa fa-arrow-left"
+						outcome="/cadastros/pesquisaTermoConsulta" />
+				</p:toolbarGroup>
+				<p:toolbarGroup align="right">
+					<p:commandButton value="Imprimir" icon="fa fa-print"
+						onclick="window.print(); return false;" 
+						styleClass="ui-button-secondary" />
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<h:panelGroup rendered="#{visualizarTermoBean.termo != null}">
+				<div class="termo-container">
+					<!-- Cabeçalho -->
+					<div class="termo-header">
+						<h2>TERMO DE CONSENTIMENTO LIVRE E ESCLARECIDO PARA REALIZAÇÃO DE CONSULTA E TRATAMENTO CLÍNICO.</h2>
+					</div>
+
+					<!-- Dados do Proprietário -->
+					<div class="termo-section">
+						<h4 class="section-title">DADOS DO RESPONSÁVEL</h4>
+						<p><strong>Nome:</strong> #{visualizarTermoBean.termo.nomeProprietario}</p>
+						<p><strong>RG:</strong> #{visualizarTermoBean.termo.rgProprietario}</p>
+						<p><strong>CPF:</strong> #{visualizarTermoBean.termo.cpfProprietario}</p>
+						<p><strong>Endereço:</strong> #{visualizarTermoBean.termo.enderecoProprietario}</p>
+					</div>
+
+					<!-- Dados do Animal -->
+					<div class="dados-animal-direita">
+                        <h4 class="section-title">DADOS DO ANIMAL</h4>
+						<p><strong>Nome do animal:</strong> #{visualizarTermoBean.termo.nomeAnimal}</p>
+						<p><strong>Ficha De Controle:</strong> #{visualizarTermoBean.termo.fichaControle}</p>
+						<p><strong>Pelagem:</strong> #{visualizarTermoBean.termo.corAnimal}</p>
+						<p><strong>Espécie:</strong> #{visualizarTermoBean.termo.especieAnimal}</p>
+						<p><strong>Raça: </strong> 
+						   <h:outputText value="#{visualizarTermoBean.termo.animal.raca.nome}" 
+						   			rendered="#{not empty visualizarTermoBean.termo.animal.raca}" />
+						   <h:outputText value="Não informada" styleClass="text-muted" 
+						   			rendered="#{empty visualizarTermoBean.termo.animal.raca}" />
+						</p>
+						<p><strong>Idade: </strong> 
+						   <h:outputText value="#{visualizarTermoBean.termo.animal.idade}" 
+						   			rendered="#{not empty visualizarTermoBean.termo.animal.idade}" />
+						   <h:outputText value="Não informada" styleClass="text-muted" 
+						   			rendered="#{empty visualizarTermoBean.termo.animal.idade}" />
+						</p>
+						<p><strong>Sexo:</strong> #{visualizarTermoBean.termo.sexoAnimal}</p>
+						<br/>
+						<p>Guaíra, 
+						   <h:outputText value="#{visualizarTermoBean.termo.dataAssinaturaAsDate}">
+							   <f:convertDateTime pattern="dd 'de' MMMM 'de' yyyy" locale="pt_BR" />
+						   </h:outputText>
+						</p>
+					</div>
+
+					<!-- Corpo do Termo -->
+					<div class="termo-corpo">
+						<p>Eu <strong>#{visualizarTermoBean.termo.nomeProprietario}</strong></p>
+						<p>Portador do RG: <strong>#{visualizarTermoBean.termo.rgProprietario}</strong> CPF: <strong>#{visualizarTermoBean.termo.cpfProprietario}</strong>, Residente no endereço:</p>
+						<p><strong>#{visualizarTermoBean.termo.enderecoProprietario}</strong>, Guaíra-PR.</p>
+						
+						<p>Declaro o livre consentimento para a realização de consulta (s) veterinária e tratamento (s) 
+						necessário (s) no animal abaixo identificado, a ser realizado por médico (a) veterinário (a) do Centro 
+						de Controle Animal dentro das especificações de saúde básica veterinária contidas na Lei 
+						Municipal Nº 2.324/2023.</p>
+						
+						<p>Declaro ter consciência que o atendimento realizado no centro de controle animal é realizado 
+						gratuitamente dentro das especificações da Lei Municipal Nº 2.324/2023.</p>
+						
+						<p>Declaro ter consciência que custos adicionais referentes ao atendimento veterinário em clínicas 
+						particulares, medicações, exames complementares e outros procedimentos necessários em 
+						função de outras patologias não contidas na Lei Municipal Nº 2.324/2023 são de minha inteira 
+						responsabilidade, sendo isento o município de Guaíra de qualquer custo adicional em função de 
+						atendimentos veterinários realizados em clínicas particulares.</p>
+						
+						<p>Declaro ter consciência do especificado na Lei Municipal Nº 2.324/2023, e que não será 
+						disponibilizado internamento clínico para os animais de tutores em situação de vulnerabilidade 
+						social ONGs ou protetores independentes em decorrência de piora do quadro clínico das doenças: 
+						dirofilariose, toxocariase, ancylostomíase, equinoccocose, dipilidiose, erlichiose, esporotricose e 
+						escabiose, e que caso se faça necessário este serviço em clínica veterinária particular, os custos 
+						são de minha inteira responsabilidade.</p>
+						
+						<p>Declaro, ainda, ter sido esclarecido (a) acerca dos possíveis riscos inerentes à situação clínica do 
+						animal, bem como do(s) tratamento(s) proposto(s), estando o(a) referido(a) profissional isento(a) de 
+						quaisquer responsabilidades decorrentes de tais riscos.</p>
+					</div>
+
+					<!-- Rodapé com assinatura -->
+					<div class="termo-rodape">
+						<br/><br/>
+						<div style="text-align: center;">
+							<div style="border-top: 1px solid #000; width: 300px; margin: 0 auto; padding-top: 5px;">
+								<strong>Tutor do Animal/Protetor Individual.</strong>
+							</div>
+						</div>
+					</div>
+				</div>
+			</h:panelGroup>
+
+			<h:panelGroup rendered="#{visualizarTermoBean.termo == null}">
+				<p:panel header="Termo não encontrado">
+					<p>O termo solicitado não foi encontrado ou não existe.</p>
+					<p:button value="Voltar para Pesquisa" 
+						outcome="/cadastros/pesquisaTermoConsulta" 
+						styleClass="ui-button-primary" />
+				</p:panel>
+			</h:panelGroup>
+			
+		</h:form>
+	</ui:define>
+
+</ui:composition>

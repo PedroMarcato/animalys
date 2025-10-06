@@ -5,15 +5,15 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
 
-	<ui:define name="titulo">Retirada de Medicamentos</ui:define>
+	<ui:define name="titulo">Retirada de Ração</ui:define>
 	<f:metadata>
-		<f:viewAction action="#{retiradaMedicamentoBean.inicializar()}" />
+		<f:viewAction action="#{retiradaRacaoBean.inicializar()}" />
 	</f:metadata>
 	
 	<ui:define name="content">
 		<h:form id="formRetirada">
 			<h1 class="aw-page-title">
-				#{empty retiradaMedicamentoBean.retirada.idRetiradaMedicamento ? 'Nova Retirada de Medicamento' : 'Editar Retirada de Medicamento'}
+				#{empty retiradaRacaoBean.retirada.idRetiradaRacao ? 'Nova Retirada de Ração' : 'Editar Retirada de Ração'}
 			</h1>
 
 			<p:messages id="messages" closable="true" />
@@ -21,17 +21,17 @@
 			<p:toolbar>
 				<p:toolbarGroup>
 					<p:button value="Nova Retirada" icon="fa fa-plus"
-						outcome="/estoque/retiradaMedicamento" />
+						outcome="/estoque/retiradaRacao" />
 					<p:commandButton value="Salvar" icon="fa fa-save"
-						action="#{retiradaMedicamentoBean.salvar()}" 
+						action="#{retiradaRacaoBean.salvar()}" 
 						update="@form" />
 					<p:commandButton value="Limpar" icon="fa fa-eraser"
-						action="#{retiradaMedicamentoBean.limpar()}" 
+						action="#{retiradaRacaoBean.limpar()}" 
 						update="@form" immediate="true" />
 				</p:toolbarGroup>
 				<p:toolbarGroup align="right">
 					<p:button value="Pesquisar Retiradas" icon="fa fa-search"
-						outcome="/estoque/pesquisaRetiradaMedicamento" />
+						outcome="/estoque/pesquisaRetiradaRacao" />
 				</p:toolbarGroup>
 			</p:toolbar>
 
@@ -43,10 +43,10 @@
 					<p:outputLabel value="CPF do Proprietário" for="cpfProprietario" />
 					<h:panelGroup>
 						<p:inputMask id="cpfProprietario" mask="999.999.999-99"
-							value="#{retiradaMedicamentoBean.cpfProprietario}"
+							value="#{retiradaRacaoBean.cpfProprietario}"
 							placeholder="Digite o CPF do proprietário" required="true">
 							<p:ajax event="blur" 
-								listener="#{retiradaMedicamentoBean.buscarProprietarioPorCpf()}" 
+								listener="#{retiradaRacaoBean.buscarProprietarioPorCpf()}" 
 								update="nomeProprietario animalSelect messages" />
 						</p:inputMask>
 						<p:message for="cpfProprietario" />
@@ -54,7 +54,7 @@
 
 					<p:outputLabel value="Proprietário" for="nomeProprietario" />
 					<p:inputText id="nomeProprietario"
-						value="#{retiradaMedicamentoBean.retirada.proprietario.nome}"
+						value="#{retiradaRacaoBean.retirada.proprietario.nome}"
 						readonly="true" 
 						placeholder="Proprietário será carregado após inserir CPF" />
 
@@ -62,10 +62,10 @@
 					<h:panelGroup>
 						<p:selectOneMenu id="animalSelect"
                             required="true"
-							value="#{retiradaMedicamentoBean.animalSelecionadoId}"
-							disabled="#{empty retiradaMedicamentoBean.animaisProprietario}">
+							value="#{retiradaRacaoBean.animalSelecionadoId}"
+							disabled="#{empty retiradaRacaoBean.animaisProprietario}">
 							<f:selectItem itemLabel="Selecione o animal" itemValue="#{null}" noSelectionOption="true" />
-							<f:selectItems value="#{retiradaMedicamentoBean.animaisProprietario}"
+							<f:selectItems value="#{retiradaRacaoBean.animaisProprietario}"
 								var="animal" 
 								itemValue="#{animal.idAnimal}" 
 								itemLabel="#{animal.nome} - #{animal.raca != null ? animal.raca.nome : 'Sem raça'}" />
@@ -76,41 +76,48 @@
 
 					<p:outputLabel value="Raça" for="racaAnimal" />
 					<p:inputText id="racaAnimal"
-						value="#{retiradaMedicamentoBean.retirada.animal != null and retiradaMedicamentoBean.retirada.animal.raca != null ? retiradaMedicamentoBean.retirada.animal.raca.nome : 'Não informada'}"
+						value="#{retiradaRacaoBean.retirada.animal != null and retiradaRacaoBean.retirada.animal.raca != null ? retiradaRacaoBean.retirada.animal.raca.nome : 'Não informada'}"
 						readonly="true" 
 						placeholder="Raça será exibida após selecionar o animal" />
 
 					<p:outputLabel value="Classificação Etária" for="classificacaoIdade" />
 					<p:inputText id="classificacaoIdade"
-						value="#{retiradaMedicamentoBean.classificacaoIdade}"
+						value="#{retiradaRacaoBean.classificacaoIdade}"
 						readonly="true" 
 						placeholder="Classificação será exibida após selecionar o animal" />
 
-					<p:outputLabel value="Medicamento" for="nomeMedicamento" />
+					<p:outputLabel value="Quantidade (Kg)" for="quantidadeKg" />
 					<h:panelGroup>
-						<p:inputText id="nomeMedicamento"
-							value="#{retiradaMedicamentoBean.retirada.nomeMedicamento}"
+						<p:spinner id="quantidadeKg"
                             required="true"
-							placeholder="Digite o nome do medicamento"
-							maxlength="200" />
-						<p:message for="nomeMedicamento" />
+							value="#{retiradaRacaoBean.retirada.quantidadeKg}"
+							min="0.001"
+							max="999.999"
+							step="0.5"
+							decimalPlaces="3"
+							placeholder="Ex: 5.000" />
+						<p:message for="quantidadeKg" />
 					</h:panelGroup>
 
-					<p:outputLabel value="Quantidade" for="quantidade" />
+					<p:outputLabel value="Mês de Referência" for="mesReferencia" />
 					<h:panelGroup>
-						<p:spinner id="quantidade"
+						<p:selectOneMenu id="mesReferencia"
                             required="true"
-							value="#{retiradaMedicamentoBean.retirada.quantidade}"
-							min="1"
-							max="999" />
-						<p:message for="quantidade" />
+							value="#{retiradaRacaoBean.retirada.mesReferencia}">
+							<f:selectItem itemLabel="Selecione o mês" noSelectionOption="true" />
+							<f:selectItems value="#{retiradaRacaoBean.mesesReferencia}"
+								var="mes" 
+								itemValue="#{mes.numero}" 
+								itemLabel="#{mes.numero} - #{mes.nome}" />
+						</p:selectOneMenu>
+						<p:message for="mesReferencia" />
 					</h:panelGroup>
 
 					<p:outputLabel value="Data da Retirada" for="dataRetirada" />
 					<h:panelGroup>
 						<p:calendar id="dataRetirada"
                             required="true"
-							value="#{retiradaMedicamentoBean.dataRetirada}"
+							value="#{retiradaRacaoBean.dataRetirada}"
 							pattern="dd/MM/yyyy HH:mm"
 							showTime="true"
 							timeOnlyTitle="Escolha o horário"
@@ -128,11 +135,10 @@
 					
 					<p:outputLabel value="Observações" for="observacoes" />
 					<p:inputTextarea id="observacoes"
-						value="#{retiradaMedicamentoBean.retirada.observacoes}"
+						value="#{retiradaRacaoBean.retirada.observacoes}"
 						rows="3"
 						maxlength="500"
-						placeholder="Observações sobre a retirada do medicamento (opcional)"
-                        style="height: 400px;" />
+						placeholder="Observações sobre a retirada da ração (opcional)" />
 				
 				</p:panelGrid>
 

@@ -1,0 +1,107 @@
+<ui:composition template="/WEB-INF/template/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="titulo">Pesquisa de Termos de Consulta</ui:define>
+
+	<ui:define name="content">
+		<h:form id="formPesquisa">
+			<h1 class="aw-page-title">Pesquisa de Termos de Consulta</h1>
+
+			<p:messages id="messages" closable="true" />
+			
+			<p:toolbar>
+				<p:toolbarGroup>
+					<p:commandButton value="Pesquisar" icon="fa fa-search"
+						action="#{pesquisaTermoConsultaBean.pesquisar()}" 
+						update="@form" />
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<div class="ui-fluid">
+				<p:panelGrid columns="2" layout="grid"
+					columnClasses="ui-grid-col-2, ui-grid-col-6"
+					styleClass="panelgrid-noborder">
+
+					<p:outputLabel value="CPF do Proprietário" for="cpfFiltro" />
+					<p:inputMask id="cpfFiltro" mask="999.999.999-99"
+						value="#{pesquisaTermoConsultaBean.cpfFiltro}" />
+
+					<p:outputLabel value="Nome do Animal" for="nomeAnimalFiltro" />
+					<p:inputText id="nomeAnimalFiltro"
+						value="#{pesquisaTermoConsultaBean.nomeAnimalFiltro}" />
+
+				</p:panelGrid>
+			</div>
+
+			<p:dataTable id="termosTable" 
+				emptyMessage="Nenhum termo de consulta encontrado" 
+				rows="20"
+				paginator="true" 
+				paginatorAlwaysVisible="false"
+				paginatorPosition="bottom" 
+				reflow="true"
+				value="#{pesquisaTermoConsultaBean.termosConsulta}" 
+				var="termo">
+				
+				<p:column headerText="Data/Hora" style="width: 115px;">
+					<h:outputText value="#{termo.dataCadastroAsDate}">
+						<f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="America/Sao_Paulo" />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="Proprietário">
+					<h:outputText value="#{termo.nomeProprietario}" />
+				</p:column>
+
+				<p:column headerText="CPF" style="width: 110px;">
+					<h:outputText value="#{termo.cpfProprietario}" />
+				</p:column>
+
+				<p:column headerText="RG" style="width: 100px;">
+					<h:outputText value="#{termo.rgProprietario}" />
+				</p:column>
+
+				<p:column headerText="Para o Animal" style="width: 150px;">
+					<h:outputText value="#{termo.nomeAnimal}" />
+				</p:column>
+
+				<p:column headerText="Espécie" style="width: 110px;">
+					<h:outputText value="#{termo.especieAnimal}" />
+				</p:column>
+
+				<p:column headerText="Pelagem" style="width: 100px;">
+					<h:outputText value="#{termo.corAnimal}" 
+						rendered="#{not empty termo.corAnimal}" />
+					<h:outputText value="-" styleClass="text-muted" 
+						rendered="#{empty termo.corAnimal}" />
+				</p:column>
+
+				<p:column headerText="Idade" style="width: 80px;">
+					<h:outputText value="#{termo.animal.idade}" 
+						rendered="#{not empty termo.animal.idade}" />
+					<h:outputText value="-" styleClass="text-muted" 
+						rendered="#{empty termo.animal.idade}" />
+				</p:column>
+
+				<p:column headerText="Ficha" style="width: 100px;">
+					<h:outputText value="#{termo.fichaControle}" />
+				</p:column>
+				
+				<p:column headerText="Ações" width="80" styleClass="text-center">
+                    <div style="display: flex; width: 100%;">
+                        <p:button icon="fa fa-eye" title="Visualizar Termo"
+                            outcome="/cadastros/visualizarTermo" styleClass="btn-sm" style="margin: auto;">
+                            <f:param name="termo" value="#{termo.id}" />
+                        </p:button>
+                    </div>
+				</p:column>
+				
+			</p:dataTable>
+		</h:form>
+	</ui:define>
+
+</ui:composition>

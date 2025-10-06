@@ -805,15 +805,21 @@ public class CadastroAnimalBean implements Serializable {
 
 	// Métodos para remoção de documentos individuais
 	public void removerCardUnico() {
+		System.out.println("DEBUG: Executando removerCardUnico()");
 		setCardUnicoFile(null);
+		System.out.println("DEBUG: Card Único removido - cardUnicoFile = " + cardUnicoFile);
 	}
 
 	public void removerDocumentoComFoto() {
+		System.out.println("DEBUG: Executando removerDocumentoComFoto()");
 		setDocumentoComFotoFile(null);
+		System.out.println("DEBUG: Documento com Foto removido - documentoComFotoFile = " + documentoComFotoFile);
 	}
 
 	public void removerComprovanteEndereco() {
+		System.out.println("DEBUG: Executando removerComprovanteEndereco()");
 		setComprovanteEnderecoFile(null);
+		System.out.println("DEBUG: Comprovante de Endereço removido - comprovanteEnderecoFile = " + comprovanteEnderecoFile);
 	}
 
 	// Método para limpar todos os documentos

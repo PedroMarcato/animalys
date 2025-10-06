@@ -55,4 +55,9 @@ public class RetiradaMedicamentoService implements Serializable {
             throw new NegocioException("O animal selecionado não pertence ao proprietário informado.");
         }
     }
+    
+    @Transactional
+    public void excluir(RetiradaMedicamento retirada) throws NegocioException {
+        retiradas.remover(retirada);
+    }
 }

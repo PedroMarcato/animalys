@@ -1,0 +1,163 @@
+/* Estilos para visualização do termo de consulta */
+.termo-container {
+    padding: 30px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    background-color: #fff;
+    margin: 20px 0;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.termo-header {
+    text-align: center;
+    margin-bottom: 40px;
+    border-bottom: 2px solid #2c3e50;
+    padding-bottom: 20px;
+}
+
+.termo-header h2 {
+    margin: 0;
+    color: #2c3e50;
+    font-size: 20px;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+}
+
+.termo-header h3 {
+    margin: 8px 0;
+    color: #34495e;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.termo-subtitle {
+    margin: 15px 0;
+    font-size: 12px;
+    color: #7f8c8d;
+    font-weight: 500;
+}
+
+.termo-section {
+    margin-bottom: 25px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 6px;
+    border-left: 4px solid #3498db;
+}
+
+.section-title {
+    color: #2c3e50;
+    border-bottom: 1px solid #bdc3c7;
+    padding-bottom: 8px;
+    margin-bottom: 15px;
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.termo-section p {
+    margin: 8px 0;
+    color: #2c3e50;
+}
+
+.termo-corpo {
+    margin-bottom: 40px;
+    text-align: justify;
+    padding: 20px;
+    background-color: #fdfdfd;
+    border-radius: 6px;
+    border: 1px solid #e9ecef;
+}
+
+.termo-corpo p {
+    margin-bottom: 15px;
+    color: #2c3e50;
+}
+
+.termo-lista {
+    margin-left: 30px;
+    margin-bottom: 20px;
+}
+
+.termo-lista li {
+    margin-bottom: 8px;
+    color: #2c3e50;
+}
+
+.termo-rodape {
+    text-align: center;
+    margin-top: 50px;
+    padding-top: 30px;
+    border-top: 2px solid #bdc3c7;
+}
+
+.assinatura {
+    margin-top: 80px;
+    border-top: 1px solid #2c3e50;
+    width: 350px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 8px;
+}
+
+.nome-assinatura {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.label-assinatura {
+    margin: 5px 0 0 0;
+    font-size: 11px;
+    color: #7f8c8d;
+    font-style: italic;
+}
+
+.dados-animal-direita {
+    float: right;
+    width: 45%;
+    margin-left: 20px;
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #bdc3c7;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+    clear: both;
+}
+
+.dados-animal-direita p {
+    margin: 8px 0;
+    color: #2c3e50;
+    line-height: 1.4;
+}
+
+/* Estilos para impressão */
+@media print {
+    .termo-container {
+        box-shadow: none;
+        border: none;
+        margin: 0;
+        padding: 20px;
+    }
+    
+    .ui-toolbar,
+    .ui-messages {
+        display: none !important;
+    }
+    
+    body {
+        font-size: 12px;
+    }
+    
+    .termo-header h2 {
+        font-size: 18px;
+    }
+    
+    .termo-header h3 {
+        font-size: 14px;
+    }
+}

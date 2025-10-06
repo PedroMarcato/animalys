@@ -1,0 +1,264 @@
+<ui:composition template="/WEB-INF/template/LayoutExterno.xhtml" 
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html" 
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets" 
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="titulo">Assinatura de Termo de Consulta</ui:define>
+
+	<ui:define name="content">
+		<h:form id="form" style="padding: 0 20px;">
+			<h1 class="aw-page-title">Assinatura de Termo de Consulta</h1>
+			<h3>Para assinar o termo de consulta, informe o CPF do proprietário e selecione o animal.</h3>
+
+			<p:messages closable="true" id="msgs" />
+
+			<div class="ui-fluid">
+
+				<!-- Seção 1: Busca por CPF -->
+				<h2><i class="fa fa-search"></i> Buscar Proprietário</h2>
+				
+				<p:panel>
+					<p:panelGrid columns="3" layout="grid" 
+						columnClasses="ui-grid-col-3, ui-grid-col-6, ui-grid-col-3"
+						styleClass="panelgrid-noborder">
+						
+						<p:outputLabel value="CPF do Proprietário:" for="cpf" />
+						<p:inputMask id="cpf" mask="999.999.999-99" 
+							value="#{assinarTermoBean.cpf}" 
+							required="true" 
+							requiredMessage="Informe o CPF do proprietário"
+							placeholder="000.000.000-00" />
+						<p:commandButton value="Buscar" 
+							icon="fa fa-search" 
+							action="#{assinarTermoBean.buscarProprietarioPorCPF()}"
+							update="form"
+							styleClass="ui-button-info" />
+					</p:panelGrid>
+				</p:panel>
+
+				<!-- Seção 2: Dados do Proprietário -->
+				<h:panelGroup rendered="#{assinarTermoBean.proprietarioEncontrado}">
+					<h2><i class="fa fa-user"></i> Dados do Proprietário</h2>
+
+					<p:panel>
+						<p:panelGrid columns="4" layout="grid" 
+							columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-2, ui-grid-col-4"
+							styleClass="panelgrid-noborder">
+							
+							<p:outputLabel value="Nome:" />
+							<h:outputText value="#{assinarTermoBean.proprietario.nome}" />
+								
+							<p:outputLabel value="CPF:" />
+							<h:outputText value="#{assinarTermoBean.proprietario.cpf}" />
+								
+							<p:outputLabel value="RG:" />
+							<h:outputText value="#{assinarTermoBean.proprietario.rg}" />
+								
+							<p:outputLabel value="Endereço:" />
+							<h:outputText value="#{assinarTermoBean.proprietario.endereco.logradouro}, #{assinarTermoBean.proprietario.endereco.numero} - #{assinarTermoBean.proprietario.endereco.bairro}" />
+						</p:panelGrid>
+					</p:panel>
+				</h:panelGroup>
+
+				<!-- Seção 3: Seleção de Animal -->
+				<h:panelGroup rendered="#{assinarTermoBean.proprietarioEncontrado and assinarTermoBean.temAnimais}">
+					<h2><i class="fa fa-paw"></i> Selecionar Animal</h2>
+
+					<p:panel>
+						<p:panelGrid columns="2" layout="grid" 
+							columnClasses="ui-grid-col-8, ui-grid-col-4"
+							styleClass="panelgrid-noborder">
+							
+							<p:selectOneMenu id="animalSelecionado" 
+								value="#{assinarTermoBean.animalSelecionado}"
+								converter="animalConverter">
+								<f:selectItem itemLabel="Selecione o animal para o termo..." itemValue="#{null}" />
+								<f:selectItems value="#{assinarTermoBean.animaisDoProprietario}" 
+									var="animal" 
+									itemValue="#{animal}" 
+									itemLabel="#{animal.nome} - #{animal.raca.nome} (#{animal.sexo.descricao})" />
+							</p:selectOneMenu>
+							
+							<p:commandButton value="Preparar Termo" 
+								icon="fa fa-file-text-o" 
+								action="#{assinarTermoBean.selecionarAnimal()}"
+								update="form"
+								styleClass="ui-button-warning" />
+						</p:panelGrid>
+					</p:panel>
+				</h:panelGroup>
+
+				<!-- Seção 4: Visualização do Termo -->
+				<h:panelGroup rendered="#{assinarTermoBean.termoPreparado}">
+					<h2><i class="fa fa-file-text"></i> Termo de Consentimento</h2>
+
+					<div class="termo-container">
+						
+						<!-- Cabeçalho do termo -->
+						<div class="termo-header-doc">
+							<h3>TERMO DE CONSENTIMENTO LIVRE E ESCLARECIDO PARA REALIZAÇÃO DE CONSULTA E TRATAMENTO CLÍNICO.</h3>
+						</div>
+
+						<!-- Dados preenchidos -->
+						<div class="termo-dados">
+							<p><strong>Eu, </strong> #{assinarTermoBean.termo.nomeProprietario}</p>
+							<p><strong>Portador do RG: </strong> #{assinarTermoBean.termo.rgProprietario} <strong>CPF: </strong> #{assinarTermoBean.termo.cpfProprietario}</p>
+							<p><strong>Residente no endereço: </strong> #{assinarTermoBean.termo.enderecoProprietario}</p>
+						</div>
+
+						<!-- Dados do Animal -->
+						<div class="dados-animal">
+							<h4>Dados do Animal:</h4>
+							<p><strong>Nome do animal: </strong>#{assinarTermoBean.termo.nomeAnimal}</p>
+							<p><strong>Ficha de Controle: </strong>#{assinarTermoBean.termo.fichaControle}</p>
+							<p><strong>Espécie: </strong>#{assinarTermoBean.termo.especieAnimal}</p>
+							<p><strong>Sexo: </strong>#{assinarTermoBean.termo.sexoAnimal}</p>
+							<p><strong>Cor: </strong>#{assinarTermoBean.termo.corAnimal}</p>
+						</div>
+
+						<!-- Texto do termo -->
+						<div class="termo-texto">
+							<p>Declaro o livre consentimento para a realização de consulta (s) veterinária e tratamento (s) necessário (s) no animal abaixo identificado, a ser realizado por medico (a) veterinário (a) do Centro de Controle Animal dentro das especificações de saúde básica veterinária contidas na Lei Municipal Nº 2.324/2023.</p>
+							
+							<p>Declaro ter consciência que o atendimento realizado no centro de controle animal é realizado gratuitamente dentro das especificações da Lei Municipal Nº 2.324/2023.</p>
+							
+							<p>Declaro ter consciência que custos adicionais referentes ao atendimento veterinário em clinicas particulares, medicações, exames complementares e outros procedimentos necessários em função de outras patologias não contidas na Lei Municipal Nº 2.324/2023 são de minha inteira responsabilidade, sendo isento o município de Guaíra de qualquer custo adicional em função de atendimentos veterinários realizados em clinicas particulares.</p>
+							
+							<p>Declaro ter consciência do especificado na Lei Municipal Nº 2.324/2023, e que não será disponibilizado internamento clinico para os animais de tutores em situação de vulnerabilidade social ONGs ou protetores independentes em decorrência de piora do quadro clinico das doenças: dirofilariose, toxocaríase, ancylostomíase, equinococose, dipilidiose, erlichiose, esporotricose e escabiose, e que caso se faça necessário este serviço em clínica veterinária particular, os custos são de minha inteira responsabilidade.</p>
+							
+							<p>Declaro, ainda, ter sido esclarecido (a) acerca dos possíveis riscos inerentes à situação clínica do animal, bem como do(s) tratamento(s) proposto(s), estando o(a) referido(a) profissional isento(a) de quaisquer responsabilidades decorrentes de tais riscos.</p>
+
+                            <p><strong>Data: </strong><h:outputText value="#{assinarTermoBean.termo.dataAssinaturaAsDate}"><f:convertDateTime pattern="dd/MM/yyyy" /></h:outputText></p>
+						</div>
+
+						<!-- Linha de assinatura -->
+						<div class="termo-assinatura">
+							<div class="linha-assinatura">
+								<strong>Tutor do Animal/Protetor Individual.</strong>
+							</div>
+						</div>
+
+						<!-- Rodapé -->
+						<div class="termo-rodape">
+							Guaíra, <h:outputText value="#{assinarTermoBean.termo.dataAssinaturaAsDate}">
+								<f:convertDateTime pattern="dd 'de' MMMM 'de' yyyy" locale="pt_BR" />
+							</h:outputText>
+						</div>
+					</div>
+
+					<!-- Botões de ação -->
+					<div class="botoes-acao">
+						<p:commandButton value="Assinar Termo" 
+							icon="fa fa-check" 
+							action="#{assinarTermoBean.assinarTermo()}"
+							update="form"
+							styleClass="ui-button-success"
+							onclick="return confirm('Confirma a assinatura do termo de consulta?');" />
+							
+						<p:commandButton value="Cancelar" 
+							icon="fa fa-times" 
+							action="#{assinarTermoBean.novoTermo()}"
+							update="form"
+							styleClass="ui-button-danger" />
+					</div>
+				</h:panelGroup>
+
+				<!-- Botão para nova consulta -->
+				<h:panelGroup rendered="#{!assinarTermoBean.proprietarioEncontrado}">
+					<div class="nova-consulta">
+						<p:commandButton value="Nova Consulta" 
+							icon="fa fa-refresh" 
+							action="#{assinarTermoBean.novoTermo()}"
+							update="form"
+							styleClass="ui-button-secondary" />
+					</div>
+				</h:panelGroup>
+
+			</div>
+		</h:form>
+		
+		<style>
+			.termo-container {
+				margin: 20px;
+				padding: 30px;
+				border: 2px solid #ddd;
+				border-radius: 10px;
+				background-color: #f9f9f9;
+			}
+			
+			.termo-header-doc {
+				text-align: center;
+				margin-bottom: 30px;
+				border-bottom: 2px solid #333;
+				padding-bottom: 20px;
+			}
+			
+			.termo-header-doc h3 {
+				margin: 0;
+				font-weight: bold;
+				text-transform: uppercase;
+			}
+			
+			.termo-dados {
+				margin-bottom: 30px;
+				line-height: 1.8;
+			}
+			
+			.dados-animal {
+				margin-bottom: 30px;
+				padding: 20px;
+				background-color: #fff;
+				border: 1px solid #ccc;
+				border-radius: 8px;
+			}
+			
+			.dados-animal h4 {
+				margin-top: 0;
+				color: #007bff;
+			}
+			
+			.termo-texto {
+				text-align: justify;
+				line-height: 1.6;
+				margin-bottom: 30px;
+			}
+			
+			.termo-assinatura {
+				margin-top: 50px;
+				text-align: center;
+			}
+			
+			.linha-assinatura {
+				border-top: 2px solid #333;
+				width: 300px;
+				margin: 0 auto;
+				padding-top: 10px;
+			}
+			
+			.termo-rodape {
+				text-align: right;
+				margin-top: 30px;
+				font-size: 0.9em;
+				color: #666;
+			}
+			
+			.botoes-acao {
+				margin: 30px 20px;
+				text-align: center;
+			}
+			
+			.botoes-acao .ui-button {
+				margin: 0 10px;
+				font-size: 1.2em;
+				padding: 12px 30px;
+			}
+			
+			.nova-consulta {
+				text-align: center;
+				margin: 50px 0;
+			}
+		</style>
+	</ui:define>
+</ui:composition>

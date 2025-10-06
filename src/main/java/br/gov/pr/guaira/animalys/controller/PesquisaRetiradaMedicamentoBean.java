@@ -10,6 +10,9 @@ import javax.inject.Named;
 
 import br.gov.pr.guaira.animalys.entity.RetiradaMedicamento;
 import br.gov.pr.guaira.animalys.repository.RetiradasMedicamento;
+import br.gov.pr.guaira.animalys.service.NegocioException;
+import br.gov.pr.guaira.animalys.service.RetiradaMedicamentoService;
+import br.gov.pr.guaira.animalys.util.jsf.FacesUtil;
 
 @Named
 @ViewScoped
@@ -19,11 +22,15 @@ public class PesquisaRetiradaMedicamentoBean implements Serializable {
 
     @Inject
     private RetiradasMedicamento retiradas;
+    
+    @Inject
+    private RetiradaMedicamentoService retiradaMedicamentoService;
 
     private List<RetiradaMedicamento> retiradasFiltradas;
     private String cpfProprietario;
     private String nomeAnimal;
     private String nomeMedicamento;
+    private RetiradaMedicamento retiradaSelecionadaParaExclusao;
 
     @PostConstruct
     public void inicializar() {
@@ -84,5 +91,31 @@ public class PesquisaRetiradaMedicamentoBean implements Serializable {
 
     public void setNomeMedicamento(String nomeMedicamento) {
         this.nomeMedicamento = nomeMedicamento;
+    }
+    
+    public void prepararExclusao(RetiradaMedicamento retirada) {
+        this.retiradaSelecionadaParaExclusao = retirada;
+    }
+    
+    public void confirmarExclusao() {
+        try {
+            retiradaMedicamentoService.excluir(retiradaSelecionadaParaExclusao);
+            this.retiradasFiltradas.remove(retiradaSelecionadaParaExclusao);
+            
+            FacesUtil.addInfoMessage("Retirada de medicamento excluída com sucesso!");
+        } catch (NegocioException ne) {
+            FacesUtil.addErrorMessage(ne.getMessage());
+        } catch (Exception e) {
+            FacesUtil.addErrorMessage("Erro ao excluir retirada: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    public RetiradaMedicamento getRetiradaSelecionadaParaExclusao() {
+        return retiradaSelecionadaParaExclusao;
+    }
+    
+    public void setRetiradaSelecionadaParaExclusao(RetiradaMedicamento retiradaSelecionadaParaExclusao) {
+        this.retiradaSelecionadaParaExclusao = retiradaSelecionadaParaExclusao;
     }
 }

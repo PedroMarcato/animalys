@@ -16,6 +16,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import br.gov.pr.guaira.animalys.model.TermoConsulta;
+
 @Entity
 @Table(schema="animal")
 public class Proprietario implements Serializable{
@@ -45,6 +47,9 @@ public class Proprietario implements Serializable{
 	private Contato contato;
 	@OneToMany(cascade=CascadeType.MERGE, fetch=FetchType.LAZY, mappedBy="proprietario")
 	private List<Animal> animais;
+
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy="proprietario")
+	private List<TermoConsulta> termosConsulta;
 
     @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(name = "documentos", referencedColumnName = "id_documentos")
@@ -110,6 +115,14 @@ public class Proprietario implements Serializable{
 	public void setAnimais(List<Animal> animais) {
 		this.animais = animais;
 	}
+	
+	public List<TermoConsulta> getTermosConsulta() {
+		return termosConsulta;
+	}
+	public void setTermosConsulta(List<TermoConsulta> termosConsulta) {
+		this.termosConsulta = termosConsulta;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

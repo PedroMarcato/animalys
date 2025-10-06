@@ -56,7 +56,7 @@
 				value="#{pesquisaTermoItraconazolBean.termosFiltrados}" 
 				var="termo">
 				
-				<p:column headerText="1° Retirada">
+				<p:column headerText="1° Retirada" style="width: 115px;">
 					<h:outputText value="#{termo.dataRetirada.time}">
 						<f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="America/Sao_Paulo" />
 					</h:outputText>
@@ -66,26 +66,26 @@
 					<h:outputText value="#{termo.animal.proprietario.nome}" />
 				</p:column>
 
-				<p:column headerText="CPF">
+				<p:column headerText="CPF" style="width: 105px;">
 					<h:outputText value="#{termo.animal.proprietario.cpf}" />
 				</p:column>
 				
-				<p:column headerText="Animal">
+				<p:column headerText="Animal" style="width: 150px;">
 					<h:outputText value="#{termo.animal.nome}" />
 				</p:column>
 				
-				<p:column headerText="Porte">
+				<p:column headerText="Porte" style="width: 70px;">
 					<h:outputText value="#{termo.porteAnimal}" 
 						rendered="#{not empty termo.porteAnimal}" />
 					<h:outputText value="Não informado" styleClass="text-muted"
 						rendered="#{empty termo.porteAnimal}" />
 				</p:column>
 				
-				<p:column headerText="Medicamento">
+				<p:column headerText="Medicamento" style="width: 90px;">
 					<h:outputText value="Itraconazol" />
 				</p:column>
 				
-				<p:column headerText="Quantidade">
+				<p:column headerText="Quantidade" style="width: 80px;">
 					<h:outputText value="#{termo.quantidadeRetirada}" />
 				</p:column>
 				

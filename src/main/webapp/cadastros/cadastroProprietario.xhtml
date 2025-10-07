@@ -53,7 +53,255 @@
                 <p:outputLabel value="NIS" for="nis" />
                 <p:inputText id="nis" size="20" maxlength="20"
                              value="#{cadastroProprietarioBean.proprietario.nis}" />
+
+                <p:outputLabel value="Documentos" for="botaoAnexarDocumentos" />
+                <h:panelGroup>
+                    <p:commandButton id="botaoAnexarDocumentos"
+                        value="Anexar Documentos Pessoais" icon="fa fa-paperclip"
+                        onclick="PF('dlgDocumentos').show(); return false;" type="button" 
+                        style="width: 100%; margin-right: 2%;" />
+                    <p:commandButton id="botaoVisualizarDocumentos" 
+                        value="Ver Documentos" icon="fa fa-eye"
+                        disabled="#{!cadastroProprietarioBean.proprietarioTemDocumentos()}"
+                        action="#{cadastroProprietarioBean.refreshDocumentos()}"
+                        oncomplete="PF('dlgVisualizarDocumentos').show();" 
+                        update="dlgVisualizarDocumentos"
+                        style="width: 100%;" 
+                        styleClass="#{cadastroProprietarioBean.proprietarioTemDocumentos() ? 'ui-button-success' : 'ui-button-secondary'}" />
+                </h:panelGroup>
             </p:panelGrid>
+
+            <!-- Dialog para anexar documentos pessoais -->
+            <p:dialog id="dlgDocumentos" header="Anexar Documentos Pessoais" widgetVar="dlgDocumentos"
+                modal="true" resizable="false" width="95%" style="max-width: 1250px; min-height: 800px;"
+                styleClass="ui-fluid">
+                <style>
+                    .painel-upload-vivo,
+                    .ui-dialog-content,
+                    .ui-panel,
+                    .ui-panelgrid-cell,
+                    .ui-panelgrid,
+                    .ui-widget-content {
+                        opacity: 1 !important;
+                        filter: none !important;
+                        pointer-events: auto !important;
+                        color: inherit !important;
+                    }
+                    .ui-dialog .ui-dialog-content {
+                        background: #fff !important;
+                        opacity: 1 !important;
+                        filter: none !important;
+                    }
+                    .painel {
+                        min-height: 200px;
+                    }
+                </style>
+                <p:panelGrid id="documentosPanel" columns="3" layout="grid" styleClass="ui-fluid"
+                    style="margin: 10px;">
+
+                    <p:panel header="Card Único" styleClass="ui-widget-shadow painel-upload-vivo"
+                        style="text-align: center; margin: 5px; padding: 10px; background: #fff; border: 2px solid #0056b3; border-radius: 12px; box-shadow: 0 2px 8px #0056b355;"
+                        toggleable="true">
+                        
+                        <p:fileUpload id="cardUnico" label="Escolher arquivo" auto="true" mode="advanced"
+                            dragDrop="true" showUploadButton="true" sizeLimit="5242880"
+                            allowTypes="/(pdf|jpe?g|png)$/"
+                            fileUploadListener="#{cadastroProprietarioBean.handleCardUnicoUpload}"
+                            update="documentosPanel cardPreview" styleClass="ui-fluid"
+                            style="margin: 10px 0;" />
+
+                        <h:panelGroup id="cardPreview" style="width: 100%; display: inline-grid;" 
+                            rendered="#{not empty cadastroProprietarioBean.cardUnicoFile}">
+                            <p:outputLabel value="Arquivo carregado:" style="font-weight: bold; font-size: 0.9em;" />
+                            <ui:fragment rendered="#{cadastroProprietarioBean.cardUnicoFile.endsWith('.pdf')}">
+                                <a href="/uploads/documentos/#{cadastroProprietarioBean.cardUnicoFile}"
+                                    target="_blank" style="color: #007bff;">Visualizar PDF</a>
+                            </ui:fragment>
+                            <ui:fragment
+                                rendered="#{cadastroProprietarioBean.cardUnicoFile.endsWith('.jpg') or cadastroProprietarioBean.cardUnicoFile.endsWith('.jpeg') or cadastroProprietarioBean.cardUnicoFile.endsWith('.png')}">
+                                <img src="/uploads/documentos/#{cadastroProprietarioBean.cardUnicoFile}"
+                                    alt="Preview Card Único"
+                                    style="max-width: 250px; max-height: 350px; border: 2px solid #ddd; border-radius: 8px; margin: 5px auto; cursor: pointer;"
+                                    preview="true" previewWidth="400" previewHeight="300" />
+                            </ui:fragment>
+                            <p:commandButton value="Remover" icon="fa fa-trash"
+                                action="#{cadastroProprietarioBean.removerCardUnico}"
+                                update="documentosPanel cardPreview" styleClass="ui-button-danger"
+                                style="margin-top: 5px;" process="@this" />
+                        </h:panelGroup>
+                        
+                        <p:outputPanel rendered="#{empty cadastroProprietarioBean.cardUnicoFile}" 
+                            style="margin-top: 10px; text-align: center;">
+                            <p style="color: #888; font-weight: bold; font-size: 1em;">Nenhum documento carregado</p>
+                        </p:outputPanel>
+
+                        <i class="fa fa-id-card" style="font-size: 2em; color: #0056b3; margin-bottom: 10px; margin-top: 25px; font-weight: bold;"></i>
+                    </p:panel>
+
+                    <p:panel header="Documento com Foto" styleClass="ui-widget-shadow painel-upload-vivo"
+                        style="text-align: center; margin: 5px; padding: 10px; background: #fff; border: 2px solid #218838; border-radius: 12px; box-shadow: 0 2px 8px #21883855;"
+                        toggleable="true">
+                        
+                        <p:fileUpload id="docFoto" label="Escolher arquivo" auto="true" mode="advanced"
+                            dragDrop="true" showUploadButton="true" sizeLimit="5242880"
+                            allowTypes="/(pdf|jpe?g|png)$/"
+                            fileUploadListener="#{cadastroProprietarioBean.handleDocumentoComFotoUpload}"
+                            update="documentosPanel docFotoPreview" styleClass="ui-fluid"
+                            style="margin: 10px 0;" />
+                            
+                        <h:panelGroup style="width: 100%; display: inline-grid;" id="docFotoPreview"
+                            rendered="#{not empty cadastroProprietarioBean.documentoComFotoFile}">
+                            <p:outputLabel value="Arquivo carregado:" style="font-weight: bold; font-size: 0.9em;" />
+                            <ui:fragment rendered="#{cadastroProprietarioBean.documentoComFotoFile.endsWith('.pdf')}">
+                                <a href="/uploads/documentos/#{cadastroProprietarioBean.documentoComFotoFile}"
+                                    target="_blank" style="color: #007bff;">Visualizar PDF</a>
+                            </ui:fragment>
+                            <ui:fragment
+                                rendered="#{cadastroProprietarioBean.documentoComFotoFile.endsWith('.jpg') or cadastroProprietarioBean.documentoComFotoFile.endsWith('.jpeg') or cadastroProprietarioBean.documentoComFotoFile.endsWith('.png')}">
+                                <img src="/uploads/documentos/#{cadastroProprietarioBean.documentoComFotoFile}"
+                                    alt="Preview Documento com Foto"
+                                    style="max-width: 250px; max-height: 350px; border: 2px solid #ddd; border-radius: 8px; margin: 5px auto; cursor: pointer;"
+                                    preview="true" previewWidth="400" previewHeight="300" />
+                            </ui:fragment>
+                            <p:commandButton value="Remover" icon="fa fa-trash"
+                                action="#{cadastroProprietarioBean.removerDocumentoComFoto}"
+                                update="documentosPanel docFotoPreview" styleClass="ui-button-danger"
+                                style="margin-top: 5px;" process="@this" />
+                        </h:panelGroup>
+                        
+                        <p:outputPanel rendered="#{empty cadastroProprietarioBean.documentoComFotoFile}" 
+                            style="margin-top: 10px; text-align: center;">
+                            <p style="color: #888; font-weight: bold; font-size: 1em;">Nenhum documento carregado</p>
+                        </p:outputPanel>
+
+                        <i class="fa fa-id-badge" style="font-size: 2em; color: #218838; margin-bottom: 10px; margin-top: 25px; font-weight: bold;"></i>
+                    </p:panel>
+
+                    <p:panel header="Comprovante de Endereço" styleClass="ui-widget-shadow painel-upload-vivo"
+                        style="text-align: center; margin: 5px; padding: 10px; background: #fff; border: 2px solid #ffc107; border-radius: 12px; box-shadow: 0 2px 8px #ffc10799;"
+                        toggleable="true">
+                        
+                        <p:fileUpload id="compEndereco" label="Escolher arquivo" auto="true" mode="advanced"
+                            dragDrop="true" showUploadButton="true" sizeLimit="5242880"
+                            allowTypes="/(pdf|jpe?g|png)$/"
+                            fileUploadListener="#{cadastroProprietarioBean.handleComprovanteEnderecoUpload}"
+                            update="documentosPanel compEnderecoPreview" styleClass="ui-fluid"
+                            style="margin: 10px 0;" />
+                            
+                        <h:panelGroup id="compEnderecoPreview" style="width: 100%; display: inline-grid;"
+                            rendered="#{not empty cadastroProprietarioBean.comprovanteEnderecoFile}">
+                            <p:outputLabel value="Arquivo carregado:" style="font-weight: bold; font-size: 0.9em;" />
+                            <ui:fragment rendered="#{cadastroProprietarioBean.comprovanteEnderecoFile.endsWith('.pdf')}">
+                                <a href="/uploads/documentos/#{cadastroProprietarioBean.comprovanteEnderecoFile}"
+                                    target="_blank" style="color: #007bff;">Visualizar PDF</a>
+                            </ui:fragment>
+                            <ui:fragment
+                                rendered="#{cadastroProprietarioBean.comprovanteEnderecoFile.endsWith('.jpg') or cadastroProprietarioBean.comprovanteEnderecoFile.endsWith('.jpeg') or cadastroProprietarioBean.comprovanteEnderecoFile.endsWith('.png')}">
+                                <img src="/uploads/documentos/#{cadastroProprietarioBean.comprovanteEnderecoFile}"
+                                    alt="Preview Comprovante de Endereço"
+                                    style="max-width: 250px; max-height: 350px; border: 2px solid #ddd; border-radius: 8px; margin: 5px auto; cursor: pointer;"
+                                    preview="true" previewWidth="400" previewHeight="300" />
+                            </ui:fragment>
+                            <p:commandButton value="Remover" icon="fa fa-trash"
+                                action="#{cadastroProprietarioBean.removerComprovanteEndereco}"
+                                update="documentosPanel compEnderecoPreview" styleClass="ui-button-danger"
+                                style="margin-top: 5px;" process="@this" />
+                        </h:panelGroup>
+                        
+                        <p:outputPanel rendered="#{empty cadastroProprietarioBean.comprovanteEnderecoFile}" 
+                            style="margin-top: 10px; text-align: center;">
+                            <p style="color: #888; font-weight: bold; font-size: 1em;">Nenhum documento carregado</p>
+                        </p:outputPanel>
+
+                        <i class="fa fa-map-marker" style="font-size: 2em; color: #ffc107; margin-bottom: 10px; margin-top: 25px; font-weight: bold;"></i>
+                    </p:panel>
+                </p:panelGrid>
+                <f:facet name="footer">
+                    <p:commandButton value="Fechar" icon="fa fa-times" onclick="PF('dlgDocumentos').hide();"
+                        styleClass="ui-button-info" />
+                </f:facet>
+            </p:dialog>
+
+            <!-- Dialog para visualizar documentos pessoais do proprietário -->
+            <p:dialog id="dlgVisualizarDocumentos" header="Documentos do Proprietário: #{cadastroProprietarioBean.proprietario.nome}" 
+                widgetVar="dlgVisualizarDocumentos" modal="true" resizable="false" width="95%" 
+                visible="false" style="max-width: 1250px;" styleClass="ui-fluid">
+                
+                <h:panelGroup rendered="#{cadastroProprietarioBean.proprietarioTemDocumentos()}">
+                    <p:panelGrid columns="3" layout="grid" styleClass="ui-fluid" style="margin: 10px;">
+                        
+                        <p:panel header="Card Único" 
+                            rendered="#{not empty cadastroProprietarioBean.proprietario.documentos.cardUnico}"
+                            style="text-align: center; margin: 5px; padding: 10px; border: 2px solid #0056b3; border-radius: 12px;">
+                            <ui:fragment rendered="#{cadastroProprietarioBean.proprietario.documentos.cardUnico.endsWith('.pdf')}">
+                                <a href="/uploads/documentos/#{cadastroProprietarioBean.proprietario.documentos.cardUnico}"
+                                    target="_blank" style="color: #007bff; font-size: 1.1em; font-weight: bold;">
+                                    <i class="fa fa-file-pdf-o" style="font-size: 3em; color: #dc3545; margin: 10px;"></i><br/>
+                                    Visualizar PDF
+                                </a>
+                            </ui:fragment>
+                            <ui:fragment
+                                rendered="#{cadastroProprietarioBean.proprietario.documentos.cardUnico.endsWith('.jpg') or cadastroProprietarioBean.proprietario.documentos.cardUnico.endsWith('.jpeg') or cadastroProprietarioBean.proprietario.documentos.cardUnico.endsWith('.png')}">
+                                <img src="/uploads/documentos/#{cadastroProprietarioBean.proprietario.documentos.cardUnico}"
+                                    alt="Card Único"
+                                    style="max-width: 315px; max-height: 450px; border: 2px solid #ddd; border-radius: 8px; cursor: pointer;"
+                                    preview="true" previewWidth="600" previewHeight="800" />
+                            </ui:fragment>
+                        </p:panel>
+
+                        <p:panel header="Documento com Foto" 
+                            rendered="#{not empty cadastroProprietarioBean.proprietario.documentos.documentoComFoto}"
+                            style="text-align: center; margin: 5px; padding: 10px; border: 2px solid #218838; border-radius: 12px;">
+                            <ui:fragment rendered="#{cadastroProprietarioBean.proprietario.documentos.documentoComFoto.endsWith('.pdf')}">
+                                <a href="/uploads/documentos/#{cadastroProprietarioBean.proprietario.documentos.documentoComFoto}"
+                                    target="_blank" style="color: #007bff; font-size: 1.1em; font-weight: bold;">
+                                    <i class="fa fa-file-pdf-o" style="font-size: 3em; color: #dc3545; margin: 10px;"></i><br/>
+                                    Visualizar PDF
+                                </a>
+                            </ui:fragment>
+                            <ui:fragment
+                                rendered="#{cadastroProprietarioBean.proprietario.documentos.documentoComFoto.endsWith('.jpg') or cadastroProprietarioBean.proprietario.documentos.documentoComFoto.endsWith('.jpeg') or cadastroProprietarioBean.proprietario.documentos.documentoComFoto.endsWith('.png')}">
+                                <img src="/uploads/documentos/#{cadastroProprietarioBean.proprietario.documentos.documentoComFoto}"
+                                    alt="Documento com Foto"
+                                    style="max-width: 315px; max-height: 450px; border: 2px solid #ddd; border-radius: 8px; cursor: pointer;"
+                                    preview="true" previewWidth="600" previewHeight="800" />
+                            </ui:fragment>
+                        </p:panel>
+
+                        <p:panel header="Comprovante de Endereço" 
+                            rendered="#{not empty cadastroProprietarioBean.proprietario.documentos.comprovanteEndereco}"
+                            style="text-align: center; margin: 5px; padding: 10px; border: 2px solid #ffc107; border-radius: 12px;">
+                            <ui:fragment rendered="#{cadastroProprietarioBean.proprietario.documentos.comprovanteEndereco.endsWith('.pdf')}">
+                                <a href="/uploads/documentos/#{cadastroProprietarioBean.proprietario.documentos.comprovanteEndereco}"
+                                    target="_blank" style="color: #007bff; font-size: 1.1em; font-weight: bold;">
+                                    <i class="fa fa-file-pdf-o" style="font-size: 3em; color: #dc3545; margin: 10px;"></i><br/>
+                                    Visualizar PDF
+                                </a>
+                            </ui:fragment>
+                            <ui:fragment
+                                rendered="#{cadastroProprietarioBean.proprietario.documentos.comprovanteEndereco.endsWith('.jpg') or cadastroProprietarioBean.proprietario.documentos.comprovanteEndereco.endsWith('.jpeg') or cadastroProprietarioBean.proprietario.documentos.comprovanteEndereco.endsWith('.png')}">
+                                <img src="/uploads/documentos/#{cadastroProprietarioBean.proprietario.documentos.comprovanteEndereco}"
+                                    alt="Comprovante de Endereço"
+                                    style="max-width: 315px; max-height: 450px; border: 2px solid #ddd; border-radius: 8px; cursor: pointer;"
+                                    preview="true" previewWidth="600" previewHeight="800" />
+                            </ui:fragment>
+                        </p:panel>
+                        
+                    </p:panelGrid>
+                </h:panelGroup>
+                
+                <h:panelGroup rendered="#{!cadastroProprietarioBean.proprietarioTemDocumentos()}">
+                    <div style="text-align: center; padding: 50px;">
+                        <i class="fa fa-folder-open" style="font-size: 4em; color: #ccc;"></i>
+                        <p style="color: #888; font-size: 1.2em; margin-top: 20px;">Nenhum documento cadastrado para este proprietário.</p>
+                    </div>
+                </h:panelGroup>
+                
+                <f:facet name="footer">
+                    <p:commandButton value="Fechar" icon="fa fa-times" onclick="PF('dlgVisualizarDocumentos').hide();"
+                        styleClass="ui-button-info" />
+                </f:facet>
+            </p:dialog>
 
             <!-- Dados de Contato -->
             <h3>Contato</h3>

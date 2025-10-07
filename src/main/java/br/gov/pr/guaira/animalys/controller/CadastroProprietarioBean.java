@@ -15,14 +15,17 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 
 import org.primefaces.component.autocomplete.AutoComplete;
+import org.primefaces.event.FileUploadEvent;
 
 import br.gov.pr.guaira.animalys.entity.Cidade;
 import br.gov.pr.guaira.animalys.entity.Contato;
+import br.gov.pr.guaira.animalys.entity.DocumentosPessoais;
 import br.gov.pr.guaira.animalys.entity.Endereco;
 import br.gov.pr.guaira.animalys.entity.Proprietario;
 import br.gov.pr.guaira.animalys.repository.Cidades;
 import br.gov.pr.guaira.animalys.repository.Proprietarios;
 import br.gov.pr.guaira.animalys.service.NegocioException;
+import br.gov.pr.guaira.animalys.util.cdi.jpa.Transactional;
 import br.gov.pr.guaira.animalys.util.jsf.FacesUtil;
 
 @Named
@@ -46,6 +49,11 @@ public class CadastroProprietarioBean implements Serializable {
 	private String cpf;
 	private Date dataNascimento;
 	private boolean edicao = false;
+	
+	// Propriedades para upload de documentos
+	private String cardUnicoFile;
+	private String documentoComFotoFile;
+	private String comprovanteEnderecoFile;
 
 	@PostConstruct
 	public void inicializar() {
@@ -83,6 +91,9 @@ public class CadastroProprietarioBean implements Serializable {
 		this.cpf = "";
 		this.dataNascimento = null;
 		this.edicao = false;
+		this.cardUnicoFile = null;
+		this.documentoComFotoFile = null;
+		this.comprovanteEnderecoFile = null;
 	}
 
 	public void buscaCadastroPeloCPF() {
@@ -109,6 +120,7 @@ public class CadastroProprietarioBean implements Serializable {
 		}
 	}
 
+	@Transactional
 	public void salvar() {
 		try {
 			// Setar CPF no proprietário (removendo máscara se necessário)
@@ -136,9 +148,45 @@ public class CadastroProprietarioBean implements Serializable {
 			// Salvar contato usando manager
 			this.contato = manager.merge(contato);
 			proprietario.setContato(contato);
+			
+			// Processar documentos pessoais se houver uploads
+			boolean isNovoProprietario = (proprietario.getIdProprietario() == null);
+			if ((cardUnicoFile != null || documentoComFotoFile != null || comprovanteEnderecoFile != null)) {
+				// Se é novo proprietário ou não tem documentos ainda
+				if (isNovoProprietario || proprietario.getDocumentos() == null) {
+					System.out.println("[LOG] Criando objeto DocumentosPessoais...");
+					DocumentosPessoais documentos = new DocumentosPessoais();
+					documentos.setCardUnico(cardUnicoFile);
+					documentos.setComprovanteEndereco(comprovanteEnderecoFile);
+					documentos.setDocumentoComFoto(documentoComFotoFile);
+					System.out.println("[LOG] Salvando DocumentosPessoais...");
+					manager.persist(documentos);
+					manager.flush();
+					System.out.println("[LOG] DocumentosPessoais persistido: id=" + documentos.getId());
+					proprietario.setDocumentos(documentos);
+					System.out.println("[LOG] Documentos pessoais associados ao proprietário.");
+				} else {
+					// Atualizar documentos existentes
+					System.out.println("[LOG] Atualizando DocumentosPessoais existentes...");
+					DocumentosPessoais docs = proprietario.getDocumentos();
+					if (cardUnicoFile != null) {
+						docs.setCardUnico(cardUnicoFile);
+					}
+					if (documentoComFotoFile != null) {
+						docs.setDocumentoComFoto(documentoComFotoFile);
+					}
+					if (comprovanteEnderecoFile != null) {
+						docs.setComprovanteEndereco(comprovanteEnderecoFile);
+					}
+					manager.merge(docs);
+					System.out.println("[LOG] Documentos pessoais atualizados.");
+				}
+			}
 
-			// Salvar proprietário
+			// Salvar proprietário (guardar já tem @Transactional, mas está dentro desta transação maior)
 			this.proprietario = proprietarios.guardar(proprietario);
+
+			System.out.println("[LOG] Proprietário salvo com sucesso");
 
 			if (edicao) {
 				FacesUtil.addInfoMessage("Proprietário atualizado com sucesso!");
@@ -150,8 +198,10 @@ public class CadastroProprietarioBean implements Serializable {
 			
 		} catch (NegocioException e) {
 			FacesUtil.addErrorMessage(e.getMessage());
+			e.printStackTrace();
 		} catch (Exception e) {
 			FacesUtil.addErrorMessage("Erro ao salvar proprietário: " + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 
@@ -286,5 +336,174 @@ public class CadastroProprietarioBean implements Serializable {
 			System.out.println("O endereço está NULL");
 		}
 		System.out.println("=== FIM CIDADE SELECIONADA ===");
+	}
+	
+	// ========== MÉTODOS PARA UPLOAD E GERENCIAMENTO DE DOCUMENTOS ==========
+	
+	// Getters e Setters para os arquivos de documentos
+	public String getCardUnicoFile() {
+		return cardUnicoFile;
+	}
+
+	public void setCardUnicoFile(String cardUnicoFile) {
+		this.cardUnicoFile = cardUnicoFile;
+	}
+
+	public String getDocumentoComFotoFile() {
+		return documentoComFotoFile;
+	}
+
+	public void setDocumentoComFotoFile(String documentoComFotoFile) {
+		this.documentoComFotoFile = documentoComFotoFile;
+	}
+
+	public String getComprovanteEnderecoFile() {
+		return comprovanteEnderecoFile;
+	}
+
+	public void setComprovanteEnderecoFile(String comprovanteEnderecoFile) {
+		this.comprovanteEnderecoFile = comprovanteEnderecoFile;
+	}
+	
+	// Métodos para processar upload de cada documento
+	public void handleCardUnicoUpload(FileUploadEvent event) {
+		System.out.println("[LOG] handleCardUnicoUpload chamado");
+		String fileName = salvarArquivoUpload(event, "Card Único");
+		if (fileName != null) {
+			this.cardUnicoFile = fileName;
+			System.out.println("[DEBUG] cardUnicoFile setado: " + this.cardUnicoFile);
+			FacesUtil.addInfoMessage("Card Único enviado com sucesso!");
+		} else {
+			System.out.println("[DEBUG] cardUnicoFile NÃO setado (null)");
+		}
+	}
+
+	public void handleDocumentoComFotoUpload(FileUploadEvent event) {
+		System.out.println("[LOG] handleDocumentoComFotoUpload chamado");
+		String fileName = salvarArquivoUpload(event, "Documento com Foto");
+		if (fileName != null) {
+			this.documentoComFotoFile = fileName;
+			System.out.println("[DEBUG] documentoComFotoFile setado: " + this.documentoComFotoFile);
+			FacesUtil.addInfoMessage("Documento com Foto enviado com sucesso!");
+		} else {
+			System.out.println("[DEBUG] documentoComFotoFile NÃO setado (null)");
+		}
+	}
+
+	public void handleComprovanteEnderecoUpload(FileUploadEvent event) {
+		System.out.println("[LOG] handleComprovanteEnderecoUpload chamado");
+		String fileName = salvarArquivoUpload(event, "Comprovante de Endereço");
+		if (fileName != null) {
+			this.comprovanteEnderecoFile = fileName;
+			System.out.println("[DEBUG] comprovanteEnderecoFile setado: " + this.comprovanteEnderecoFile);
+			FacesUtil.addInfoMessage("Comprovante de Endereço enviado com sucesso!");
+		} else {
+			System.out.println("[DEBUG] comprovanteEnderecoFile NÃO setado (null)");
+		}
+	}
+	
+	// Função utilitária para salvar o arquivo
+	private String salvarArquivoUpload(FileUploadEvent event, String tipo) {
+		try {
+			String basePath = "C:\\animalys\\documentos";
+			java.io.File dir = new java.io.File(basePath);
+			if (!dir.exists()) {
+				boolean created = dir.mkdirs();
+				if (!created) {
+					System.out.println("[LOG] Falha ao criar diretório: " + basePath);
+					FacesUtil.addErrorMessage("Erro ao criar diretório de documentos");
+					return null;
+				}
+			}
+			String fileName = System.currentTimeMillis() + "_" + event.getFile().getFileName();
+			java.io.File dest = new java.io.File(dir, fileName);
+			try (java.io.InputStream in = event.getFile().getInputstream();
+					java.io.FileOutputStream out = new java.io.FileOutputStream(dest)) {
+				byte[] buffer = new byte[1024];
+				int len;
+				while ((len = in.read(buffer)) > 0) {
+					out.write(buffer, 0, len);
+				}
+				System.out.println("[LOG] " + tipo + " salvo em: " + dest.getAbsolutePath());
+				return fileName;
+			}
+		} catch (Exception e) {
+			System.out.println("[LOG] Erro ao salvar " + tipo + ": " + e.getMessage());
+			e.printStackTrace();
+			FacesUtil.addErrorMessage("Erro ao salvar " + tipo);
+			return null;
+		}
+	}
+	
+	// Métodos para remoção de documentos individuais
+	public void removerCardUnico() {
+		System.out.println("DEBUG: Executando removerCardUnico()");
+		setCardUnicoFile(null);
+		System.out.println("DEBUG: Card Único removido - cardUnicoFile = " + cardUnicoFile);
+		FacesUtil.addInfoMessage("Card Único removido com sucesso!");
+	}
+
+	public void removerDocumentoComFoto() {
+		System.out.println("DEBUG: Executando removerDocumentoComFoto()");
+		setDocumentoComFotoFile(null);
+		System.out.println("DEBUG: Documento com Foto removido - documentoComFotoFile = " + documentoComFotoFile);
+		FacesUtil.addInfoMessage("Documento com Foto removido com sucesso!");
+	}
+
+	public void removerComprovanteEndereco() {
+		System.out.println("DEBUG: Executando removerComprovanteEndereco()");
+		setComprovanteEnderecoFile(null);
+		System.out.println("DEBUG: Comprovante de Endereço removido - comprovanteEnderecoFile = " + comprovanteEnderecoFile);
+		FacesUtil.addInfoMessage("Comprovante de Endereço removido com sucesso!");
+	}
+	
+	// Método para verificar se o proprietário atual tem documentos preenchidos
+	public boolean proprietarioTemDocumentos() {
+		// Verifica se o proprietário está carregado
+		if (proprietario == null || proprietario.getIdProprietario() == null) {
+			return false;
+		}
+		
+		// Verifica se o proprietário tem documentos
+		if (proprietario.getDocumentos() == null) {
+			// Tentar recarregar o proprietário com documentos
+			try {
+				Proprietario recarregado = proprietarios.porId(proprietario.getIdProprietario());
+				if (recarregado != null && recarregado.getDocumentos() != null) {
+					this.proprietario = recarregado;
+				} else {
+					return false;
+				}
+			} catch (Exception e) {
+				return false;
+			}
+		}
+		
+		DocumentosPessoais docs = proprietario.getDocumentos();
+		if (docs == null) {
+			return false;
+		}
+		
+		// Verifica se pelo menos um documento está preenchido
+		boolean temCardUnico = docs.getCardUnico() != null && !docs.getCardUnico().trim().isEmpty();
+		boolean temDocComFoto = docs.getDocumentoComFoto() != null && !docs.getDocumentoComFoto().trim().isEmpty();
+		boolean temComprovante = docs.getComprovanteEndereco() != null && !docs.getComprovanteEndereco().trim().isEmpty();
+		
+		return temCardUnico || temDocComFoto || temComprovante;
+	}
+	
+	// Método para forçar refresh do estado dos documentos
+	public void refreshDocumentos() {
+		if (proprietario != null && proprietario.getIdProprietario() != null) {
+			try {
+				Proprietario recarregado = proprietarios.porId(proprietario.getIdProprietario());
+				if (recarregado != null) {
+					this.proprietario = recarregado;
+					System.out.println("[REFRESH] Proprietário recarregado. Tem documentos: " + proprietarioTemDocumentos());
+				}
+			} catch (Exception e) {
+				System.out.println("[REFRESH] Erro ao recarregar: " + e.getMessage());
+			}
+		}
 	}
 }

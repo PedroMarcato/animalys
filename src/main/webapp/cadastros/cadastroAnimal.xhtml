@@ -151,7 +151,7 @@
 									<p:commandButton value="Remover" icon="fa fa-trash"
 										action="#{cadastroAnimalBean.removerCardUnico}"
 										update="documentosPanel cardPreview" styleClass="ui-button-danger"
-										style="margin-top: 5px;" />
+										style="margin-top: 5px;" process="@this" />
 								</h:panelGroup>
 								
 								<p:outputPanel rendered="#{empty cadastroAnimalBean.cardUnicoFile}" style="margin-top: 10px; text-align: center;">
@@ -191,7 +191,7 @@
 									<p:commandButton value="Remover" icon="fa fa-trash"
 										action="#{cadastroAnimalBean.removerDocumentoComFoto}"
 										update="documentosPanel docFotoPreview" styleClass="ui-button-danger"
-										style="margin-top: 5px;" />
+										style="margin-top: 5px;" process="@this" />
 								</h:panelGroup>
 								<p:outputPanel rendered="#{empty cadastroAnimalBean.documentoComFotoFile}" style="margin-top: 10px; text-align: center;">
 									<img src="/uploads/documentos/no_doc.jpg" alt="Nenhum documento carregado" style="max-width: 250px; max-height: 350px; border: 2px solid #ddd; border-radius: 8px; margin: 5px auto; opacity: 0.7;" />
@@ -231,7 +231,7 @@
 									<p:commandButton value="Remover" icon="fa fa-trash"
 										action="#{cadastroAnimalBean.removerComprovanteEndereco}"
 										update="documentosPanel compEnderecoPreview" styleClass="ui-button-danger"
-										style="margin-top: 5px;" />
+										style="margin-top: 5px;" process="@this" />
 								</h:panelGroup>
 								<p:outputPanel rendered="#{empty cadastroAnimalBean.comprovanteEnderecoFile}" style="margin-top: 10px; text-align: center;">
 									<img src="/uploads/documentos/no_doc.jpg" alt="Nenhum documento carregado" style="max-width: 250px; max-height: 350px; border: 2px solid #ddd; border-radius: 8px; margin: 5px 0; opacity: 0.7;" />

@@ -83,7 +83,7 @@ public class RetiradasRacao implements Serializable {
                 .getResultList();
     }
 
-    public List<RetiradaRacao> filtradas(String nomeProprietario, String nomeAnimal, Integer mesReferencia) {
+    public List<RetiradaRacao> filtradas(String nomeProprietario, String nomeAnimal, Integer mesReferencia, Integer anoReferencia) {
         StringBuilder jpql = new StringBuilder("SELECT r FROM RetiradaRacao r " +
                 "LEFT JOIN FETCH r.proprietario p " +
                 "LEFT JOIN FETCH r.animal a " +
@@ -99,6 +99,10 @@ public class RetiradasRacao implements Serializable {
 
         if (mesReferencia != null) {
             jpql.append("AND r.mesReferencia = :mesReferencia ");
+        }
+
+        if (anoReferencia != null) {
+            jpql.append("AND YEAR(COALESCE(r.data12Mes, r.data11Mes, r.data10Mes, r.data9Mes, r.data8Mes, r.data7Mes, r.data6Mes, r.data5Mes, r.data4Mes, r.data3Mes, r.data2Mes, r.data1Mes)) = :anoReferencia ");
         }
 
         jpql.append("ORDER BY r.dataRetirada DESC");
@@ -117,10 +121,14 @@ public class RetiradasRacao implements Serializable {
             query.setParameter("mesReferencia", mesReferencia);
         }
 
+        if (anoReferencia != null) {
+            query.setParameter("anoReferencia", anoReferencia);
+        }
+
         return query.getResultList();
     }
 
-    public List<RetiradaRacao> filtradasPorCpf(String cpfProprietario, String nomeAnimal, Integer mesReferencia) {
+    public List<RetiradaRacao> filtradasPorCpf(String cpfProprietario, String nomeAnimal, Integer mesReferencia, Integer anoReferencia) {
         StringBuilder jpql = new StringBuilder("SELECT r FROM RetiradaRacao r " +
                 "LEFT JOIN FETCH r.proprietario p " +
                 "LEFT JOIN FETCH r.animal a " +
@@ -136,6 +144,10 @@ public class RetiradasRacao implements Serializable {
 
         if (mesReferencia != null) {
             jpql.append("AND r.mesReferencia = :mesReferencia ");
+        }
+
+        if (anoReferencia != null) {
+            jpql.append("AND YEAR(COALESCE(r.data12Mes, r.data11Mes, r.data10Mes, r.data9Mes, r.data8Mes, r.data7Mes, r.data6Mes, r.data5Mes, r.data4Mes, r.data3Mes, r.data2Mes, r.data1Mes)) = :anoReferencia ");
         }
 
         jpql.append("ORDER BY r.dataRetirada DESC");
@@ -156,6 +168,10 @@ public class RetiradasRacao implements Serializable {
 
         if (mesReferencia != null) {
             query.setParameter("mesReferencia", mesReferencia);
+        }
+
+        if (anoReferencia != null) {
+            query.setParameter("anoReferencia", anoReferencia);
         }
 
         return query.getResultList();

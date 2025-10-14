@@ -34,6 +34,7 @@ public class PesquisaRetiradaRacaoBean implements Serializable {
     private String cpfProprietario;
     private String nomeAnimal;
     private Integer mesReferencia;
+    private Integer anoReferencia;
 
     @PostConstruct
     public void inicializar() {
@@ -45,10 +46,10 @@ public class PesquisaRetiradaRacaoBean implements Serializable {
         try {
             if (cpfProprietario != null && !cpfProprietario.trim().isEmpty()) {
                 // Usar busca por CPF
-                this.retiradasFiltradas = retiradas.filtradasPorCpf(cpfProprietario, nomeAnimal, mesReferencia);
+                this.retiradasFiltradas = retiradas.filtradasPorCpf(cpfProprietario, nomeAnimal, mesReferencia, anoReferencia);
             } else {
                 // Usar busca por nome (sem filtros)
-                this.retiradasFiltradas = retiradas.filtradas(null, nomeAnimal, mesReferencia);
+                this.retiradasFiltradas = retiradas.filtradas(null, nomeAnimal, mesReferencia, anoReferencia);
             }
             
             if (retiradasFiltradas.isEmpty()) {
@@ -66,6 +67,7 @@ public class PesquisaRetiradaRacaoBean implements Serializable {
         this.cpfProprietario = null;
         this.nomeAnimal = null;
         this.mesReferencia = null;
+        this.anoReferencia = null;
         pesquisar();
     }
     
@@ -185,5 +187,26 @@ public class PesquisaRetiradaRacaoBean implements Serializable {
 
     public void setMesReferencia(Integer mesReferencia) {
         this.mesReferencia = mesReferencia;
+    }
+
+    public Integer getAnoReferencia() {
+        return anoReferencia;
+    }
+
+    public void setAnoReferencia(Integer anoReferencia) {
+        this.anoReferencia = anoReferencia;
+    }
+
+    // Lista de anos para filtro (últimos 10 anos + próximos 2 anos)
+    public List<Integer> getAnosReferencia() {
+        List<Integer> anos = new ArrayList<>();
+        int anoAtual = java.util.Calendar.getInstance().get(java.util.Calendar.YEAR);
+        
+        // Adiciona os últimos 10 anos até os próximos 2 anos
+        for (int i = anoAtual - 10; i <= anoAtual + 2; i++) {
+            anos.add(i);
+        }
+        
+        return anos;
     }
 }

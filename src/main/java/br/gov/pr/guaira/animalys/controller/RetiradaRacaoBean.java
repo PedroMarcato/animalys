@@ -172,6 +172,9 @@ public class RetiradaRacaoBean implements Serializable {
 
     public void salvar() {
         try {
+            // Calcular automaticamente o mês de referência baseado na última data preenchida
+            calcularMesReferencia();
+            
             // Converter Date para Calendar
             if (dataRetirada != null) {
                 Calendar cal = Calendar.getInstance();
@@ -183,6 +186,7 @@ public class RetiradaRacaoBean implements Serializable {
             System.out.println("DEBUG SALVAR - Proprietário ID: " + (retirada.getProprietario() != null ? retirada.getProprietario().getIdProprietario() : "null"));
             System.out.println("DEBUG SALVAR - Animal ID: " + (retirada.getAnimal() != null ? retirada.getAnimal().getIdAnimal() : "null"));
             System.out.println("DEBUG SALVAR - Animal Proprietário ID: " + (retirada.getAnimal() != null && retirada.getAnimal().getProprietario() != null ? retirada.getAnimal().getProprietario().getIdProprietario() : "null"));
+            System.out.println("DEBUG SALVAR - Mês de Referência: " + retirada.getMesReferencia());
             
             boolean isEdicao = (retirada.getIdRetiradaRacao() != null);
             this.retirada = retiradaService.salvar(this.retirada);
@@ -199,6 +203,72 @@ public class RetiradaRacaoBean implements Serializable {
             FacesUtil.addErrorMessage("Erro inesperado ao salvar retirada: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Calcula automaticamente o mês de referência baseado na última data de retirada preenchida
+     */
+    private void calcularMesReferencia() {
+        Date ultimaData = null;
+        
+        // Verificar as datas do 12º ao 1º mês para encontrar a última preenchida
+        if (retirada.getData12Mes() != null) {
+            ultimaData = retirada.getData12Mes();
+        } else if (retirada.getData11Mes() != null) {
+            ultimaData = retirada.getData11Mes();
+        } else if (retirada.getData10Mes() != null) {
+            ultimaData = retirada.getData10Mes();
+        } else if (retirada.getData9Mes() != null) {
+            ultimaData = retirada.getData9Mes();
+        } else if (retirada.getData8Mes() != null) {
+            ultimaData = retirada.getData8Mes();
+        } else if (retirada.getData7Mes() != null) {
+            ultimaData = retirada.getData7Mes();
+        } else if (retirada.getData6Mes() != null) {
+            ultimaData = retirada.getData6Mes();
+        } else if (retirada.getData5Mes() != null) {
+            ultimaData = retirada.getData5Mes();
+        } else if (retirada.getData4Mes() != null) {
+            ultimaData = retirada.getData4Mes();
+        } else if (retirada.getData3Mes() != null) {
+            ultimaData = retirada.getData3Mes();
+        } else if (retirada.getData2Mes() != null) {
+            ultimaData = retirada.getData2Mes();
+        } else if (retirada.getData1Mes() != null) {
+            ultimaData = retirada.getData1Mes();
+        }
+        
+        // Se encontrou uma data, extrair o mês
+        if (ultimaData != null) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(ultimaData);
+            int mes = cal.get(Calendar.MONTH) + 1; // Calendar.MONTH é 0-based
+            retirada.setMesReferencia(mes);
+        } else {
+            // Se não há nenhuma data preenchida, não define mês de referência
+            retirada.setMesReferencia(null);
+        }
+    }
+    
+    /**
+     * Retorna o mês de referência formatado para exibição
+     */
+    public String getMesReferenciaFormatado() {
+        if (retirada.getMesReferencia() == null) {
+            return "Não definido";
+        }
+        
+        String[] nomesMeses = {
+            "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+            "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+        };
+        
+        int mes = retirada.getMesReferencia();
+        if (mes >= 1 && mes <= 12) {
+            return nomesMeses[mes - 1];
+        }
+        
+        return "Não definido";
     }
 
     public String getClassificacaoIdade() {

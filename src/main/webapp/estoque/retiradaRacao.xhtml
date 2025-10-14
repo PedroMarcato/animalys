@@ -44,7 +44,9 @@
 					<h:panelGroup>
 						<p:inputMask id="cpfProprietario" mask="999.999.999-99"
 							value="#{retiradaRacaoBean.cpfProprietario}"
-							placeholder="Digite o CPF do proprietário" required="true">
+							placeholder="Digite o CPF do proprietário" 
+							required="true"
+							disabled="#{not empty retiradaRacaoBean.retirada.idRetiradaRacao}">
 							<p:ajax event="blur" 
 								listener="#{retiradaRacaoBean.buscarProprietarioPorCpf()}" 
 								update="nomeProprietario animalSelect messages" />
@@ -56,14 +58,15 @@
 					<p:inputText id="nomeProprietario"
 						value="#{retiradaRacaoBean.retirada.proprietario.nome}"
 						readonly="true" 
-						placeholder="Proprietário será carregado após inserir CPF" />
+						placeholder="Proprietário será carregado após inserir CPF"
+						disabled="#{not empty retiradaRacaoBean.retirada.idRetiradaRacao}" />
 
 					<p:outputLabel value="Animal" for="animalSelect" />
 					<h:panelGroup>
 						<p:selectOneMenu id="animalSelect"
                             required="true"
 							value="#{retiradaRacaoBean.animalSelecionadoId}"
-							disabled="#{empty retiradaRacaoBean.animaisProprietario}">
+							disabled="#{empty retiradaRacaoBean.animaisProprietario or not empty retiradaRacaoBean.retirada.idRetiradaRacao}">
 							<f:selectItem itemLabel="Selecione o animal" itemValue="#{null}" noSelectionOption="true" />
 							<f:selectItems value="#{retiradaRacaoBean.animaisProprietario}"
 								var="animal" 
@@ -78,54 +81,22 @@
 					<p:inputText id="racaAnimal"
 						value="#{retiradaRacaoBean.retirada.animal != null and retiradaRacaoBean.retirada.animal.raca != null ? retiradaRacaoBean.retirada.animal.raca.nome : 'Não informada'}"
 						readonly="true" 
-						placeholder="Raça será exibida após selecionar o animal" />
+						placeholder="Raça será exibida após selecionar o animal"
+						disabled="#{not empty retiradaRacaoBean.retirada.idRetiradaRacao}" />
 
 					<p:outputLabel value="Classificação Etária" for="classificacaoIdade" />
 					<p:inputText id="classificacaoIdade"
 						value="#{retiradaRacaoBean.classificacaoIdade}"
 						readonly="true" 
-						placeholder="Classificação será exibida após selecionar o animal" />
-
-					<p:outputLabel value="Quantidade (Kg)" for="quantidadeKg" />
-					<h:panelGroup>
-						<p:spinner id="quantidadeKg"
-                            required="true"
-							value="#{retiradaRacaoBean.retirada.quantidadeKg}"
-							min="0.001"
-							max="999.999"
-							step="0.5"
-							decimalPlaces="3"
-							placeholder="Ex: 5.000" />
-						<p:message for="quantidadeKg" />
-					</h:panelGroup>
+						placeholder="Classificação será exibida após selecionar o animal"
+						disabled="#{not empty retiradaRacaoBean.retirada.idRetiradaRacao}" />
 
 					<p:outputLabel value="Mês de Referência" for="mesReferencia" />
-					<h:panelGroup>
-						<p:selectOneMenu id="mesReferencia"
-                            required="true"
-							value="#{retiradaRacaoBean.retirada.mesReferencia}">
-							<f:selectItem itemLabel="Selecione o mês" noSelectionOption="true" />
-							<f:selectItems value="#{retiradaRacaoBean.mesesReferencia}"
-								var="mes" 
-								itemValue="#{mes.numero}" 
-								itemLabel="#{mes.numero} - #{mes.nome}" />
-						</p:selectOneMenu>
-						<p:message for="mesReferencia" />
-					</h:panelGroup>
-
-					<p:outputLabel value="Data da Retirada" for="dataRetirada" />
-					<h:panelGroup>
-						<p:calendar id="dataRetirada"
-                            required="true"
-							value="#{retiradaRacaoBean.dataRetirada}"
-							pattern="dd/MM/yyyy HH:mm"
-							showTime="true"
-							timeOnlyTitle="Escolha o horário"
-							stepHour="1"
-							stepMinute="15"
-							locale="pt_BR" />
-						<p:message for="dataRetirada" />
-					</h:panelGroup>
+					<p:inputText id="mesReferencia"
+						value="#{retiradaRacaoBean.mesReferenciaFormatado}"
+						readonly="true"
+						placeholder="Será calculado automaticamente pela última data de retirada"
+						disabled="#{not empty retiradaRacaoBean.retirada.idRetiradaRacao}" />
 
 				</p:panelGrid>
 
@@ -141,6 +112,87 @@
 						placeholder="Observações sobre a retirada da ração (opcional)" />
 				
 				</p:panelGrid>
+
+				<!-- Controle de Acompanhamento Mensal -->
+				<p:panel header="Controle de Acompanhamento Mensal de Retirada" styleClass="mt-3">
+					<p:panelGrid columns="6" layout="grid" 
+						columnClasses="ui-grid-col-1, ui-grid-col-2, ui-grid-col-2, ui-grid-col-1, ui-grid-col-2, ui-grid-col-2" 
+						styleClass="panelgrid-noborder">
+						
+						<p:outputLabel value="1º mês:" />
+						<p:calendar id="data1Mes" value="#{retiradaRacaoBean.retirada.data1Mes}" 
+							pattern="dd/MM/yyyy" mask="99/99/9999" placeholder="Data" />
+						<p:spinner id="qtd1Mes" value="#{retiradaRacaoBean.retirada.quantidade1Mes}"
+							min="0" step="0.5" decimalPlaces="3" placeholder="Quantidade (Kg)" />
+						
+						<p:outputLabel value="2º mês:" />
+						<p:calendar id="data2Mes" value="#{retiradaRacaoBean.retirada.data2Mes}" 
+							pattern="dd/MM/yyyy" mask="99/99/9999" placeholder="Data" />
+						<p:spinner id="qtd2Mes" value="#{retiradaRacaoBean.retirada.quantidade2Mes}"
+							min="0" step="0.5" decimalPlaces="3" placeholder="Quantidade (Kg)" />
+						
+						<p:outputLabel value="3º mês:" />
+						<p:calendar id="data3Mes" value="#{retiradaRacaoBean.retirada.data3Mes}" 
+							pattern="dd/MM/yyyy" mask="99/99/9999" placeholder="Data" />
+						<p:spinner id="qtd3Mes" value="#{retiradaRacaoBean.retirada.quantidade3Mes}"
+							min="0" step="0.5" decimalPlaces="3" placeholder="Quantidade (Kg)" />
+						
+						<p:outputLabel value="4º mês:" />
+						<p:calendar id="data4Mes" value="#{retiradaRacaoBean.retirada.data4Mes}" 
+							pattern="dd/MM/yyyy" mask="99/99/9999" placeholder="Data" />
+						<p:spinner id="qtd4Mes" value="#{retiradaRacaoBean.retirada.quantidade4Mes}"
+							min="0" step="0.5" decimalPlaces="3" placeholder="Quantidade (Kg)" />
+						
+						<p:outputLabel value="5º mês:" />
+						<p:calendar id="data5Mes" value="#{retiradaRacaoBean.retirada.data5Mes}" 
+							pattern="dd/MM/yyyy" mask="99/99/9999" placeholder="Data" />
+						<p:spinner id="qtd5Mes" value="#{retiradaRacaoBean.retirada.quantidade5Mes}"
+							min="0" step="0.5" decimalPlaces="3" placeholder="Quantidade (Kg)" />
+						
+						<p:outputLabel value="6º mês:" />
+						<p:calendar id="data6Mes" value="#{retiradaRacaoBean.retirada.data6Mes}" 
+							pattern="dd/MM/yyyy" mask="99/99/9999" placeholder="Data" />
+						<p:spinner id="qtd6Mes" value="#{retiradaRacaoBean.retirada.quantidade6Mes}"
+							min="0" step="0.5" decimalPlaces="3" placeholder="Quantidade (Kg)" />
+						
+						<p:outputLabel value="7º mês:" />
+						<p:calendar id="data7Mes" value="#{retiradaRacaoBean.retirada.data7Mes}" 
+							pattern="dd/MM/yyyy" mask="99/99/9999" placeholder="Data" />
+						<p:spinner id="qtd7Mes" value="#{retiradaRacaoBean.retirada.quantidade7Mes}"
+							min="0" step="0.5" decimalPlaces="3" placeholder="Quantidade (Kg)" />
+						
+						<p:outputLabel value="8º mês:" />
+						<p:calendar id="data8Mes" value="#{retiradaRacaoBean.retirada.data8Mes}" 
+							pattern="dd/MM/yyyy" mask="99/99/9999" placeholder="Data" />
+						<p:spinner id="qtd8Mes" value="#{retiradaRacaoBean.retirada.quantidade8Mes}"
+							min="0" step="0.5" decimalPlaces="3" placeholder="Quantidade (Kg)" />
+						
+						<p:outputLabel value="9º mês:" />
+						<p:calendar id="data9Mes" value="#{retiradaRacaoBean.retirada.data9Mes}" 
+							pattern="dd/MM/yyyy" mask="99/99/9999" placeholder="Data" />
+						<p:spinner id="qtd9Mes" value="#{retiradaRacaoBean.retirada.quantidade9Mes}"
+							min="0" step="0.5" decimalPlaces="3" placeholder="Quantidade (Kg)" />
+						
+						<p:outputLabel value="10º mês:" />
+						<p:calendar id="data10Mes" value="#{retiradaRacaoBean.retirada.data10Mes}" 
+							pattern="dd/MM/yyyy" mask="99/99/9999" placeholder="Data" />
+						<p:spinner id="qtd10Mes" value="#{retiradaRacaoBean.retirada.quantidade10Mes}"
+							min="0" step="0.5" decimalPlaces="3" placeholder="Quantidade (Kg)" />
+						
+						<p:outputLabel value="11º mês:" />
+						<p:calendar id="data11Mes" value="#{retiradaRacaoBean.retirada.data11Mes}" 
+							pattern="dd/MM/yyyy" mask="99/99/9999" placeholder="Data" />
+						<p:spinner id="qtd11Mes" value="#{retiradaRacaoBean.retirada.quantidade11Mes}"
+							min="0" step="0.5" decimalPlaces="3" placeholder="Quantidade (Kg)" />
+						
+						<p:outputLabel value="12º mês:" />
+						<p:calendar id="data12Mes" value="#{retiradaRacaoBean.retirada.data12Mes}" 
+							pattern="dd/MM/yyyy" mask="99/99/9999" placeholder="Data" />
+						<p:spinner id="qtd12Mes" value="#{retiradaRacaoBean.retirada.quantidade12Mes}"
+							min="0" step="0.5" decimalPlaces="3" placeholder="Quantidade (Kg)" />
+						
+					</p:panelGrid>
+				</p:panel>
 
 			</div>
 		</h:form>

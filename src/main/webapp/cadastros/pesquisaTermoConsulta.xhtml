@@ -19,6 +19,10 @@
 						action="#{pesquisaTermoConsultaBean.pesquisar()}" 
 						update="@form" />
 				</p:toolbarGroup>
+				<p:toolbarGroup align="right">
+					<p:button value="Assinar Termo" icon="fa fa-pencil" 
+						outcome="/cadastros/assinarTermo" styleClass="ui-button-success" />
+				</p:toolbarGroup>
 			</p:toolbar>
 
 			<div class="ui-fluid">

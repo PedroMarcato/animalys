@@ -48,6 +48,13 @@
 							itemLabel="#{mes.nome}" />
 					</p:selectOneMenu>
 
+					<p:outputLabel value="Ano de Referência" for="anoReferenciaFiltro" />
+					<p:selectOneMenu id="anoReferenciaFiltro"
+						value="#{pesquisaRetiradaRacaoBean.anoReferencia}">
+						<f:selectItem itemLabel="Todos os anos" itemValue="#{null}" />
+						<f:selectItems value="#{pesquisaRetiradaRacaoBean.anosReferencia}" />
+					</p:selectOneMenu>
+
 				</p:panelGrid>
 			</div>
 
@@ -61,13 +68,54 @@
 				reflow="true"
 				value="#{pesquisaRetiradaRacaoBean.retiradasFiltradas}" 
 				var="retirada">
-				
-				<p:column headerText="Data da Retirada" style="width: 115px;">
-					<h:outputText value="#{retirada.dataRetirada.time}">
-						<f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="America/Sao_Paulo" />
+
+				<p:column headerText="Última Retirada" style="width: 110px;">
+					<h:outputText value="#{retirada.data12Mes}" rendered="#{not empty retirada.data12Mes}">
+						<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Sao_Paulo" />
 					</h:outputText>
+					<h:outputText value="#{retirada.data11Mes}" rendered="#{empty retirada.data12Mes and not empty retirada.data11Mes}">
+						<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Sao_Paulo" />
+					</h:outputText>
+					<h:outputText value="#{retirada.data10Mes}" rendered="#{empty retirada.data12Mes and empty retirada.data11Mes and not empty retirada.data10Mes}">
+						<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Sao_Paulo" />
+					</h:outputText>
+					<h:outputText value="#{retirada.data9Mes}" rendered="#{empty retirada.data12Mes and empty retirada.data11Mes and empty retirada.data10Mes and not empty retirada.data9Mes}">
+						<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Sao_Paulo" />
+					</h:outputText>
+					<h:outputText value="#{retirada.data8Mes}" rendered="#{empty retirada.data12Mes and empty retirada.data11Mes and empty retirada.data10Mes and empty retirada.data9Mes and not empty retirada.data8Mes}">
+						<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Sao_Paulo" />
+					</h:outputText>
+					<h:outputText value="#{retirada.data7Mes}" rendered="#{empty retirada.data12Mes and empty retirada.data11Mes and empty retirada.data10Mes and empty retirada.data9Mes and empty retirada.data8Mes and not empty retirada.data7Mes}">
+						<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Sao_Paulo" />
+					</h:outputText>
+					<h:outputText value="#{retirada.data6Mes}" rendered="#{empty retirada.data12Mes and empty retirada.data11Mes and empty retirada.data10Mes and empty retirada.data9Mes and empty retirada.data8Mes and empty retirada.data7Mes and not empty retirada.data6Mes}">
+						<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Sao_Paulo" />
+					</h:outputText>
+					<h:outputText value="#{retirada.data5Mes}" rendered="#{empty retirada.data12Mes and empty retirada.data11Mes and empty retirada.data10Mes and empty retirada.data9Mes and empty retirada.data8Mes and empty retirada.data7Mes and empty retirada.data6Mes and not empty retirada.data5Mes}">
+						<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Sao_Paulo" />
+					</h:outputText>
+					<h:outputText value="#{retirada.data4Mes}" rendered="#{empty retirada.data12Mes and empty retirada.data11Mes and empty retirada.data10Mes and empty retirada.data9Mes and empty retirada.data8Mes and empty retirada.data7Mes and empty retirada.data6Mes and empty retirada.data5Mes and not empty retirada.data4Mes}">
+						<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Sao_Paulo" />
+					</h:outputText>
+					<h:outputText value="#{retirada.data3Mes}" rendered="#{empty retirada.data12Mes and empty retirada.data11Mes and empty retirada.data10Mes and empty retirada.data9Mes and empty retirada.data8Mes and empty retirada.data7Mes and empty retirada.data6Mes and empty retirada.data5Mes and empty retirada.data4Mes and not empty retirada.data3Mes}">
+						<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Sao_Paulo" />
+					</h:outputText>
+					<h:outputText value="#{retirada.data2Mes}" rendered="#{empty retirada.data12Mes and empty retirada.data11Mes and empty retirada.data10Mes and empty retirada.data9Mes and empty retirada.data8Mes and empty retirada.data7Mes and empty retirada.data6Mes and empty retirada.data5Mes and empty retirada.data4Mes and empty retirada.data3Mes and not empty retirada.data2Mes}">
+						<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Sao_Paulo" />
+					</h:outputText>
+					<h:outputText value="#{retirada.data1Mes}" rendered="#{empty retirada.data12Mes and empty retirada.data11Mes and empty retirada.data10Mes and empty retirada.data9Mes and empty retirada.data8Mes and empty retirada.data7Mes and empty retirada.data6Mes and empty retirada.data5Mes and empty retirada.data4Mes and empty retirada.data3Mes and empty retirada.data2Mes and not empty retirada.data1Mes}">
+						<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Sao_Paulo" />
+					</h:outputText>
+					<h:outputText value="-" styleClass="text-muted" rendered="#{empty retirada.data1Mes and empty retirada.data2Mes and empty retirada.data3Mes and empty retirada.data4Mes and empty retirada.data5Mes and empty retirada.data6Mes and empty retirada.data7Mes and empty retirada.data8Mes and empty retirada.data9Mes and empty retirada.data10Mes and empty retirada.data11Mes and empty retirada.data12Mes}" />
 				</p:column>
 				
+				<p:column headerText="1ª Retirada" style="width: 110px;">
+					<h:outputText value="#{retirada.data1Mes}" rendered="#{not empty retirada.data1Mes}">
+						<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Sao_Paulo" />
+					</h:outputText>
+					<h:outputText value="-" styleClass="text-muted" rendered="#{empty retirada.data1Mes}" />
+				</p:column>
+					
 				<p:column headerText="Proprietário">
 					<h:outputText value="#{retirada.proprietario.nome}" />
 				</p:column>
@@ -81,9 +129,43 @@
 				</p:column>
 				
 				<p:column headerText="Quantidade (Kg)" style="width: 120px;">
-					<h:outputText value="#{retirada.quantidadeKg}">
+					<h:outputText value="#{retirada.quantidade12Mes}" rendered="#{not empty retirada.data12Mes}">
 						<f:convertNumber pattern="#0.000" />
 					</h:outputText>
+					<h:outputText value="#{retirada.quantidade11Mes}" rendered="#{empty retirada.data12Mes and not empty retirada.data11Mes}">
+						<f:convertNumber pattern="#0.000" />
+					</h:outputText>
+					<h:outputText value="#{retirada.quantidade10Mes}" rendered="#{empty retirada.data12Mes and empty retirada.data11Mes and not empty retirada.data10Mes}">
+						<f:convertNumber pattern="#0.000" />
+					</h:outputText>
+					<h:outputText value="#{retirada.quantidade9Mes}" rendered="#{empty retirada.data12Mes and empty retirada.data11Mes and empty retirada.data10Mes and not empty retirada.data9Mes}">
+						<f:convertNumber pattern="#0.000" />
+					</h:outputText>
+					<h:outputText value="#{retirada.quantidade8Mes}" rendered="#{empty retirada.data12Mes and empty retirada.data11Mes and empty retirada.data10Mes and empty retirada.data9Mes and not empty retirada.data8Mes}">
+						<f:convertNumber pattern="#0.000" />
+					</h:outputText>
+					<h:outputText value="#{retirada.quantidade7Mes}" rendered="#{empty retirada.data12Mes and empty retirada.data11Mes and empty retirada.data10Mes and empty retirada.data9Mes and empty retirada.data8Mes and not empty retirada.data7Mes}">
+						<f:convertNumber pattern="#0.000" />
+					</h:outputText>
+					<h:outputText value="#{retirada.quantidade6Mes}" rendered="#{empty retirada.data12Mes and empty retirada.data11Mes and empty retirada.data10Mes and empty retirada.data9Mes and empty retirada.data8Mes and empty retirada.data7Mes and not empty retirada.data6Mes}">
+						<f:convertNumber pattern="#0.000" />
+					</h:outputText>
+					<h:outputText value="#{retirada.quantidade5Mes}" rendered="#{empty retirada.data12Mes and empty retirada.data11Mes and empty retirada.data10Mes and empty retirada.data9Mes and empty retirada.data8Mes and empty retirada.data7Mes and empty retirada.data6Mes and not empty retirada.data5Mes}">
+						<f:convertNumber pattern="#0.000" />
+					</h:outputText>
+					<h:outputText value="#{retirada.quantidade4Mes}" rendered="#{empty retirada.data12Mes and empty retirada.data11Mes and empty retirada.data10Mes and empty retirada.data9Mes and empty retirada.data8Mes and empty retirada.data7Mes and empty retirada.data6Mes and empty retirada.data5Mes and not empty retirada.data4Mes}">
+						<f:convertNumber pattern="#0.000" />
+					</h:outputText>
+					<h:outputText value="#{retirada.quantidade3Mes}" rendered="#{empty retirada.data12Mes and empty retirada.data11Mes and empty retirada.data10Mes and empty retirada.data9Mes and empty retirada.data8Mes and empty retirada.data7Mes and empty retirada.data6Mes and empty retirada.data5Mes and empty retirada.data4Mes and not empty retirada.data3Mes}">
+						<f:convertNumber pattern="#0.000" />
+					</h:outputText>
+					<h:outputText value="#{retirada.quantidade2Mes}" rendered="#{empty retirada.data12Mes and empty retirada.data11Mes and empty retirada.data10Mes and empty retirada.data9Mes and empty retirada.data8Mes and empty retirada.data7Mes and empty retirada.data6Mes and empty retirada.data5Mes and empty retirada.data4Mes and empty retirada.data3Mes and not empty retirada.data2Mes}">
+						<f:convertNumber pattern="#0.000" />
+					</h:outputText>
+					<h:outputText value="#{retirada.quantidade1Mes}" rendered="#{empty retirada.data12Mes and empty retirada.data11Mes and empty retirada.data10Mes and empty retirada.data9Mes and empty retirada.data8Mes and empty retirada.data7Mes and empty retirada.data6Mes and empty retirada.data5Mes and empty retirada.data4Mes and empty retirada.data3Mes and empty retirada.data2Mes and not empty retirada.data1Mes}">
+						<f:convertNumber pattern="#0.000" />
+					</h:outputText>
+					<h:outputText value="-" styleClass="text-muted" rendered="#{empty retirada.data1Mes and empty retirada.data2Mes and empty retirada.data3Mes and empty retirada.data4Mes and empty retirada.data5Mes and empty retirada.data6Mes and empty retirada.data7Mes and empty retirada.data8Mes and empty retirada.data9Mes and empty retirada.data10Mes and empty retirada.data11Mes and empty retirada.data12Mes}" />
 				</p:column>
 				
 				<p:column headerText="Mês de Referência" style="width: 130px;">

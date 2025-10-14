@@ -376,6 +376,10 @@ public class CadastroAnimalBean implements Serializable {
 
 
 	public void salvar() {
+		System.out.println("[LOG] ========== INICIANDO MÉTODO SALVAR ==========");
+		System.out.println("[LOG] Modalidade da solicitação: " + (solicitacao != null && solicitacao.getModalidade() != null ? solicitacao.getModalidade() : "NULL"));
+		System.out.println("[LOG] Quantidade de animais adicionados: " + (animaisAdicionados != null ? animaisAdicionados.size() : 0));
+		
 		Proprietario propAtual;
 		// Busca o proprietário pelo CPF, se existir
 		if (cpf != null && !cpf.trim().isEmpty()) {
@@ -441,6 +445,12 @@ public class CadastroAnimalBean implements Serializable {
 			if (dataNascimento != null) {
 				dataNascimentoCalendar.setTime(dataNascimento);
 				propAtual.setDataNascimento(dataNascimentoCalendar);
+			}
+
+			// Set modalidade from solicitacao
+			if (solicitacao != null && solicitacao.getModalidade() != null) {
+				propAtual.setModalidade(solicitacao.getModalidade());
+				System.out.println("[LOG] Modalidade definida no proprietário: " + solicitacao.getModalidade());
 			}
 
 			// Persistir ou atualizar proprietário (antes dos animais)
@@ -639,6 +649,8 @@ public class CadastroAnimalBean implements Serializable {
 
 			System.out.println("METODO: adicionarAnimal() DIZ: - FotoUpload: "
 					+ (fotoUpload != null ? fotoUpload.getFileName() : "null"));
+			System.out.println("METODO: adicionarAnimal() DIZ: - Modalidade atual: " + 
+					(this.solicitacao.getModalidade() != null ? this.solicitacao.getModalidade() : "NULL"));
 
 			this.animal.setProprietario(this.proprietario);
 			this.animal.setStatus(Status.SOLICITADO);
@@ -662,19 +674,20 @@ public class CadastroAnimalBean implements Serializable {
 
 			// Adiciona à lista (persistência completa em salvar())
 			System.out.println("METODO: adicionarAnimal() DIZ: NOME DA FOTO ANTES DE ADICIONAR: " + this.animal.getFoto());
-			if (this.solicitacao.getModalidade().equals(ModalidadeSolicitante.PESSOA_FISICA)) {
-				System.out.println("METODO: adicionarAnimal() DIZ: ADCIONANDO A LISTA");
-				if (!this.animaisAdicionados.contains(this.animal)) {
-					this.animaisAdicionados.add(this.animal);
-				}
-			} else if (this.solicitacao.getModalidade().equals(ModalidadeSolicitante.PROTETOR_INDIVIUAL_ANIMAIS)) {
-				if (!this.animaisAdicionados.contains(this.animal)) {
-					this.animaisAdicionados.add(this.animal);
-				}
+			
+			// Adiciona o animal à lista independente da modalidade
+			if (!this.animaisAdicionados.contains(this.animal)) {
+				this.animaisAdicionados.add(this.animal);
+				System.out.println("METODO: adicionarAnimal() DIZ: ANIMAL ADICIONADO A LISTA - Modalidade: " + this.solicitacao.getModalidade());
+			} else {
+				System.out.println("METODO: adicionarAnimal() DIZ: ANIMAL JA EXISTE NA LISTA");
 			}
 
 			System.out.println("METODO: adicionarAnimal() DIZ: CHAMANDO METODO: limparCamposFoto()");
 			this.limparCamposFoto();
+			this.limparAposAdicionar();
+			
+			FacesUtil.addInfoMessage("Animal adicionado com sucesso!");
 
 		} catch (NegocioException | IOException e) {
 			e.printStackTrace();

@@ -23,6 +23,7 @@ public class PesquisaTermoConsultaBean implements Serializable {
 	private List<TermoConsulta> termosConsulta;
 	private String cpfFiltro;
 	private String nomeAnimalFiltro;
+	private TermoConsulta termoSelecionado;
 
 	@javax.annotation.PostConstruct
 	public void init() {
@@ -54,6 +55,20 @@ public class PesquisaTermoConsultaBean implements Serializable {
 		termosConsulta = null;
 	}
 
+	public void prepararExclusao(TermoConsulta termo) {
+		this.termoSelecionado = termo;
+	}
+
+	public void confirmarExclusao() {
+		try {
+			termoConsultaService.excluir(termoSelecionado);
+			termosConsulta.remove(termoSelecionado);
+			FacesUtil.addInfoMessage("Termo de consulta excluído com sucesso!");
+		} catch (Exception e) {
+			FacesUtil.addErrorMessage("Erro ao excluir termo de consulta: " + e.getMessage());
+		}
+	}
+
 	// Getters e Setters
 	public List<TermoConsulta> getTermosConsulta() {
 		return termosConsulta;
@@ -77,5 +92,13 @@ public class PesquisaTermoConsultaBean implements Serializable {
 
 	public void setNomeAnimalFiltro(String nomeAnimalFiltro) {
 		this.nomeAnimalFiltro = nomeAnimalFiltro;
+	}
+
+	public TermoConsulta getTermoSelecionado() {
+		return termoSelecionado;
+	}
+
+	public void setTermoSelecionado(TermoConsulta termoSelecionado) {
+		this.termoSelecionado = termoSelecionado;
 	}
 }

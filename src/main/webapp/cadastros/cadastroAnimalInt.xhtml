@@ -470,7 +470,7 @@
 				<div class="chamada_acao">
 					<p:commandButton value="Enviar Solicitação" icon="fa fa-send" id="botaoSalvar"
 						action="#{cadastroAnimalBean.salvar()}" update="@form"
-						disabled="#{empty cadastroAnimalBean.solicitacao.modalidade}" />
+						disabled="#{empty cadastroAnimalBean.animaisAdicionados}" />
 				</div>
 			</div>
 
@@ -548,9 +548,12 @@
 
 				</div>
 
-				<p:commandButton value="Salvar" icon="fa fa-send" ajax="false"
-					action="#{cadastroAnimalBean.adicionarAnimal}" update="form:animalTable" process="@this"
-					oncomplete="PF('dlg').hide()" disabled="#{empty cadastroAnimalBean.solicitacao.modalidade}">
+				<p:commandButton value="Salvar" icon="fa fa-send"
+					action="#{cadastroAnimalBean.adicionarAnimal}" 
+					update="form:tabView:animalTable form:msgs form:botaoSalvar" 
+					process="formAnexo:dlg"
+					oncomplete="PF('dlg').hide();" 
+					disabled="#{empty cadastroAnimalBean.solicitacao.modalidade}">
 				</p:commandButton>
 			</p:dialog>
 

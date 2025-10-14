@@ -10,6 +10,8 @@ import javax.inject.Named;
 import br.gov.pr.guaira.animalys.entity.Proprietario;
 import br.gov.pr.guaira.animalys.filter.ProprietarioFilter;
 import br.gov.pr.guaira.animalys.repository.Proprietarios;
+import br.gov.pr.guaira.animalys.service.NegocioException;
+import br.gov.pr.guaira.animalys.util.jsf.FacesUtil;
 
 @Named
 @ViewScoped
@@ -77,5 +79,21 @@ public class PesquisaProprietarioBean implements Serializable {
 	
 	public boolean proprietarioSelecionadoTemDocumentos() {
 		return proprietarioTemDocumentos(this.proprietarioSelecionado);
+	}
+	
+	public void prepararExclusao(Proprietario proprietario) {
+		this.proprietarioSelecionado = proprietario;
+	}
+	
+	public void confirmarExclusao() {
+		try {
+			proprietarios.remover(proprietarioSelecionado);
+			proprietariosFiltrados.remove(proprietarioSelecionado);
+			FacesUtil.addInfoMessage("Proprietário excluído com sucesso!");
+		} catch (NegocioException e) {
+			FacesUtil.addErrorMessage(e.getMessage());
+		} catch (Exception e) {
+			FacesUtil.addErrorMessage("Erro ao excluir proprietário: " + e.getMessage());
+		}
 	}
 }

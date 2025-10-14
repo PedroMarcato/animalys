@@ -96,15 +96,30 @@
 				</p:column>
 				
 				<p:column headerText="Ações" width="80" styleClass="text-center">
-                    <div style="display: flex; width: 100%;">
-                        <p:button icon="fa fa-eye" title="Visualizar Termo"
-                            outcome="/cadastros/visualizarTermo" styleClass="btn-sm" style="margin: auto;">
-                            <f:param name="termo" value="#{termo.id}" />
-                        </p:button>
-                    </div>
+					<p:button icon="fa fa-eye" title="Visualizar Termo"
+						outcome="/cadastros/visualizarTermo" styleClass="btn-sm" style="margin-left: 5px;">
+						<f:param name="termo" value="#{termo.id}" />
+					</p:button>
+					<p:commandButton icon="fa fa-trash" title="Excluir" 
+						styleClass="btn-sm ui-button-danger"
+						actionListener="#{pesquisaTermoConsultaBean.prepararExclusao(termo)}"
+						process="@this"
+						oncomplete="PF('confirmExclusao').show()">
+					</p:commandButton>
 				</p:column>
 				
 			</p:dataTable>
+			
+			<p:confirmDialog message="Tem certeza que deseja excluir este termo de consulta?"
+				header="Confirmação de Exclusão" severity="alert" 
+				widgetVar="confirmExclusao">
+				<p:commandButton value="Sim" 
+					action="#{pesquisaTermoConsultaBean.confirmarExclusao()}"
+					update="termosTable messages"
+					oncomplete="PF('confirmExclusao').hide()" />
+				<p:commandButton value="Não" type="button" 
+					onclick="PF('confirmExclusao').hide()" />
+			</p:confirmDialog>
 		</h:form>
 	</ui:define>
 

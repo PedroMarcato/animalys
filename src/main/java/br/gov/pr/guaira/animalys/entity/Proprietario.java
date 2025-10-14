@@ -7,6 +7,8 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -39,6 +41,11 @@ public class Proprietario implements Serializable{
 	private String nis;
 	@Column
 	private Calendar dataNascimento;
+	
+	@Enumerated(EnumType.STRING)
+	@Column(name = "modalidade", length = 50)
+	private ModalidadeSolicitante modalidade;
+	
 	@ManyToOne(cascade=CascadeType.MERGE, fetch=FetchType.LAZY)
 	@JoinColumn(name="endereco", referencedColumnName="idEndereco")
 	private Endereco endereco;
@@ -193,6 +200,14 @@ public class Proprietario implements Serializable{
 
 	public void setDocumentos(DocumentosPessoais documentos) {
 		this.documentos = documentos;
+	}
+
+	public ModalidadeSolicitante getModalidade() {
+		return modalidade;
+	}
+
+	public void setModalidade(ModalidadeSolicitante modalidade) {
+		this.modalidade = modalidade;
 	}
 	
 	

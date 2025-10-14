@@ -64,6 +64,11 @@
 					<h:outputText value="Sem Registros" style="color: gray; font-style: italic;" rendered="#{empty prop.nis}" />
 				</p:column>
 				
+				<p:column headerText="Modalidade" style="width: 200px;">
+					<h:outputText value="#{prop.modalidade.descricao}" rendered="#{not empty prop.modalidade}" />
+					<h:outputText value="Não informada" style="color: gray; font-style: italic;" rendered="#{empty prop.modalidade}" />
+				</p:column>
+				
 				<p:column headerText="Data de Nascimento">
 					<h:outputText value="#{prop.dataNascimento.time}" rendered="#{not empty prop.dataNascimento}">
 						<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Sao_Paulo" />
@@ -83,7 +88,7 @@
 						rendered="#{empty prop.endereco.logradouro or empty prop.endereco.bairro}" />
 				</p:column>
 				
-				<p:column headerText="Ações" style="width: 100px; text-align: center;">
+				<p:column headerText="Ações" style="width: 120px; text-align: center;">
 					<p:button outcome="/cadastros/cadastroProprietario" icon="fa fa-pencil" title="Editar"
 						style="margin-right: 5px;">
 						<f:param name="proprietario" value="#{prop.idProprietario}" />
@@ -93,7 +98,14 @@
 						action="#{pesquisaProprietarioBean.selecionarProprietario(prop)}"
 						oncomplete="PF('dlgVisualizarDocumentos').show();"
 						update=":formPesquisa:dlgVisualizarDocumentos"
+						style="margin-right: 5px;"
 						styleClass="#{pesquisaProprietarioBean.proprietarioTemDocumentos(prop) ? 'ui-button-success' : 'ui-button-secondary'}" />
+					<p:commandButton icon="fa fa-trash" title="Excluir" 
+						styleClass="ui-button-danger"
+						actionListener="#{pesquisaProprietarioBean.prepararExclusao(prop)}"
+						process="@this"
+						oncomplete="PF('confirmExclusao').show()">
+					</p:commandButton>
 				</p:column>
 				
 			</p:dataTable>
@@ -208,6 +220,17 @@
 						styleClass="ui-button-info" />
 				</f:facet>
 			</p:dialog>
+			
+			<p:confirmDialog message="Tem certeza que deseja excluir este proprietário?"
+				header="Confirmação de Exclusão" severity="alert" 
+				widgetVar="confirmExclusao">
+				<p:commandButton value="Sim" 
+					action="#{pesquisaProprietarioBean.confirmarExclusao()}"
+					update="proprietarioTable"
+					oncomplete="PF('confirmExclusao').hide()" />
+				<p:commandButton value="Não" type="button" 
+					onclick="PF('confirmExclusao').hide()" />
+			</p:confirmDialog>
 		</h:form>
 	</ui:define>
 </ui:composition>

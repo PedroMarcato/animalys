@@ -44,6 +44,15 @@ public class TermoItraconazolDTO implements Serializable {
 	private String data6Mes;
 	private String data7Mes;
 
+	// Quantidades dos meses seguintes
+	private Integer quantidade1Mes;
+	private Integer quantidade2Mes;
+	private Integer quantidade3Mes;
+	private Integer quantidade4Mes;
+	private Integer quantidade5Mes;
+	private Integer quantidade6Mes;
+	private Integer quantidade7Mes;
+
 	// Campos adicionais do relatório JRXML
 	private String data; // Campo genérico "data" usado no JRXML
 	private String procedimento;
@@ -299,6 +308,62 @@ public class TermoItraconazolDTO implements Serializable {
 
 	public void setData7Mes(String data7Mes) {
 		this.data7Mes = data7Mes;
+	}
+
+	public Integer getQuantidade1Mes() {
+		return quantidade1Mes;
+	}
+
+	public void setQuantidade1Mes(Integer quantidade1Mes) {
+		this.quantidade1Mes = quantidade1Mes;
+	}
+
+	public Integer getQuantidade2Mes() {
+		return quantidade2Mes;
+	}
+
+	public void setQuantidade2Mes(Integer quantidade2Mes) {
+		this.quantidade2Mes = quantidade2Mes;
+	}
+
+	public Integer getQuantidade3Mes() {
+		return quantidade3Mes;
+	}
+
+	public void setQuantidade3Mes(Integer quantidade3Mes) {
+		this.quantidade3Mes = quantidade3Mes;
+	}
+
+	public Integer getQuantidade4Mes() {
+		return quantidade4Mes;
+	}
+
+	public void setQuantidade4Mes(Integer quantidade4Mes) {
+		this.quantidade4Mes = quantidade4Mes;
+	}
+
+	public Integer getQuantidade5Mes() {
+		return quantidade5Mes;
+	}
+
+	public void setQuantidade5Mes(Integer quantidade5Mes) {
+		this.quantidade5Mes = quantidade5Mes;
+	}
+
+	public Integer getQuantidade6Mes() {
+		return quantidade6Mes;
+	}
+
+	public void setQuantidade6Mes(Integer quantidade6Mes) {
+		this.quantidade6Mes = quantidade6Mes;
+	}
+
+	public Integer getQuantidade7Mes() {
+		return quantidade7Mes;
+	}
+
+	public void setQuantidade7Mes(Integer quantidade7Mes) {
+		this.quantidade7Mes = quantidade7Mes;
 	}
 
 	// Getters e Setters para campos adicionais do JRXML

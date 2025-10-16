@@ -80,12 +80,9 @@ public class TermoItraconazolService implements Serializable {
         if (termo == null || termo.getIdTermoItraconazol() == null) {
             throw new Exception("Termo inválido para exclusão!");
         }
-        
-        // Validar se pode excluir (opcional - se quiser manter a validação)
-        if (!podeRemover(termo)) {
-            throw new Exception("Não é possível excluir este termo pois já possui acompanhamento registrado!");
-        }
-        
+        // Permitir exclusão mesmo que existam dados de acompanhamento mensal.
+        // Os campos de acompanhamento são armazenados no próprio registro do termo,
+        // portanto ao remover o termo os acompanhamentos também serão removidos.
         termosItraconazol.remover(termo);
     }
 }

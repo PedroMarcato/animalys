@@ -156,7 +156,9 @@
 						</tr>
 						<tr>
 							<td class="label"><strong>Espécie:</strong></td>
-							<td>#{visualizarTermoItraconazolBean.termo.animal.especie.nome}</td>
+							<td>
+								#{(not empty visualizarTermoItraconazolBean.termo.animal.raca and not empty visualizarTermoItraconazolBean.termo.animal.raca.especie) ? visualizarTermoItraconazolBean.termo.animal.raca.especie.nome : 'Não informado'}
+							</td>
 							<td class="label"><strong>Porte:</strong></td>
 							<td>#{visualizarTermoItraconazolBean.termo.porteAnimal}</td>
 						</tr>
@@ -217,12 +219,22 @@
 									<tr>
 										<td style="border: 1px solid #000; padding: 8px; text-align: center; font-weight: bold; font-size: 12px;">1º mês</td>
 										<td style="border: 1px solid #000; padding: 8px; text-align: center; font-size: 12px;">
-											<h:outputText value="#{visualizarTermoItraconazolBean.termo.dataRetirada.time}">
+											<h:outputText value="#{visualizarTermoItraconazolBean.termo.data1Mes}"
+												rendered="#{not empty visualizarTermoItraconazolBean.termo.data1Mes}">
+												<f:convertDateTime pattern="dd/MM/yyyy" />
+											</h:outputText>
+											<h:outputText value="#{visualizarTermoItraconazolBean.termo.dataRetirada.time}"
+												rendered="#{empty visualizarTermoItraconazolBean.termo.data1Mes}">
 												<f:convertDateTime pattern="dd/MM/yyyy" />
 											</h:outputText>
 										</td>
 										<td style="border: 1px solid #000; padding: 8px; text-align: center; font-size: 12px;">
-											#{(not empty visualizarTermoItraconazolBean.termo.quantidade1Mes) ? visualizarTermoItraconazolBean.termo.quantidade1Mes : visualizarTermoItraconazolBean.termo.quantidadeRetirada} unidades
+											<h:panelGroup rendered="#{not empty visualizarTermoItraconazolBean.termo.quantidade1Mes}">
+												#{visualizarTermoItraconazolBean.termo.quantidade1Mes} unidades
+											</h:panelGroup>
+											<h:panelGroup rendered="#{empty visualizarTermoItraconazolBean.termo.quantidade1Mes and not empty visualizarTermoItraconazolBean.termo.quantidadeRetirada}">
+												#{visualizarTermoItraconazolBean.termo.quantidadeRetirada} unidades
+											</h:panelGroup>
 										</td>
 										<td style="border: 1px solid #000; padding: 20px; text-align: center;">
 											<!-- Espaço para assinatura -->
@@ -239,7 +251,12 @@
 												rendered="#{empty visualizarTermoItraconazolBean.termo.data2Mes}" />
 										</td>
 										<td style="border: 1px solid #000; padding: 8px; text-align: center; font-size: 12px;">
-											#{(not empty visualizarTermoItraconazolBean.termo.quantidade2Mes) ? visualizarTermoItraconazolBean.termo.quantidade2Mes : visualizarTermoItraconazolBean.termo.quantidadeRetirada} unidades
+											<h:panelGroup rendered="#{not empty visualizarTermoItraconazolBean.termo.quantidade2Mes}">
+												#{visualizarTermoItraconazolBean.termo.quantidade2Mes} unidades
+											</h:panelGroup>
+											<h:panelGroup rendered="#{empty visualizarTermoItraconazolBean.termo.quantidade2Mes and not empty visualizarTermoItraconazolBean.termo.quantidadeRetirada}">
+												#{visualizarTermoItraconazolBean.termo.quantidadeRetirada} unidades
+											</h:panelGroup>
 										</td>
 										<td style="border: 1px solid #000; padding: 20px; text-align: center;">
 											<!-- Espaço para assinatura -->
@@ -256,7 +273,12 @@
 												rendered="#{empty visualizarTermoItraconazolBean.termo.data3Mes}" />
 										</td>
 										<td style="border: 1px solid #000; padding: 8px; text-align: center; font-size: 12px;">
-											#{(not empty visualizarTermoItraconazolBean.termo.quantidade3Mes) ? visualizarTermoItraconazolBean.termo.quantidade3Mes : visualizarTermoItraconazolBean.termo.quantidadeRetirada} unidades
+											<h:panelGroup rendered="#{not empty visualizarTermoItraconazolBean.termo.quantidade3Mes}">
+												#{visualizarTermoItraconazolBean.termo.quantidade3Mes} unidades
+											</h:panelGroup>
+											<h:panelGroup rendered="#{empty visualizarTermoItraconazolBean.termo.quantidade3Mes and not empty visualizarTermoItraconazolBean.termo.quantidadeRetirada}">
+												#{visualizarTermoItraconazolBean.termo.quantidadeRetirada} unidades
+											</h:panelGroup>
 										</td>
 										<td style="border: 1px solid #000; padding: 20px; text-align: center;">
 											<!-- Espaço para assinatura -->
@@ -273,7 +295,12 @@
 												rendered="#{empty visualizarTermoItraconazolBean.termo.data4Mes}" />
 										</td>
 										<td style="border: 1px solid #000; padding: 8px; text-align: center; font-size: 12px;">
-											#{(not empty visualizarTermoItraconazolBean.termo.quantidade4Mes) ? visualizarTermoItraconazolBean.termo.quantidade4Mes : visualizarTermoItraconazolBean.termo.quantidadeRetirada} unidades
+											<h:panelGroup rendered="#{not empty visualizarTermoItraconazolBean.termo.quantidade4Mes}">
+												#{visualizarTermoItraconazolBean.termo.quantidade4Mes} unidades
+											</h:panelGroup>
+											<h:panelGroup rendered="#{empty visualizarTermoItraconazolBean.termo.quantidade4Mes and not empty visualizarTermoItraconazolBean.termo.quantidadeRetirada}">
+												#{visualizarTermoItraconazolBean.termo.quantidadeRetirada} unidades
+											</h:panelGroup>
 										</td>
 										<td style="border: 1px solid #000; padding: 20px; text-align: center;">
 											<!-- Espaço para assinatura -->
@@ -290,7 +317,12 @@
 												rendered="#{empty visualizarTermoItraconazolBean.termo.data5Mes}" />
 										</td>
 										<td style="border: 1px solid #000; padding: 8px; text-align: center; font-size: 12px;">
-											#{(not empty visualizarTermoItraconazolBean.termo.quantidade5Mes) ? visualizarTermoItraconazolBean.termo.quantidade5Mes : visualizarTermoItraconazolBean.termo.quantidadeRetirada} unidades
+											<h:panelGroup rendered="#{not empty visualizarTermoItraconazolBean.termo.quantidade5Mes}">
+												#{visualizarTermoItraconazolBean.termo.quantidade5Mes} unidades
+											</h:panelGroup>
+											<h:panelGroup rendered="#{empty visualizarTermoItraconazolBean.termo.quantidade5Mes and not empty visualizarTermoItraconazolBean.termo.quantidadeRetirada}">
+												#{visualizarTermoItraconazolBean.termo.quantidadeRetirada} unidades
+											</h:panelGroup>
 										</td>
 										<td style="border: 1px solid #000; padding: 20px; text-align: center;">
 											<!-- Espaço para assinatura -->
@@ -307,7 +339,12 @@
 												rendered="#{empty visualizarTermoItraconazolBean.termo.data6Mes}" />
 										</td>
 										<td style="border: 1px solid #000; padding: 8px; text-align: center; font-size: 12px;">
-											#{(not empty visualizarTermoItraconazolBean.termo.quantidade6Mes) ? visualizarTermoItraconazolBean.termo.quantidade6Mes : visualizarTermoItraconazolBean.termo.quantidadeRetirada} unidades
+											<h:panelGroup rendered="#{not empty visualizarTermoItraconazolBean.termo.quantidade6Mes}">
+												#{visualizarTermoItraconazolBean.termo.quantidade6Mes} unidades
+											</h:panelGroup>
+											<h:panelGroup rendered="#{empty visualizarTermoItraconazolBean.termo.quantidade6Mes and not empty visualizarTermoItraconazolBean.termo.quantidadeRetirada}">
+												#{visualizarTermoItraconazolBean.termo.quantidadeRetirada} unidades
+											</h:panelGroup>
 										</td>
 										<td style="border: 1px solid #000; padding: 20px; text-align: center;">
 											<!-- Espaço para assinatura -->
@@ -324,7 +361,12 @@
 												rendered="#{empty visualizarTermoItraconazolBean.termo.data7Mes}" />
 										</td>
 										<td style="border: 1px solid #000; padding: 8px; text-align: center; font-size: 12px;">
-											#{(not empty visualizarTermoItraconazolBean.termo.quantidade7Mes) ? visualizarTermoItraconazolBean.termo.quantidade7Mes : visualizarTermoItraconazolBean.termo.quantidadeRetirada} unidades
+											<h:panelGroup rendered="#{not empty visualizarTermoItraconazolBean.termo.quantidade7Mes}">
+												#{visualizarTermoItraconazolBean.termo.quantidade7Mes} unidades
+											</h:panelGroup>
+											<h:panelGroup rendered="#{empty visualizarTermoItraconazolBean.termo.quantidade7Mes and not empty visualizarTermoItraconazolBean.termo.quantidadeRetirada}">
+												#{visualizarTermoItraconazolBean.termo.quantidadeRetirada} unidades
+											</h:panelGroup>
 										</td>
 										<td style="border: 1px solid #000; padding: 20px; text-align: center;">
 											<!-- Espaço para assinatura -->

@@ -120,8 +120,13 @@ public class GerarTermoItraconazol implements Serializable {
 				dto.setCastradoStr(termo.getAnimal().isCastrado() ? "Sim" : "Não");
 			}
 			
-			if (termo.getAnimal().getEspecie() != null) {
+			// Espécie: preferir raca.especie.nome quando disponível (corrige casos de null)
+			if (termo.getAnimal().getRaca() != null && termo.getAnimal().getRaca().getEspecie() != null) {
+				dto.setEspecie(termo.getAnimal().getRaca().getEspecie().getNome());
+			} else if (termo.getAnimal().getEspecie() != null) {
 				dto.setEspecie(termo.getAnimal().getEspecie().getNome());
+			} else {
+				dto.setEspecie("Não informado");
 			}
 			
 			if (termo.getAnimal().getRaca() != null) {
@@ -152,6 +157,15 @@ public class GerarTermoItraconazol implements Serializable {
 		dto.setData5Mes(termo.getData5Mes() != null ? sdf.format(termo.getData5Mes()) : "");
 		dto.setData6Mes(termo.getData6Mes() != null ? sdf.format(termo.getData6Mes()) : "");
 		dto.setData7Mes(termo.getData7Mes() != null ? sdf.format(termo.getData7Mes()) : "");
+
+		// Quantidades dos meses seguintes (usar campos da entidade, podem ser nulos)
+		dto.setQuantidade1Mes(termo.getQuantidade1Mes());
+		dto.setQuantidade2Mes(termo.getQuantidade2Mes());
+		dto.setQuantidade3Mes(termo.getQuantidade3Mes());
+		dto.setQuantidade4Mes(termo.getQuantidade4Mes());
+		dto.setQuantidade5Mes(termo.getQuantidade5Mes());
+		dto.setQuantidade6Mes(termo.getQuantidade6Mes());
+		dto.setQuantidade7Mes(termo.getQuantidade7Mes());
 		
 		return dto;
 	}

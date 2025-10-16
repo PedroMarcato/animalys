@@ -33,6 +33,13 @@
 	<field name="data5Mes" class="java.lang.String"/>
 	<field name="data6Mes" class="java.lang.String"/>
 	<field name="data7Mes" class="java.lang.String"/>
+	<field name="quantidade1Mes" class="java.lang.Integer"/>
+	<field name="quantidade2Mes" class="java.lang.Integer"/>
+	<field name="quantidade3Mes" class="java.lang.Integer"/>
+	<field name="quantidade4Mes" class="java.lang.Integer"/>
+	<field name="quantidade5Mes" class="java.lang.Integer"/>
+	<field name="quantidade6Mes" class="java.lang.Integer"/>
+	<field name="quantidade7Mes" class="java.lang.Integer"/>
 	<title height="170" splitType="Stretch">
 		<element kind="image" uuid="b1e8e8b4-5b2e-4c8b-8c7c-5c1c6c1e4c81" x="460" y="0" width="70" height="70">
 			<expression><![CDATA[$P{REPORT_DIRECTORY} + "images/centroDeControle.png"]]></expression>
@@ -365,25 +372,25 @@ Em caso do animal vir a óbito durante o tratamento, devo entrar em contato com 
 				<expression><![CDATA[$F{data7Mes}]]></expression>
 			</element>
 			<element kind="textField" uuid="f71fefd0-d59a-458e-b220-c26159cc4b9c" x="180" y="390" width="99" height="20" fontSize="9.0" hTextAlign="Center" vTextAlign="Middle">
-				<expression><![CDATA[$F{quantidadeRetirada}]]></expression>
+				<expression><![CDATA[$F{quantidade1Mes} != null ? $F{quantidade1Mes}.toString() : ""]]></expression>
 			</element>
 			<element kind="textField" uuid="79c18263-9622-4b48-8fc7-af3c6cf6f169" x="180" y="410" width="99" height="20" fontSize="9.0" hTextAlign="Center" vTextAlign="Middle">
-				<expression><![CDATA[$F{quantidadeRetirada}]]></expression>
+				<expression><![CDATA[$F{quantidade2Mes} != null ? $F{quantidade2Mes}.toString() : ""]]></expression>
 			</element>
 			<element kind="textField" uuid="e0d4a69e-d7f6-485e-9fa5-3bb49b9e56ba" x="180" y="430" width="99" height="20" fontSize="9.0" hTextAlign="Center" vTextAlign="Middle">
-				<expression><![CDATA[$F{quantidadeRetirada}]]></expression>
+				<expression><![CDATA[$F{quantidade3Mes} != null ? $F{quantidade3Mes}.toString() : ""]]></expression>
 			</element>
 			<element kind="textField" uuid="b527e17a-2199-412a-a8a5-5028d3a59079" x="180" y="450" width="99" height="20" fontSize="9.0" hTextAlign="Center" vTextAlign="Middle">
-				<expression><![CDATA[$F{quantidadeRetirada}]]></expression>
+				<expression><![CDATA[$F{quantidade4Mes} != null ? $F{quantidade4Mes}.toString() : ""]]></expression>
 			</element>
 			<element kind="textField" uuid="82562e0d-cd1c-4ea2-9b0a-0c421898c3c4" x="180" y="470" width="99" height="20" fontSize="9.0" hTextAlign="Center" vTextAlign="Middle">
-				<expression><![CDATA[$F{quantidadeRetirada}]]></expression>
+				<expression><![CDATA[$F{quantidade5Mes} != null ? $F{quantidade5Mes}.toString() : ""]]></expression>
 			</element>
 			<element kind="textField" uuid="09d29cfd-5135-494d-b38d-cdf278d1d82c" x="180" y="490" width="99" height="20" fontSize="9.0" hTextAlign="Center" vTextAlign="Middle">
-				<expression><![CDATA[$F{quantidadeRetirada}]]></expression>
+				<expression><![CDATA[$F{quantidade6Mes} != null ? $F{quantidade6Mes}.toString() : ""]]></expression>
 			</element>
 			<element kind="textField" uuid="69621c4b-b871-44cf-bbd9-8cf3712c94f7" x="180" y="510" width="99" height="20" fontSize="9.0" hTextAlign="Center" vTextAlign="Middle">
-				<expression><![CDATA[$F{quantidadeRetirada}]]></expression>
+				<expression><![CDATA[$F{quantidade7Mes} != null ? $F{quantidade7Mes}.toString() : ""]]></expression>
 			</element>
 			<element kind="textField" uuid="12bc8179-8850-49b6-b28c-2f948f12e8d4" x="300" y="90" width="100" height="20" fontSize="9.0" vTextAlign="Middle">
 				<expression><![CDATA[$F{celularProprietario}]]></expression>

@@ -175,7 +175,9 @@
 									rendered="#{empty visualizarTermoItraconazolBean.termo.animal.numeroMicrochip}" />
 							</td>
 							<td class="label"><strong>Castrado:</strong></td>
-							<td>#{visualizarTermoItraconazolBean.termo.animal.castrado ? 'Sim' : 'Não'}</td>
+							<td>
+								#{(not empty visualizarTermoItraconazolBean.termo.animal.numeroMicrochip) ? 'Sim' : (visualizarTermoItraconazolBean.termo.animal.castrado ? 'Sim' : 'Não')}
+							</td>
 						</tr>
 					</table>
 
@@ -220,7 +222,7 @@
 											</h:outputText>
 										</td>
 										<td style="border: 1px solid #000; padding: 8px; text-align: center; font-size: 12px;">
-											#{visualizarTermoItraconazolBean.termo.quantidadeRetirada} unidades
+											#{(not empty visualizarTermoItraconazolBean.termo.quantidade1Mes) ? visualizarTermoItraconazolBean.termo.quantidade1Mes : visualizarTermoItraconazolBean.termo.quantidadeRetirada} unidades
 										</td>
 										<td style="border: 1px solid #000; padding: 20px; text-align: center;">
 											<!-- Espaço para assinatura -->
@@ -237,7 +239,7 @@
 												rendered="#{empty visualizarTermoItraconazolBean.termo.data2Mes}" />
 										</td>
 										<td style="border: 1px solid #000; padding: 8px; text-align: center; font-size: 12px;">
-											#{visualizarTermoItraconazolBean.termo.quantidadeRetirada} unidades
+											#{(not empty visualizarTermoItraconazolBean.termo.quantidade2Mes) ? visualizarTermoItraconazolBean.termo.quantidade2Mes : visualizarTermoItraconazolBean.termo.quantidadeRetirada} unidades
 										</td>
 										<td style="border: 1px solid #000; padding: 20px; text-align: center;">
 											<!-- Espaço para assinatura -->
@@ -254,7 +256,7 @@
 												rendered="#{empty visualizarTermoItraconazolBean.termo.data3Mes}" />
 										</td>
 										<td style="border: 1px solid #000; padding: 8px; text-align: center; font-size: 12px;">
-											#{visualizarTermoItraconazolBean.termo.quantidadeRetirada} unidades
+											#{(not empty visualizarTermoItraconazolBean.termo.quantidade3Mes) ? visualizarTermoItraconazolBean.termo.quantidade3Mes : visualizarTermoItraconazolBean.termo.quantidadeRetirada} unidades
 										</td>
 										<td style="border: 1px solid #000; padding: 20px; text-align: center;">
 											<!-- Espaço para assinatura -->
@@ -271,7 +273,7 @@
 												rendered="#{empty visualizarTermoItraconazolBean.termo.data4Mes}" />
 										</td>
 										<td style="border: 1px solid #000; padding: 8px; text-align: center; font-size: 12px;">
-											#{visualizarTermoItraconazolBean.termo.quantidadeRetirada} unidades
+											#{(not empty visualizarTermoItraconazolBean.termo.quantidade4Mes) ? visualizarTermoItraconazolBean.termo.quantidade4Mes : visualizarTermoItraconazolBean.termo.quantidadeRetirada} unidades
 										</td>
 										<td style="border: 1px solid #000; padding: 20px; text-align: center;">
 											<!-- Espaço para assinatura -->
@@ -288,7 +290,7 @@
 												rendered="#{empty visualizarTermoItraconazolBean.termo.data5Mes}" />
 										</td>
 										<td style="border: 1px solid #000; padding: 8px; text-align: center; font-size: 12px;">
-											#{visualizarTermoItraconazolBean.termo.quantidadeRetirada} unidades
+											#{(not empty visualizarTermoItraconazolBean.termo.quantidade5Mes) ? visualizarTermoItraconazolBean.termo.quantidade5Mes : visualizarTermoItraconazolBean.termo.quantidadeRetirada} unidades
 										</td>
 										<td style="border: 1px solid #000; padding: 20px; text-align: center;">
 											<!-- Espaço para assinatura -->
@@ -305,7 +307,7 @@
 												rendered="#{empty visualizarTermoItraconazolBean.termo.data6Mes}" />
 										</td>
 										<td style="border: 1px solid #000; padding: 8px; text-align: center; font-size: 12px;">
-											#{visualizarTermoItraconazolBean.termo.quantidadeRetirada} unidades
+											#{(not empty visualizarTermoItraconazolBean.termo.quantidade6Mes) ? visualizarTermoItraconazolBean.termo.quantidade6Mes : visualizarTermoItraconazolBean.termo.quantidadeRetirada} unidades
 										</td>
 										<td style="border: 1px solid #000; padding: 20px; text-align: center;">
 											<!-- Espaço para assinatura -->
@@ -322,7 +324,7 @@
 												rendered="#{empty visualizarTermoItraconazolBean.termo.data7Mes}" />
 										</td>
 										<td style="border: 1px solid #000; padding: 8px; text-align: center; font-size: 12px;">
-											#{visualizarTermoItraconazolBean.termo.quantidadeRetirada} unidades
+											#{(not empty visualizarTermoItraconazolBean.termo.quantidade7Mes) ? visualizarTermoItraconazolBean.termo.quantidade7Mes : visualizarTermoItraconazolBean.termo.quantidadeRetirada} unidades
 										</td>
 										<td style="border: 1px solid #000; padding: 20px; text-align: center;">
 											<!-- Espaço para assinatura -->

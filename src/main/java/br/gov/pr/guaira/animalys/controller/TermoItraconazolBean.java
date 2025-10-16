@@ -2,6 +2,7 @@ package br.gov.pr.guaira.animalys.controller;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -74,10 +75,17 @@ public class TermoItraconazolBean implements Serializable {
 
     public void salvar() {
         try {
-            // Validação específica
+            // Validação específica do termo (campos obrigatórios gerais)
             String mensagemErro = termoItraconazolService.validarTermo(this.termo);
             if (mensagemErro != null) {
                 FacesUtil.addErrorMessage(mensagemErro);
+                return;
+            }
+
+            // Validação específica dos pares dataNMes / quantidadeNMes
+            String mensagemMeses = validarMeses();
+            if (mensagemMeses != null) {
+                FacesUtil.addErrorMessage(mensagemMeses);
                 return;
             }
 
@@ -186,5 +194,40 @@ public class TermoItraconazolBean implements Serializable {
 
     public boolean isMostrarDadosAnimal() {
         return this.termo != null && this.termo.getAnimal() != null;
+    }
+
+    /**
+     * Valida os pares dataNMes / quantidadeNMes: exige que ambos sejam nulos ou ambos preenchidos.
+     * Retorna mensagem de erro (String) para exibir ou null quando válido.
+     */
+    private String validarMeses() {
+        if (this.termo == null) {
+            return null;
+        }
+
+        Date[] datas = new Date[] {
+            this.termo.getData1Mes(), this.termo.getData2Mes(), this.termo.getData3Mes(),
+            this.termo.getData4Mes(), this.termo.getData5Mes(), this.termo.getData6Mes(),
+            this.termo.getData7Mes()
+        };
+
+        Integer[] qts = new Integer[] {
+            this.termo.getQuantidade1Mes(), this.termo.getQuantidade2Mes(), this.termo.getQuantidade3Mes(),
+            this.termo.getQuantidade4Mes(), this.termo.getQuantidade5Mes(), this.termo.getQuantidade6Mes(),
+            this.termo.getQuantidade7Mes()
+        };
+
+        for (int i = 0; i < 7; i++) {
+            boolean temData = datas[i] != null;
+            boolean temQt = qts[i] != null && qts[i] > 0;
+            if (temData && !temQt) {
+                return String.format("Informar quantidade para o %dº mês ou remover a data.", i + 1);
+            }
+            if (!temData && temQt) {
+                return String.format("Informar data para o %dº mês ou remover a quantidade.", i + 1);
+            }
+        }
+
+        return null;
     }
 }

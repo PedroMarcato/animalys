@@ -57,8 +57,8 @@
 				var="termo">
 				
 				<p:column headerText="1° Retirada" style="width: 115px;">
-					<h:outputText value="#{termo.dataRetirada.time}">
-						<f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="America/Sao_Paulo" />
+					<h:outputText value="#{termo.primeiraRetirada}">
+						<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Sao_Paulo" />
 					</h:outputText>
 				</p:column>
 				
@@ -86,7 +86,7 @@
 				</p:column>
 				
 				<p:column headerText="Quantidade" style="width: 80px;">
-					<h:outputText value="#{termo.quantidadeRetirada}" />
+					<h:outputText value="#{termo.quantidadeUltimaRetirada}" />
 				</p:column>
 				
 				<p:column headerText="Observações">

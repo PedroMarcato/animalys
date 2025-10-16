@@ -69,15 +69,6 @@
                     <p:outputLabel value="Medicamento:" />
                     <p:outputLabel value="Itraconazol (para tratamento de esporotricose)" styleClass="fw-bold" />
 
-                    <p:outputLabel value="Quantidade Retirada:" for="quantidade" />
-                    <h:panelGroup>
-                        <p:inputNumber id="quantidade" value="#{termoItraconazolBean.termo.quantidadeRetirada}"
-                            decimalPlaces="0" minValue="1" 
-                            required="true" requiredMessage="Quantidade é obrigatória"
-                            readonly="#{termoItraconazolBean.editando}" />
-                        <p:message for="quantidade" />
-                    </h:panelGroup>
-
                     <p:outputLabel value="Observações:" for="observacoes" />
                     <p:inputTextarea id="observacoes" value="#{termoItraconazolBean.termo.observacoes}" 
                         rows="3" maxlength="1000" readonly="#{termoItraconazolBean.editando}" />
@@ -171,38 +162,46 @@
                     </ul>
                 </p:panel> -->
 
-                <!-- Controle de Acompanhamento Mensal -->
+                <!-- Controle de Acompanhamento Mensal (parecido com Retirada de Ração) -->
                 <p:panel header="Controle de Acompanhamento Mensal" styleClass="mt-3">
-                    <p:panelGrid columns="4" layout="grid" columnClasses="ui-grid-col-3, ui-grid-col-3, ui-grid-col-3, ui-grid-col-3" 
+                    <p:panelGrid columns="4" layout="grid" columnClasses="ui-grid-col-1, ui-grid-col-2, ui-grid-col-1, ui-grid-col-2" 
                         styleClass="panelgrid-noborder">
-                        
+
                         <p:outputLabel value="1º mês:" />
-                        <p:calendar id="data1Mes" value="#{termoItraconazolBean.termo.data1Mes}" 
-                            pattern="dd/MM/yyyy" mask="99/99/9999" />
-                        
+                        <p:calendar id="data1Mes" value="#{termoItraconazolBean.termo.data1Mes}" pattern="dd/MM/yyyy" mask="99/99/9999" />
+                        <p:outputLabel value="Quantidade 1º mês:" for="qtd1Mes" />
+                        <p:inputNumber id="qtd1Mes" value="#{termoItraconazolBean.termo.quantidade1Mes}" decimalPlaces="0" minValue="0" />
+
                         <p:outputLabel value="2º mês:" />
-                        <p:calendar id="data2Mes" value="#{termoItraconazolBean.termo.data2Mes}" 
-                            pattern="dd/MM/yyyy" mask="99/99/9999" />
-                        
+                        <p:calendar id="data2Mes" value="#{termoItraconazolBean.termo.data2Mes}" pattern="dd/MM/yyyy" mask="99/99/9999" />
+                        <p:outputLabel value="Quantidade 2º mês:" for="qtd2Mes" />
+                        <p:inputNumber id="qtd2Mes" value="#{termoItraconazolBean.termo.quantidade2Mes}" decimalPlaces="0" minValue="0" />
+
                         <p:outputLabel value="3º mês:" />
-                        <p:calendar id="data3Mes" value="#{termoItraconazolBean.termo.data3Mes}" 
-                            pattern="dd/MM/yyyy" mask="99/99/9999" />
-                        
+                        <p:calendar id="data3Mes" value="#{termoItraconazolBean.termo.data3Mes}" pattern="dd/MM/yyyy" mask="99/99/9999" />
+                        <p:outputLabel value="Quantidade 3º mês:" for="qtd3Mes" />
+                        <p:inputNumber id="qtd3Mes" value="#{termoItraconazolBean.termo.quantidade3Mes}" decimalPlaces="0" minValue="0" />
+
                         <p:outputLabel value="4º mês:" />
-                        <p:calendar id="data4Mes" value="#{termoItraconazolBean.termo.data4Mes}" 
-                            pattern="dd/MM/yyyy" mask="99/99/9999" />
-                        
+                        <p:calendar id="data4Mes" value="#{termoItraconazolBean.termo.data4Mes}" pattern="dd/MM/yyyy" mask="99/99/9999" />
+                        <p:outputLabel value="Quantidade 4º mês:" for="qtd4Mes" />
+                        <p:inputNumber id="qtd4Mes" value="#{termoItraconazolBean.termo.quantidade4Mes}" decimalPlaces="0" minValue="0" />
+
                         <p:outputLabel value="5º mês:" />
-                        <p:calendar id="data5Mes" value="#{termoItraconazolBean.termo.data5Mes}" 
-                            pattern="dd/MM/yyyy" mask="99/99/9999" />
-                        
+                        <p:calendar id="data5Mes" value="#{termoItraconazolBean.termo.data5Mes}" pattern="dd/MM/yyyy" mask="99/99/9999" />
+                        <p:outputLabel value="Quantidade 5º mês:" for="qtd5Mes" />
+                        <p:inputNumber id="qtd5Mes" value="#{termoItraconazolBean.termo.quantidade5Mes}" decimalPlaces="0" minValue="0" />
+
                         <p:outputLabel value="6º mês:" />
-                        <p:calendar id="data6Mes" value="#{termoItraconazolBean.termo.data6Mes}" 
-                            pattern="dd/MM/yyyy" mask="99/99/9999" />
-                        
+                        <p:calendar id="data6Mes" value="#{termoItraconazolBean.termo.data6Mes}" pattern="dd/MM/yyyy" mask="99/99/9999" />
+                        <p:outputLabel value="Quantidade 6º mês:" for="qtd6Mes" />
+                        <p:inputNumber id="qtd6Mes" value="#{termoItraconazolBean.termo.quantidade6Mes}" decimalPlaces="0" minValue="0" />
+
                         <p:outputLabel value="7º mês:" />
-                        <p:calendar id="data7Mes" value="#{termoItraconazolBean.termo.data7Mes}" 
-                            pattern="dd/MM/yyyy" mask="99/99/9999" />
+                        <p:calendar id="data7Mes" value="#{termoItraconazolBean.termo.data7Mes}" pattern="dd/MM/yyyy" mask="99/99/9999" />
+                        <p:outputLabel value="Quantidade 7º mês:" for="qtd7Mes" />
+                        <p:inputNumber id="qtd7Mes" value="#{termoItraconazolBean.termo.quantidade7Mes}" decimalPlaces="0" minValue="0" />
+
                     </p:panelGrid>
                 </p:panel>
             </div>

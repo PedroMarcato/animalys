@@ -73,6 +73,28 @@ public class TermoItraconazol implements Serializable {
     @Column(name = "data_7_mes")
     private Date data7Mes;
 
+    // Quantidades correspondentes aos meses (compatibilidade com a view)
+    @Column(name = "quantidade_1_mes")
+    private Integer quantidade1Mes;
+
+    @Column(name = "quantidade_2_mes")
+    private Integer quantidade2Mes;
+
+    @Column(name = "quantidade_3_mes")
+    private Integer quantidade3Mes;
+
+    @Column(name = "quantidade_4_mes")
+    private Integer quantidade4Mes;
+
+    @Column(name = "quantidade_5_mes")
+    private Integer quantidade5Mes;
+
+    @Column(name = "quantidade_6_mes")
+    private Integer quantidade6Mes;
+
+    @Column(name = "quantidade_7_mes")
+    private Integer quantidade7Mes;
+
     // Constructors
     public TermoItraconazol() {
         this.dataRetirada = Calendar.getInstance();
@@ -175,6 +197,62 @@ public class TermoItraconazol implements Serializable {
         this.data7Mes = data7Mes;
     }
 
+    public Integer getQuantidade1Mes() {
+        return quantidade1Mes;
+    }
+
+    public void setQuantidade1Mes(Integer quantidade1Mes) {
+        this.quantidade1Mes = quantidade1Mes;
+    }
+
+    public Integer getQuantidade2Mes() {
+        return quantidade2Mes;
+    }
+
+    public void setQuantidade2Mes(Integer quantidade2Mes) {
+        this.quantidade2Mes = quantidade2Mes;
+    }
+
+    public Integer getQuantidade3Mes() {
+        return quantidade3Mes;
+    }
+
+    public void setQuantidade3Mes(Integer quantidade3Mes) {
+        this.quantidade3Mes = quantidade3Mes;
+    }
+
+    public Integer getQuantidade4Mes() {
+        return quantidade4Mes;
+    }
+
+    public void setQuantidade4Mes(Integer quantidade4Mes) {
+        this.quantidade4Mes = quantidade4Mes;
+    }
+
+    public Integer getQuantidade5Mes() {
+        return quantidade5Mes;
+    }
+
+    public void setQuantidade5Mes(Integer quantidade5Mes) {
+        this.quantidade5Mes = quantidade5Mes;
+    }
+
+    public Integer getQuantidade6Mes() {
+        return quantidade6Mes;
+    }
+
+    public void setQuantidade6Mes(Integer quantidade6Mes) {
+        this.quantidade6Mes = quantidade6Mes;
+    }
+
+    public Integer getQuantidade7Mes() {
+        return quantidade7Mes;
+    }
+
+    public void setQuantidade7Mes(Integer quantidade7Mes) {
+        this.quantidade7Mes = quantidade7Mes;
+    }
+
     public String getPorteAnimal() {
         return porteAnimal;
     }
@@ -193,6 +271,55 @@ public class TermoItraconazol implements Serializable {
                 dataRetirada.get(Calendar.MINUTE));
         }
         return "";
+    }
+
+    /**
+     * Retorna a data da primeira retirada (menor data entre data1Mes..data7Mes).
+     * Se não houver nenhuma data mensal preenchida, retorna a dataRetirada (quando o termo foi criado) se houver.
+     */
+    public Date getPrimeiraRetirada() {
+        Date[] datas = new Date[] { data1Mes, data2Mes, data3Mes, data4Mes, data5Mes, data6Mes, data7Mes };
+        Date primeira = null;
+        for (Date d : datas) {
+            if (d != null) {
+                if (primeira == null || d.before(primeira)) {
+                    primeira = d;
+                }
+            }
+        }
+        if (primeira != null) {
+            return primeira;
+        }
+        if (dataRetirada != null) {
+            return dataRetirada.getTime();
+        }
+        return null;
+    }
+
+    /**
+     * Retorna a quantidade da última retirada (a quantidade relacionada à maior data entre data1Mes..data7Mes).
+     * Se não houver datas mensais, retorna a quantidadeRetirada (campo legado) como fallback.
+     */
+    public Integer getQuantidadeUltimaRetirada() {
+        Date[] datas = new Date[] { data1Mes, data2Mes, data3Mes, data4Mes, data5Mes, data6Mes, data7Mes };
+        Integer[] qts = new Integer[] { quantidade1Mes, quantidade2Mes, quantidade3Mes, quantidade4Mes, quantidade5Mes, quantidade6Mes, quantidade7Mes };
+
+        Date ultima = null;
+        Integer qtUltima = null;
+        for (int i = 0; i < datas.length; i++) {
+            Date d = datas[i];
+            if (d != null) {
+                if (ultima == null || d.after(ultima)) {
+                    ultima = d;
+                    qtUltima = qts[i];
+                }
+            }
+        }
+        if (qtUltima != null) {
+            return qtUltima;
+        }
+        // fallback para campo legado
+        return quantidadeRetirada;
     }
 
     @Override

@@ -47,7 +47,24 @@ public class TermoItraconazolService implements Serializable {
             return "Animal deve ser selecionado!";
         }
 
-        if (termo.getQuantidadeRetirada() == null || termo.getQuantidadeRetirada() <= 0) {
+        // Validar quantidades mensais: proibir valores negativos e exigir ao menos uma quantidade > 0
+        Integer[] qts = new Integer[] {
+            termo.getQuantidade1Mes(), termo.getQuantidade2Mes(), termo.getQuantidade3Mes(),
+            termo.getQuantidade4Mes(), termo.getQuantidade5Mes(), termo.getQuantidade6Mes(),
+            termo.getQuantidade7Mes()
+        };
+
+        int total = 0;
+        for (Integer q : qts) {
+            if (q != null && q < 0) {
+                return "Quantidade não pode ser negativa!";
+            }
+            if (q != null) {
+                total += q;
+            }
+        }
+
+        if (total <= 0) {
             return "Quantidade deve ser informada e maior que zero!";
         }
 

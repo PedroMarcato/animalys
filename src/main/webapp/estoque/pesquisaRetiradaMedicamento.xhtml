@@ -95,9 +95,13 @@
 						rendered="#{empty retirada.observacoes}" />
 				</p:column>
 				
-				<p:column headerText="Ações" width="80" styleClass="text-center">
+				<p:column headerText="Ações" width="120" styleClass="text-center">
+					<p:button icon="fa fa-file-text-o" title="Visualizar Termo"
+							  styleClass="btn-sm ui-button-info">
+						<f:param name="termo" value="#{retirada.idRetiradaMedicamento}" />
+					</p:button>
 					<p:button icon="fa fa-pencil" title="Editar"
-						outcome="/estoque/retiradaMedicamento" styleClass="btn-sm" style="margin-left: 5px;">
+						outcome="/estoque/retiradaMedicamento" styleClass="btn-sm">
 						<f:param name="retirada" value="#{retirada.idRetiradaMedicamento}" />
 					</p:button>
 					<p:commandButton icon="fa fa-trash" title="Excluir" 

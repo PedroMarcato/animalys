@@ -45,7 +45,15 @@ public class TermosItraconazol implements Serializable {
         
         // Fetch joins para evitar LazyInitializationException
         Fetch<TermoItraconazol, Animal> animalFetch = termoRoot.fetch("animal", JoinType.INNER);
-        animalFetch.fetch("proprietario", JoinType.INNER);
+        Fetch<Object, Object> proprietarioFetch = animalFetch.fetch("proprietario", JoinType.INNER);
+        
+        // Fetch endereco e cidade do proprietário
+        Fetch<Object, Object> enderecoFetch = proprietarioFetch.fetch("endereco", JoinType.LEFT);
+        enderecoFetch.fetch("cidade", JoinType.LEFT);
+        
+        // Fetch contato do proprietário
+        proprietarioFetch.fetch("contato", JoinType.LEFT);
+        
         animalFetch.fetch("raca", JoinType.LEFT);
         
         criteriaQuery.select(termoRoot);
@@ -63,7 +71,15 @@ public class TermosItraconazol implements Serializable {
         
         // Fetch joins para evitar LazyInitializationException
         Fetch<TermoItraconazol, Animal> animalFetch = termoRoot.fetch("animal", JoinType.INNER);
-        animalFetch.fetch("proprietario", JoinType.INNER);
+        Fetch<Object, Object> proprietarioFetch = animalFetch.fetch("proprietario", JoinType.INNER);
+        
+        // Fetch endereco e cidade do proprietário
+        Fetch<Object, Object> enderecoFetch = proprietarioFetch.fetch("endereco", JoinType.LEFT);
+        enderecoFetch.fetch("cidade", JoinType.LEFT);
+        
+        // Fetch contato do proprietário
+        proprietarioFetch.fetch("contato", JoinType.LEFT);
+        
         animalFetch.fetch("raca", JoinType.LEFT);
 
         // Filtro por nome do animal

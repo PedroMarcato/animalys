@@ -1,0 +1,354 @@
+<ui:composition template="/WEB-INF/template/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="titulo">Termo de Compromisso - Fornecimento de Itraconazol</ui:define>
+
+	<ui:define name="styles">
+		<style>
+			@media print {
+				.no-print { display: none !important; }
+				body { font-size: 12px; }
+				.termo-container { padding: 20px; }
+			}
+			
+			.termo-container {
+				padding: 30px;
+				font-family: Arial, sans-serif;
+				line-height: 1.4;
+				background-color: #fff;
+			}
+			
+			.termo-header {
+				text-align: center;
+				margin-bottom: 20px;
+				font-weight: bold;
+				font-size: 14px;
+			}
+			
+			.dados-table {
+				width: 100%;
+				border-collapse: collapse;
+				margin: 15px 0;
+				border: 2px solid #000;
+			}
+			
+			.dados-table td {
+				padding: 8px;
+				border: 1px solid #000;
+				vertical-align: top;
+				font-size: 12px;
+			}
+			
+			.dados-table .label {
+				font-weight: bold;
+				background-color: #f8f9fa;
+				width: 120px;
+			}
+			
+			.termo-content {
+				display: flex;
+				gap: 20px;
+				margin-top: 20px;
+			}
+			
+			.termo-left {
+				flex: 1;
+				text-align: justify;
+				font-size: 12px;
+				line-height: 1.5;
+			}
+			
+			.termo-right {
+				flex: 0 0 45%;
+				font-size: 12px;
+			}
+			
+			.assinatura-mes {
+				margin: 15px 0;
+				border-bottom: 1px solid #ccc;
+				padding-bottom: 10px;
+			}
+		</style>
+	</ui:define>
+
+	<ui:define name="content">
+		<f:metadata>
+			<f:viewParam name="termo" value="#{visualizarTermoItraconazolBean.termoId}" />
+			<f:viewAction action="#{visualizarTermoItraconazolBean.inicializar()}" />
+		</f:metadata>
+
+		<h:form id="formTermo">
+			<p:messages id="messages" closable="true" />
+			
+			<p:toolbar styleClass="no-print" style="margin-top: 60px; margin-bottom: 10px;">
+				<p:toolbarGroup>
+					<p:button value="Voltar" icon="fa fa-arrow-left"
+						outcome="/estoque/pesquisaTermoItraconazol" />
+				</p:toolbarGroup>
+				<p:toolbarGroup align="right">
+					<p:commandButton value="Imprimir PDF" icon="fa fa-file-pdf-o"
+						action="#{visualizarTermoItraconazolBean.imprimirPDF()}" 
+						styleClass="ui-button-success"
+						ajax="false" />
+					<p:commandButton value="Imprimir" icon="fa fa-print"
+						onclick="window.print(); return false;" 
+						styleClass="ui-button-secondary" />
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<h:panelGroup rendered="#{visualizarTermoItraconazolBean.termo != null}">
+				<div class="termo-container">
+					<div class="termo-header">
+						<strong>ANEXO VI – Termo de Compromisso - Fornecimento do itraconazol para esporotricose animal</strong>
+					</div>
+
+					<p>Atendendo as orientações e recomendações recebidas por meio da Secretaria Municipal de Saúde /Centro de Controle Animal.</p>
+
+					<!-- Tabela de dados do responsável -->
+					<table class="dados-table">
+						<tr>
+							<td class="label"><strong>Nome:</strong></td>
+							<td style="width: 55%;">#{visualizarTermoItraconazolBean.termo.animal.proprietario.nome}</td>
+							<td class="label" style="width: 80px;"><strong>CPF:</strong></td>
+							<td>#{visualizarTermoItraconazolBean.termo.animal.proprietario.cpf}</td>
+						</tr>
+						<tr>
+							<td class="label"><strong>RG:</strong></td>
+							<td>#{visualizarTermoItraconazolBean.termo.animal.proprietario.rg}</td>
+							<td colspan="2"></td>
+						</tr>
+						<tr>
+							<td class="label"><strong>Logradouro:</strong></td>
+							<td colspan="3">#{visualizarTermoItraconazolBean.termo.animal.proprietario.endereco.logradouro}</td>
+						</tr>
+						<tr>
+							<td class="label"><strong>Bairro:</strong></td>
+							<td>#{visualizarTermoItraconazolBean.termo.animal.proprietario.endereco.bairro}</td>
+							<td class="label"><strong>CEP:</strong></td>
+							<td>#{visualizarTermoItraconazolBean.termo.animal.proprietario.endereco.cep}</td>
+						</tr>
+						<tr>
+							<td class="label"><strong>Cidade:</strong></td>
+							<td>Guaíra</td>
+							<td colspan="2"></td>
+						</tr>
+						<tr>
+							<td class="label"><strong>Telefone:</strong></td>
+							<td>#{visualizarTermoItraconazolBean.termo.animal.proprietario.contato.telefone}</td>
+							<td class="label"><strong>Celular:</strong></td>
+							<td>#{visualizarTermoItraconazolBean.termo.animal.proprietario.contato.celular}</td>
+						</tr>
+					</table>
+
+					<p><strong>Tutor(a) ou responsável pelo animal abaixo descrito:</strong></p>
+
+					<!-- Tabela de dados do animal -->
+					<table class="dados-table">
+						<tr>
+							<td class="label"><strong>Nome:</strong></td>
+							<td style="width: 35%;">#{visualizarTermoItraconazolBean.termo.animal.nome}</td>
+							<td class="label"><strong>Pelagem:</strong></td>
+							<td>#{visualizarTermoItraconazolBean.termo.animal.cor}</td>
+						</tr>
+						<tr>
+							<td class="label"><strong>Espécie:</strong></td>
+							<td>#{visualizarTermoItraconazolBean.termo.animal.especie.nome}</td>
+							<td class="label"><strong>Porte:</strong></td>
+							<td>#{visualizarTermoItraconazolBean.termo.porteAnimal}</td>
+						</tr>
+						<tr>
+							<td class="label"><strong>Sexo:</strong></td>
+							<td>#{visualizarTermoItraconazolBean.termo.animal.sexo}</td>
+							<td class="label"><strong>Raça:</strong></td>
+							<td>#{visualizarTermoItraconazolBean.termo.animal.raca.nome}</td>
+						</tr>
+						<tr>
+							<td class="label"><strong>Microchip:</strong></td>
+							<td>
+								<h:outputText value="#{visualizarTermoItraconazolBean.termo.animal.numeroMicrochip}" 
+									rendered="#{not empty visualizarTermoItraconazolBean.termo.animal.numeroMicrochip}" />
+								<h:outputText value="Não informado" 
+									rendered="#{empty visualizarTermoItraconazolBean.termo.animal.numeroMicrochip}" />
+							</td>
+							<td class="label"><strong>Castrado:</strong></td>
+							<td>#{visualizarTermoItraconazolBean.termo.animal.castrado ? 'Sim' : 'Não'}</td>
+						</tr>
+					</table>
+
+					<p><strong>Fui devidamente informado(a), estou ciente e de acordo que:</strong></p>
+
+					<!-- Conteúdo dividido em duas colunas -->
+					<div class="termo-content">
+						<!-- Coluna esquerda - Texto do termo -->
+						<div class="termo-left">
+							<p>A esporotricose é uma doença causada por um fungo e pode ser transmitida ao ser humano por mordeduras ou arranhaduras de animais doentes ou pelo contato de mucosa, cortes ou feridas com material contaminado (secreção das feridas).</p>
+							
+							<p>O animal descrito acima é de minha responsabilidade e comprometo-me a medicá-lo de acordo com as instruções fornecidas pelos médicos veterinários durante todo o tempo que durar o tratamento.</p>
+							
+							<p>Comprometo-me a levar o animal para reavaliação mensal e buscar a medicação de forma a não haver interrupção do tratamento (ficar o animal dias sem medicação).</p>
+							
+							<p>Responsabilizo-me em manter o animal sempre domiciliado, evitando contato com animais estranhos para prevenir a reinfecção ou a transmissão para outros animais ou pessoas.</p>
+							
+							<p>A falta de continuidade do tratamento e a não domiciliação do animal pode causar disseminação da doença para outros animais e pessoas.</p>
+							
+							<p>Concordo que a Vigilância municipal realize acompanhamento periódico para verificar condições de saúde referentes a esporotricose.</p>
+
+							<p>Em caso do animal vir a óbito durante o tratamento, devo entrar em contato com o Centro de Controle Animal para a correta destinação, evitando contaminação ambiental.</p>
+						</div>
+
+						<!-- Coluna direita - Observações e assinaturas -->
+						<div class="termo-right">					
+							<div style="margin-top: 30px;">
+								<h4><strong>CONTROLE MENSAL DE MEDICAMENTO</strong></h4>
+								
+								<table style="width: 100%; border-collapse: collapse; margin: 15px 0; border: 1px solid #000;">
+									<tr style="background-color: #f0f0f0;">
+										<th style="border: 1px solid #000; padding: 8px; text-align: center; font-size: 12px;">Mês</th>
+										<th style="border: 1px solid #000; padding: 8px; text-align: center; font-size: 12px;">Data da Retirada</th>
+										<th style="border: 1px solid #000; padding: 8px; text-align: center; font-size: 12px;">Quantidade</th>
+										<th style="border: 1px solid #000; padding: 8px; text-align: center; font-size: 12px;">Assinatura</th>
+									</tr>
+									<tr>
+										<td style="border: 1px solid #000; padding: 8px; text-align: center; font-weight: bold; font-size: 12px;">1º mês</td>
+										<td style="border: 1px solid #000; padding: 8px; text-align: center; font-size: 12px;">
+											<h:outputText value="#{visualizarTermoItraconazolBean.termo.dataRetirada.time}">
+												<f:convertDateTime pattern="dd/MM/yyyy" />
+											</h:outputText>
+										</td>
+										<td style="border: 1px solid #000; padding: 8px; text-align: center; font-size: 12px;">
+											#{visualizarTermoItraconazolBean.termo.quantidadeRetirada} unidades
+										</td>
+										<td style="border: 1px solid #000; padding: 20px; text-align: center;">
+											<!-- Espaço para assinatura -->
+										</td>
+									</tr>
+									<tr>
+										<td style="border: 1px solid #000; padding: 8px; text-align: center; font-weight: bold; font-size: 12px;">2º mês</td>
+										<td style="border: 1px solid #000; padding: 8px; text-align: center; font-size: 12px;">
+											<h:outputText value="#{visualizarTermoItraconazolBean.termo.data2Mes}" 
+												rendered="#{not empty visualizarTermoItraconazolBean.termo.data2Mes}">
+												<f:convertDateTime pattern="dd/MM/yyyy" />
+											</h:outputText>
+											<h:outputText value="____/____/____" 
+												rendered="#{empty visualizarTermoItraconazolBean.termo.data2Mes}" />
+										</td>
+										<td style="border: 1px solid #000; padding: 8px; text-align: center; font-size: 12px;">
+											#{visualizarTermoItraconazolBean.termo.quantidadeRetirada} unidades
+										</td>
+										<td style="border: 1px solid #000; padding: 20px; text-align: center;">
+											<!-- Espaço para assinatura -->
+										</td>
+									</tr>
+									<tr>
+										<td style="border: 1px solid #000; padding: 8px; text-align: center; font-weight: bold; font-size: 12px;">3º mês</td>
+										<td style="border: 1px solid #000; padding: 8px; text-align: center; font-size: 12px;">
+											<h:outputText value="#{visualizarTermoItraconazolBean.termo.data3Mes}" 
+												rendered="#{not empty visualizarTermoItraconazolBean.termo.data3Mes}">
+												<f:convertDateTime pattern="dd/MM/yyyy" />
+											</h:outputText>
+											<h:outputText value="____/____/____" 
+												rendered="#{empty visualizarTermoItraconazolBean.termo.data3Mes}" />
+										</td>
+										<td style="border: 1px solid #000; padding: 8px; text-align: center; font-size: 12px;">
+											#{visualizarTermoItraconazolBean.termo.quantidadeRetirada} unidades
+										</td>
+										<td style="border: 1px solid #000; padding: 20px; text-align: center;">
+											<!-- Espaço para assinatura -->
+										</td>
+									</tr>
+									<tr>
+										<td style="border: 1px solid #000; padding: 8px; text-align: center; font-weight: bold; font-size: 12px;">4º mês</td>
+										<td style="border: 1px solid #000; padding: 8px; text-align: center; font-size: 12px;">
+											<h:outputText value="#{visualizarTermoItraconazolBean.termo.data4Mes}" 
+												rendered="#{not empty visualizarTermoItraconazolBean.termo.data4Mes}">
+												<f:convertDateTime pattern="dd/MM/yyyy" />
+											</h:outputText>
+											<h:outputText value="____/____/____" 
+												rendered="#{empty visualizarTermoItraconazolBean.termo.data4Mes}" />
+										</td>
+										<td style="border: 1px solid #000; padding: 8px; text-align: center; font-size: 12px;">
+											#{visualizarTermoItraconazolBean.termo.quantidadeRetirada} unidades
+										</td>
+										<td style="border: 1px solid #000; padding: 20px; text-align: center;">
+											<!-- Espaço para assinatura -->
+										</td>
+									</tr>
+									<tr>
+										<td style="border: 1px solid #000; padding: 8px; text-align: center; font-weight: bold; font-size: 12px;">5º mês</td>
+										<td style="border: 1px solid #000; padding: 8px; text-align: center; font-size: 12px;">
+											<h:outputText value="#{visualizarTermoItraconazolBean.termo.data5Mes}" 
+												rendered="#{not empty visualizarTermoItraconazolBean.termo.data5Mes}">
+												<f:convertDateTime pattern="dd/MM/yyyy" />
+											</h:outputText>
+											<h:outputText value="____/____/____" 
+												rendered="#{empty visualizarTermoItraconazolBean.termo.data5Mes}" />
+										</td>
+										<td style="border: 1px solid #000; padding: 8px; text-align: center; font-size: 12px;">
+											#{visualizarTermoItraconazolBean.termo.quantidadeRetirada} unidades
+										</td>
+										<td style="border: 1px solid #000; padding: 20px; text-align: center;">
+											<!-- Espaço para assinatura -->
+										</td>
+									</tr>
+									<tr>
+										<td style="border: 1px solid #000; padding: 8px; text-align: center; font-weight: bold; font-size: 12px;">6º mês</td>
+										<td style="border: 1px solid #000; padding: 8px; text-align: center; font-size: 12px;">
+											<h:outputText value="#{visualizarTermoItraconazolBean.termo.data6Mes}" 
+												rendered="#{not empty visualizarTermoItraconazolBean.termo.data6Mes}">
+												<f:convertDateTime pattern="dd/MM/yyyy" />
+											</h:outputText>
+											<h:outputText value="____/____/____" 
+												rendered="#{empty visualizarTermoItraconazolBean.termo.data6Mes}" />
+										</td>
+										<td style="border: 1px solid #000; padding: 8px; text-align: center; font-size: 12px;">
+											#{visualizarTermoItraconazolBean.termo.quantidadeRetirada} unidades
+										</td>
+										<td style="border: 1px solid #000; padding: 20px; text-align: center;">
+											<!-- Espaço para assinatura -->
+										</td>
+									</tr>
+									<tr>
+										<td style="border: 1px solid #000; padding: 8px; text-align: center; font-weight: bold; font-size: 12px;">7º mês</td>
+										<td style="border: 1px solid #000; padding: 8px; text-align: center; font-size: 12px;">
+											<h:outputText value="#{visualizarTermoItraconazolBean.termo.data7Mes}" 
+												rendered="#{not empty visualizarTermoItraconazolBean.termo.data7Mes}">
+												<f:convertDateTime pattern="dd/MM/yyyy" />
+											</h:outputText>
+											<h:outputText value="____/____/____" 
+												rendered="#{empty visualizarTermoItraconazolBean.termo.data7Mes}" />
+										</td>
+										<td style="border: 1px solid #000; padding: 8px; text-align: center; font-size: 12px;">
+											#{visualizarTermoItraconazolBean.termo.quantidadeRetirada} unidades
+										</td>
+										<td style="border: 1px solid #000; padding: 20px; text-align: center;">
+											<!-- Espaço para assinatura -->
+										</td>
+									</tr>
+								</table>
+								
+								<p style="font-size: 11px; margin-top: 15px; text-align: center;">
+									<strong>Medicamento:</strong> Itraconazol
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</h:panelGroup>
+
+			<h:panelGroup rendered="#{visualizarTermoItraconazolBean.termo == null}">
+				<p:panel header="Termo não encontrado">
+					<p>O termo solicitado não foi encontrado ou não existe.</p>
+					<p:button value="Voltar para Pesquisa" 
+						outcome="/estoque/pesquisaTermoItraconazol" 
+						styleClass="ui-button-primary" />
+				</p:panel>
+			</h:panelGroup>
+			
+		</h:form>
+	</ui:define>
+
+</ui:composition>

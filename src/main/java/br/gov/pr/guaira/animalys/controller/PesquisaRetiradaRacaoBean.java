@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import br.gov.pr.guaira.animalys.entity.RetiradaRacao;
+import br.gov.pr.guaira.animalys.report.GerarTermoRacao;
 import br.gov.pr.guaira.animalys.repository.RetiradasRacao;
 import br.gov.pr.guaira.animalys.service.NegocioException;
 import br.gov.pr.guaira.animalys.service.RetiradaRacaoService;
@@ -97,6 +98,24 @@ public class PesquisaRetiradaRacaoBean implements Serializable {
             FacesUtil.addErrorMessage(ne.getMessage());
         } catch (Exception e) {
             FacesUtil.addErrorMessage("Erro inesperado ao excluir retirada: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    public void visualizarTermo(RetiradaRacao retirada) {
+        try {
+            // Recarrega a retirada com todos os dados necessários usando fetch joins
+            RetiradaRacao retiradaCompleta = retiradas.porId(retirada.getIdRetiradaRacao());
+            
+            if (retiradaCompleta != null) {
+                // Gera o PDF do termo
+                GerarTermoRacao gerador = new GerarTermoRacao();
+                gerador.gerar(retiradaCompleta);
+            } else {
+                FacesUtil.addErrorMessage("Retirada de ração não encontrada!");
+            }
+        } catch (Exception e) {
+            FacesUtil.addErrorMessage("Erro ao gerar termo de ração: " + e.getMessage());
             e.printStackTrace();
         }
     }

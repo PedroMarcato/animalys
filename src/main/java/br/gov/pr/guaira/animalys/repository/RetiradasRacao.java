@@ -38,7 +38,20 @@ public class RetiradasRacao implements Serializable {
     }
 
     public RetiradaRacao porId(Integer id) {
-        return manager.find(RetiradaRacao.class, id);
+        List<RetiradaRacao> resultado = manager.createQuery(
+                "SELECT r FROM RetiradaRacao r " +
+                "LEFT JOIN FETCH r.proprietario p " +
+                "LEFT JOIN FETCH p.endereco e " +
+                "LEFT JOIN FETCH e.cidade " +
+                "LEFT JOIN FETCH p.contato " +
+                "LEFT JOIN FETCH r.animal a " +
+                "LEFT JOIN FETCH a.raca ra " +
+                "LEFT JOIN FETCH ra.especie " +
+                "WHERE r.idRetiradaRacao = :id", RetiradaRacao.class)
+                .setParameter("id", id)
+                .getResultList();
+        
+        return resultado.isEmpty() ? null : resultado.get(0);
     }
 
     public List<RetiradaRacao> porProprietario(Proprietario proprietario) {

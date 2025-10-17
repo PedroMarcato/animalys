@@ -179,11 +179,20 @@
 						rendered="#{empty retirada.observacoes}" />
 				</p:column>
 				
-				<p:column headerText="Ações" width="80" styleClass="text-center">
+				<p:column headerText="Ações" width="120" styleClass="text-center">
+
+					<p:commandButton icon="fa fa-file-text-o" title="Visualizar Termo" 
+						styleClass="btn-sm ui-button-info"
+						action="#{pesquisaRetiradaRacaoBean.visualizarTermo(retirada)}"
+						ajax="false"
+						process="@this" style="margin-left: 5px;">
+					</p:commandButton>
+
 					<p:button icon="fa fa-pencil" title="Editar"
-						outcome="/estoque/retiradaRacao" styleClass="btn-sm" style="margin-left: 5px;">
+						outcome="/estoque/retiradaRacao" styleClass="btn-sm">
 						<f:param name="retirada" value="#{retirada.idRetiradaRacao}" />
 					</p:button>
+					
 					<p:commandButton icon="fa fa-trash" title="Excluir" 
 						styleClass="btn-sm ui-button-danger"
 						actionListener="#{pesquisaRetiradaRacaoBean.prepararExclusao(retirada)}"

@@ -308,7 +308,7 @@ Em caso do animal vir a óbito durante o tratamento, devo entrar em contato com 
 			<element kind="textField" uuid="706023a4-7dd8-4547-aa7f-034025453764" x="80" y="30" width="100" height="20" fontSize="9.0" vTextAlign="Middle">
 				<expression><![CDATA[$F{rgProprietario}]]></expression>
 			</element>
-			<element kind="textField" uuid="4da4582b-d8d4-4281-a512-ec811395a8d6" x="80" y="50" width="108" height="20" fontSize="9.0" vTextAlign="Middle">
+			<element kind="textField" uuid="4da4582b-d8d4-4281-a512-ec811395a8d6" x="80" y="50" width="340" height="20" fontSize="9.0" vTextAlign="Middle">
 				<expression><![CDATA[$F{enderecoProprietario}]]></expression>
 			</element>
 			<element kind="textField" uuid="a1fffac8-9554-42ea-a7cf-cfb9427b59a1" x="80" y="70" width="100" height="20" fontSize="9.0" vTextAlign="Middle">

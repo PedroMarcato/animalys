@@ -9,6 +9,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import br.gov.pr.guaira.animalys.entity.RetiradaMedicamento;
+import br.gov.pr.guaira.animalys.report.GerarTermoMedicamento;
 import br.gov.pr.guaira.animalys.repository.RetiradasMedicamento;
 import br.gov.pr.guaira.animalys.service.NegocioException;
 import br.gov.pr.guaira.animalys.service.RetiradaMedicamentoService;
@@ -117,5 +118,24 @@ public class PesquisaRetiradaMedicamentoBean implements Serializable {
     
     public void setRetiradaSelecionadaParaExclusao(RetiradaMedicamento retiradaSelecionadaParaExclusao) {
         this.retiradaSelecionadaParaExclusao = retiradaSelecionadaParaExclusao;
+    }
+    
+    public void visualizarTermo(RetiradaMedicamento retirada) {
+        try {
+            if (retirada == null || retirada.getIdRetiradaMedicamento() == null) {
+                FacesUtil.addErrorMessage("Retirada inválida.");
+                return;
+            }
+            
+            // Recarregar a retirada com todos os dados necessários
+            RetiradaMedicamento retiradaCompleta = retiradas.porId(retirada.getIdRetiradaMedicamento());
+            
+            GerarTermoMedicamento relatorio = new GerarTermoMedicamento();
+            relatorio.gerar(retiradaCompleta);
+            
+        } catch (Exception e) {
+            FacesUtil.addErrorMessage("Erro ao gerar PDF: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 }

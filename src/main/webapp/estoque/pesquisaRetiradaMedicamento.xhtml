@@ -96,10 +96,12 @@
 				</p:column>
 				
 				<p:column headerText="Ações" width="120" styleClass="text-center">
-					<p:button icon="fa fa-file-text-o" title="Visualizar Termo"
-							  styleClass="btn-sm ui-button-info">
-						<f:param name="termo" value="#{retirada.idRetiradaMedicamento}" />
-					</p:button>
+					<p:commandButton icon="fa fa-file-text-o" title="Visualizar Termo"
+							  styleClass="btn-sm ui-button-info"
+							  action="#{pesquisaRetiradaMedicamentoBean.visualizarTermo(retirada)}"
+							  process="@this"
+							  ajax="false">
+					</p:commandButton>
 					<p:button icon="fa fa-pencil" title="Editar"
 						outcome="/estoque/retiradaMedicamento" styleClass="btn-sm">
 						<f:param name="retirada" value="#{retirada.idRetiradaMedicamento}" />

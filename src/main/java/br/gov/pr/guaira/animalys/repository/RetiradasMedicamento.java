@@ -38,7 +38,18 @@ public class RetiradasMedicamento implements Serializable {
     }
 
     public RetiradaMedicamento porId(Integer id) {
-        return manager.find(RetiradaMedicamento.class, id);
+        return manager.createQuery(
+                "SELECT r FROM RetiradaMedicamento r " +
+                "LEFT JOIN FETCH r.proprietario p " +
+                "LEFT JOIN FETCH p.endereco e " +
+                "LEFT JOIN FETCH e.cidade " +
+                "LEFT JOIN FETCH p.contato " +
+                "LEFT JOIN FETCH r.animal a " +
+                "LEFT JOIN FETCH a.raca ra " +
+                "LEFT JOIN FETCH ra.especie " +
+                "WHERE r.idRetiradaMedicamento = :id", RetiradaMedicamento.class)
+                .setParameter("id", id)
+                .getSingleResult();
     }
 
     public List<RetiradaMedicamento> porProprietario(Proprietario proprietario) {

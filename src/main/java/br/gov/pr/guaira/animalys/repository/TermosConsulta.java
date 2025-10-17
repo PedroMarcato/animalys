@@ -29,7 +29,20 @@ public class TermosConsulta implements Serializable {
 	}
 
 	public TermoConsulta porId(Long id) {
-		return manager.find(TermoConsulta.class, id);
+		List<TermoConsulta> resultado = manager.createQuery(
+				"SELECT t FROM TermoConsulta t " +
+				"LEFT JOIN FETCH t.proprietario p " +
+				"LEFT JOIN FETCH p.endereco e " +
+				"LEFT JOIN FETCH e.cidade " +
+				"LEFT JOIN FETCH p.contato " +
+				"LEFT JOIN FETCH t.animal a " +
+				"LEFT JOIN FETCH a.raca ra " +
+				"LEFT JOIN FETCH ra.especie " +
+				"WHERE t.id = :id", TermoConsulta.class)
+				.setParameter("id", id)
+				.getResultList();
+
+		return resultado.isEmpty() ? null : resultado.get(0);
 	}
 
 	public List<TermoConsulta> porProprietario(Integer proprietarioId) {

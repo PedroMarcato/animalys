@@ -9,6 +9,7 @@ import javax.inject.Named;
 
 import br.gov.pr.guaira.animalys.model.TermoConsulta;
 import br.gov.pr.guaira.animalys.service.TermoConsultaService;
+import br.gov.pr.guaira.animalys.report.GerarTermoConsulta;
 import br.gov.pr.guaira.animalys.util.jsf.FacesUtil;
 
 @Named
@@ -59,5 +60,20 @@ public class VisualizarTermoBean implements Serializable {
 
 	public void setTermo(TermoConsulta termo) {
 		this.termo = termo;
+	}
+
+	public void imprimirPdf() {
+		if (this.termo == null) {
+			FacesUtil.addErrorMessage("Nenhum termo carregado para impressão.");
+			return;
+		}
+
+		try {
+			GerarTermoConsulta gerador = new GerarTermoConsulta();
+			gerador.gerar(this.termo);
+		} catch (Exception e) {
+			FacesUtil.addErrorMessage("Erro ao gerar PDF do termo: " + e.getMessage());
+			e.printStackTrace();
+		}
 	}
 }

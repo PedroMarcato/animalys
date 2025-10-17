@@ -27,8 +27,8 @@
 				</p:toolbarGroup>
 				<p:toolbarGroup align="right">
 					<p:commandButton value="Imprimir" icon="fa fa-print"
-						onclick="window.print(); return false;" 
-						styleClass="ui-button-secondary" />
+						action="#{visualizarTermoBean.imprimirPdf()}" ajax="false" 
+						styleClass="ui-button-primary" />
 				</p:toolbarGroup>
 			</p:toolbar>
 

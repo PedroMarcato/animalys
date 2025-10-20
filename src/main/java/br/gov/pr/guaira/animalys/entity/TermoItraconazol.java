@@ -95,6 +95,9 @@ public class TermoItraconazol implements Serializable {
     @Column(name = "quantidade_7_mes")
     private Integer quantidade7Mes;
 
+    @Column(name = "nome_arquivo", length = 255)
+    private String nomeArquivo;
+
     // Constructors
     public TermoItraconazol() {
         this.dataRetirada = Calendar.getInstance();
@@ -259,6 +262,14 @@ public class TermoItraconazol implements Serializable {
 
     public void setPorteAnimal(String porteAnimal) {
         this.porteAnimal = porteAnimal;
+    }
+
+    public String getNomeArquivo() {
+        return nomeArquivo;
+    }
+
+    public void setNomeArquivo(String nomeArquivo) {
+        this.nomeArquivo = nomeArquivo;
     }
 
     public String getDataRetiradaFormatada() {

@@ -11,6 +11,7 @@
 	</f:metadata>
 	
 	<ui:define name="content">
+		<h:outputScript library="js" name="debug-upload.js" />
 		<h:form id="formRetirada">
 			<h1 class="aw-page-title">
 				#{empty retiradaMedicamentoBean.retirada.idRetiradaMedicamento ? 'Nova Retirada de Medicamento' : 'Editar Retirada de Medicamento'}
@@ -136,7 +137,84 @@
 				
 				</p:panelGrid>
 
+				<!-- Seção de Upload de Arquivo -->
+				<p:panel header="Anexar Receita/Laudo (Imagem ou PDF)" styleClass="mt-3">
+					<p:panelGrid columns="2" layout="grid" 
+						columnClasses="ui-grid-col-6, ui-grid-col-6"
+						styleClass="panelgrid-noborder">
+						
+						<h:panelGroup>
+							<p:outputLabel for="fileUpload" value="Anexar Receita" style="display: none;"/>
+							<p:fileUpload id="fileUpload"
+								widgetVar="uploaderRetirada"
+								fileUploadListener="#{retiradaMedicamentoBean.uploadListener}"
+								mode="advanced"
+								multiple="false"
+								auto="true"
+								showUploadButton="true"
+								disabled="#{retiradaMedicamentoBean.hasArquivoAnexado()}"
+								onstart="console.log('[retiradaMedicamento] upload.start', event);"
+								oncomplete="console.log('[retiradaMedicamento] upload.complete', event);"
+								onerror="console.log('[retiradaMedicamento] upload.error', event);"
+								allowTypes="/(jpg|jpeg|png|gif|bmp|pdf)$/i"
+								update=":formRetirada:messages :formRetirada"
+								/>
+							<p style="font-size: 0.9em; color: #666; margin-top: 162px;">
+								Tipos permitidos: JPG, PNG, PDF (máx. 10MB)
+							</p>
+						</h:panelGroup>
+						
+						<h:panelGroup>
+							<p:outputLabel value="Arquivo anexado:" style="font-weight: bold;" />
+							<div style="margin-top: 10px;">
+								<!-- Preview para imagem -->
+								<h:panelGroup rendered="#{retiradaMedicamentoBean.arquivoImagemPreview}">
+									<div style="width: 100%; padding: 10px 0; display: flex; border: 1px solid #ccc; border-radius: 4px;">
+									<img src="#{retiradaMedicamentoBean.urlArquivoPreview}" title="Preview do documento"
+										style="max-width: 200px; max-height: 200px; border: 1px solid #ccc; border-radius: 4px; margin: 0 auto;" />
+									</div>
+								</h:panelGroup>
+
+								<!-- Preview específico para PDF: ícone centralizado -->
+								<h:panelGroup rendered="#{retiradaMedicamentoBean.arquivoPdfPreview}">
+									<div style="width: 100%; display:flex; justify-content:center; align-items:center; padding:20px 0;">
+										<div style="width:140px; height:140px; border:3px solid #e74c3c; border-radius:6px; display:flex; justify-content:center; align-items:center;">
+											<i class="fa fa-file-pdf-o" style="font-size:64px; color:#e74c3c;" title="Arquivo PDF"></i>
+										</div>
+									</div>
+								</h:panelGroup>
+								
+								<!-- Link para PDF ou imagem -->
+								<p:commandButton value="Visualizar Arquivo" 
+									icon="fa fa-external-link"
+									onclick="window.open('#{retiradaMedicamentoBean.urlArquivoPreview}', '_blank'); return false;"
+									styleClass="ui-button-info"
+									style="margin-top: 10px;"
+									rendered="#{retiradaMedicamentoBean.hasArquivoAnexado()}" />
+								
+								<p:commandButton value="Remover Arquivo" 
+									icon="fa fa-trash"
+									action="#{retiradaMedicamentoBean.removerArquivoAnexado()}"
+									update="@form"
+									rendered="#{retiradaMedicamentoBean.hasArquivoAnexado()}"
+									styleClass="ui-button-danger"
+									style="margin-top: 10px;">
+									<p:confirm header="Confirmação" 
+										message="Deseja realmente remover este arquivo?" 
+										icon="fa fa-exclamation-triangle" />
+								</p:commandButton>
+							</div>
+						</h:panelGroup>
+						
+					</p:panelGrid>
+				</p:panel>
+
 			</div>
+			
+			<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+				<p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="fa fa-check" />
+				<p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" />
+			</p:confirmDialog>
 		</h:form>
 	</ui:define>
 

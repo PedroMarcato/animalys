@@ -46,6 +46,9 @@ public class RetiradaMedicamento implements Serializable {
     @Column(length = 500)
     private String observacoes;
 
+    @Column(name = "nome_arquivo", length = 255)
+    private String nomeArquivo;
+
     // Construtores
     public RetiradaMedicamento() {
         this.dataRetirada = Calendar.getInstance();
@@ -106,6 +109,14 @@ public class RetiradaMedicamento implements Serializable {
 
     public void setObservacoes(String observacoes) {
         this.observacoes = observacoes;
+    }
+
+    public String getNomeArquivo() {
+        return nomeArquivo;
+    }
+
+    public void setNomeArquivo(String nomeArquivo) {
+        this.nomeArquivo = nomeArquivo;
     }
 
     @Override

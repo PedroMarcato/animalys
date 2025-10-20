@@ -9,6 +9,7 @@ import br.gov.pr.guaira.animalys.repository.RetiradasMedicamento;
 import br.gov.pr.guaira.animalys.service.NegocioException;
 import br.gov.pr.guaira.animalys.service.RetiradaMedicamentoService;
 import br.gov.pr.guaira.animalys.util.jsf.FacesUtil;
+import br.gov.pr.guaira.animalys.util.FileUploadUtil;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -21,6 +22,11 @@ import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+
+import org.primefaces.model.UploadedFile;
+import org.primefaces.event.FileUploadEvent;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 @Named
 @ViewScoped
@@ -45,6 +51,10 @@ public class RetiradaMedicamentoBean implements Serializable {
     private List<Animal> animaisProprietario;
     private Date dataRetirada;
     private Integer animalSelecionadoId;
+    private UploadedFile arquivoUpload;
+    // nome temporário do arquivo salvo no disco antes do persist (ficará null se nenhum upload novo)
+    private String nomeArquivoTemp;
+    private static final Log logger = LogFactory.getLog(RetiradaMedicamentoBean.class);
 
     @PostConstruct
     public void init() {
@@ -162,8 +172,92 @@ public class RetiradaMedicamentoBean implements Serializable {
 
     // Método removido - não precisamos mais de autocomplete de lotes
 
+    public void handleFileUpload() {
+        // Mantido para compatibilidade; em modo simple é acionado ao submeter formulário
+        if (arquivoUpload != null) {
+            try {
+                System.out.println("[server-debug][RetiradaMedicamento] handleFileUpload: início - file=" + arquivoUpload.getFileName() + " size=" + arquivoUpload.getSize());
+                logger.debug("handleFileUpload: início");
+                String nomeArquivo = FileUploadUtil.salvarArquivo(arquivoUpload);
+                System.out.println("[server-debug][RetiradaMedicamento] handleFileUpload: arquivo salvo temporariamente '" + nomeArquivo + "'");
+                this.nomeArquivoTemp = nomeArquivo;
+                retirada.setNomeArquivo(nomeArquivo);
+                logger.info("handleFileUpload: arquivo salvo temporariamente '" + nomeArquivo + "'");
+                FacesUtil.addInfoMessage("Arquivo anexado com sucesso!");
+            } catch (IllegalArgumentException e) {
+                System.out.println("[server-debug][RetiradaMedicamento] handleFileUpload: validação falhou: " + e.getMessage());
+                logger.warn("handleFileUpload: validação falhou: " + e.getMessage());
+                FacesUtil.addErrorMessage(e.getMessage());
+            } catch (Exception e) {
+                System.out.println("[server-debug][RetiradaMedicamento] handleFileUpload: erro inesperado: " + e.getMessage());
+                logger.error("handleFileUpload: erro inesperado: " + e.getMessage(), e);
+                FacesUtil.addErrorMessage("Erro ao anexar arquivo: " + e.getMessage());
+            }
+        }
+    }
+
+    /**
+     * Listener para upload automático (PrimeFaces advanced)
+     */
+    public void uploadListener(FileUploadEvent event) {
+        UploadedFile file = event.getFile();
+        if (file != null) {
+            try {
+                System.out.println("[server-debug][RetiradaMedicamento] uploadListener: recebendo arquivo '" + file.getFileName() + "' tamanho=" + file.getSize() + " contentType=" + file.getContentType());
+                logger.debug("uploadListener: recebendo arquivo '" + file.getFileName() + "' tamanho=" + file.getSize());
+                String nomeArquivo = FileUploadUtil.salvarArquivo(file);
+                System.out.println("[server-debug][RetiradaMedicamento] uploadListener: arquivo salvo temporariamente '" + nomeArquivo + "'");
+                // se havia um arquivo temporário anterior, removemos
+                if (this.nomeArquivoTemp != null && !this.nomeArquivoTemp.equals(retirada.getNomeArquivo())) {
+                    FileUploadUtil.removerArquivo(this.nomeArquivoTemp);
+                }
+                this.nomeArquivoTemp = nomeArquivo;
+                // mostrar preview/URL atualizando o objeto de tela (não persiste no DB ainda)
+                retirada.setNomeArquivo(nomeArquivo);
+                logger.info("uploadListener: arquivo enviado e salvo temporariamente como '" + nomeArquivo + "'");
+                FacesUtil.addInfoMessage("Arquivo enviado ao servidor com sucesso.");
+            } catch (IllegalArgumentException e) {
+                System.out.println("[server-debug][RetiradaMedicamento] uploadListener: validação falhou: " + e.getMessage());
+                logger.warn("uploadListener: validação falhou: " + e.getMessage());
+                FacesUtil.addErrorMessage(e.getMessage());
+            } catch (Exception e) {
+                System.out.println("[server-debug][RetiradaMedicamento] uploadListener: erro ao salvar arquivo no servidor: " + e.getMessage());
+                logger.error("uploadListener: erro ao salvar arquivo no servidor: " + e.getMessage(), e);
+                FacesUtil.addErrorMessage("Erro ao salvar arquivo no servidor: " + e.getMessage());
+            }
+        }
+    }
+    
+    public void removerArquivoAnexado() {
+        if ((nomeArquivoTemp != null && !nomeArquivoTemp.isEmpty()) || (retirada.getNomeArquivo() != null && !retirada.getNomeArquivo().isEmpty())) {
+            try {
+                // Remover temporário primeiro (novo upload ainda não persistido)
+                if (nomeArquivoTemp != null && !nomeArquivoTemp.isEmpty()) {
+                    FileUploadUtil.removerArquivo(nomeArquivoTemp);
+                    nomeArquivoTemp = null;
+                }
+                // Remover arquivo associado ao objeto (persistido)
+                if (retirada.getNomeArquivo() != null && !retirada.getNomeArquivo().isEmpty()) {
+                    FileUploadUtil.removerArquivo(retirada.getNomeArquivo());
+                }
+                retirada.setNomeArquivo(null);
+                this.nomeArquivoTemp = null;
+                logger.info("removerArquivoAnexado: arquivo removido com sucesso");
+                FacesUtil.addInfoMessage("Arquivo removido com sucesso!");
+            } catch (Exception e) {
+                logger.error("removerArquivoAnexado: erro ao remover arquivo: " + e.getMessage(), e);
+                FacesUtil.addErrorMessage("Erro ao remover arquivo: " + e.getMessage());
+            }
+        }
+    }
+
     public void salvar() {
         try {
+            // Se houve upload prévio, garantir que o nome temporário siga para persistência
+            if (this.nomeArquivoTemp != null) {
+                retirada.setNomeArquivo(this.nomeArquivoTemp);
+            }
+            
             // Converter Date para Calendar
             if (this.dataRetirada != null) {
                 Calendar cal = Calendar.getInstance();
@@ -172,7 +266,9 @@ public class RetiradaMedicamentoBean implements Serializable {
             }
 
             boolean isEdicao = (retirada.getIdRetiradaMedicamento() != null);
+            logger.debug("salvar: salvando retirada id=" + (retirada.getIdRetiradaMedicamento()!=null?retirada.getIdRetiradaMedicamento():"(novo)"));
             this.retiradaService.salvar(this.retirada);
+            logger.info("salvar: retirada salva com sucesso id=" + (retirada.getIdRetiradaMedicamento()!=null?retirada.getIdRetiradaMedicamento():"(novo)"));
             
             if (isEdicao) {
                 FacesUtil.addInfoMessage("Retirada de medicamento atualizada com sucesso!");
@@ -297,5 +393,73 @@ public class RetiradaMedicamentoBean implements Serializable {
         } else {
             this.retirada.setAnimal(null);
         }
+    }
+    
+    public UploadedFile getArquivoUpload() {
+        return arquivoUpload;
+    }
+    
+    public void setArquivoUpload(UploadedFile arquivoUpload) {
+        this.arquivoUpload = arquivoUpload;
+    }
+    
+    public String getUrlArquivo() {
+        if (retirada != null && retirada.getNomeArquivo() != null) {
+            return FileUploadUtil.obterUrlArquivo(retirada.getNomeArquivo());
+        }
+        return null;
+    }
+    
+    public boolean isArquivoImagem() {
+        if (retirada != null && retirada.getNomeArquivo() != null) {
+            return FileUploadUtil.isImagem(retirada.getNomeArquivo());
+        }
+        return false;
+    }
+    
+    public boolean isArquivoPdf() {
+        if (retirada != null && retirada.getNomeArquivo() != null) {
+            return FileUploadUtil.isPdf(retirada.getNomeArquivo());
+        }
+        return false;
+    }
+
+    /**
+     * URL usada pelo preview: retorna o arquivo associado quando presente,
+     * ou o placeholder 'no_doc.jpg' caso não exista anexo.
+     */
+    public String getUrlArquivoPreview() {
+        if (retirada != null && retirada.getNomeArquivo() != null && !retirada.getNomeArquivo().isEmpty()) {
+            return FileUploadUtil.obterUrlArquivo(retirada.getNomeArquivo());
+        }
+        return FileUploadUtil.obterUrlArquivo("no_doc.jpg");
+    }
+
+    /**
+     * Indica se devemos exibir um preview em <img>. Retorna true quando o
+     * anexo existente é uma imagem ou quando não há anexo (exibir placeholder).
+     */
+    public boolean isArquivoImagemPreview() {
+        if (retirada != null && retirada.getNomeArquivo() != null && !retirada.getNomeArquivo().isEmpty()) {
+            return FileUploadUtil.isImagem(retirada.getNomeArquivo());
+        }
+        // Sem arquivo -> exibimos placeholder (imagem)
+        return true;
+    }
+
+    public boolean isArquivoPdfPreview() {
+        if (retirada != null && retirada.getNomeArquivo() != null && !retirada.getNomeArquivo().isEmpty()) {
+            return FileUploadUtil.isPdf(retirada.getNomeArquivo());
+        }
+        return false;
+    }
+
+    /**
+     * Indica se há algum arquivo anexado (temporário ou persistido).
+     */
+    public boolean hasArquivoAnexado() {
+        boolean temp = this.nomeArquivoTemp != null && !this.nomeArquivoTemp.isEmpty();
+        boolean persist = this.retirada != null && this.retirada.getNomeArquivo() != null && !this.retirada.getNomeArquivo().isEmpty();
+        return temp || persist;
     }
 }

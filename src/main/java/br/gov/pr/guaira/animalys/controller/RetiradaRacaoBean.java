@@ -98,11 +98,6 @@ public class RetiradaRacaoBean implements Serializable {
                     }
                 }
                 
-                // Converter data para o campo de interface
-                if (retirada.getDataRetirada() != null) {
-                    this.dataRetirada = retirada.getDataRetirada().getTime();
-                }
-                
                 FacesUtil.addInfoMessage("Retirada carregada para edição.");
             } else {
                 FacesUtil.addErrorMessage("Retirada não encontrada.");
@@ -120,8 +115,6 @@ public class RetiradaRacaoBean implements Serializable {
         this.animaisProprietario = new ArrayList<>();
         this.dataRetirada = new Date();
         this.animalSelecionadoId = null;
-        this.retirada.setDataRetirada(Calendar.getInstance());
-        this.retirada.setQuantidadeKg(BigDecimal.ZERO);
     }
 
     public void buscarProprietarioPorCpf() {
@@ -174,13 +167,6 @@ public class RetiradaRacaoBean implements Serializable {
         try {
             // Calcular automaticamente o mês de referência baseado na última data preenchida
             calcularMesReferencia();
-            
-            // Converter Date para Calendar
-            if (dataRetirada != null) {
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(dataRetirada);
-                retirada.setDataRetirada(cal);
-            }
             
             // Debug antes de salvar
             System.out.println("DEBUG SALVAR - Proprietário ID: " + (retirada.getProprietario() != null ? retirada.getProprietario().getIdProprietario() : "null"));

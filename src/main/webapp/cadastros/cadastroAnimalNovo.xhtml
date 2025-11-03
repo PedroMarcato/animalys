@@ -34,10 +34,12 @@
                         <p:inputText id="codigo" size="20" readonly="true" value="#{cadastroAnimalNovoBean.animal.idAnimal}" />
 
                         <p:outputLabel value="Animal de Rua ?" for="animalDeRua" />
-                        <p:selectOneRadio id="animalDeRua" value="#{cadastroAnimalNovoBean.animalDeRua}" layout="lineDirection">
+                        <p:selectOneRadio id="animalDeRua" value="#{cadastroAnimalNovoBean.animalDeRua}" 
+                                          layout="lineDirection"
+                                          disabled="#{cadastroAnimalNovoBean.edicao}">
                                 <f:selectItem itemLabel="Sim" itemValue="true" />
                                 <f:selectItem itemLabel="Não" itemValue="false" />
-                                <p:ajax listener="#{cadastroAnimalNovoBean.onAnimalDeRuaChange}" update="painel-proprietario" />
+                                <p:ajax listener="#{cadastroAnimalNovoBean.onAnimalDeRuaChange}" update="painel-proprietario painel-animal-rua" />
                         </p:selectOneRadio>
 
                         <p:outputLabel value="Nome" for="nome" />
@@ -57,6 +59,35 @@
                     </p:selectOneMenu>
                     <p:commandButton value="Pesquisar" type="button" onclick="PF('dlgPesquisaProprietario').show();"
                         style="margin-left: 10px;" rendered="#{!cadastroAnimalNovoBean.edicao and !cadastroAnimalNovoBean.proprietarioDesabilitado}" />
+                </h:panelGroup>
+
+                <!-- Painel para campos de Animal de Rua -->
+                <h:panelGroup id="painel-animal-rua" layout="block" styleClass="animal-rua-fields" colspan="2">
+                    <p:panelGrid columns="2" rendered="#{cadastroAnimalNovoBean.animalDeRua}" 
+                                 style="width: 100%; margin-top: 10px; background-color: #f8f9fa; padding: 10px; border: 1px solid #dee2e6; border-radius: 4px;"
+                                 columnClasses="rotulo, campo">
+                        
+                        <p:outputLabel value="Responsável pela Entrega" for="responsavelEntrega" 
+                                       style="font-weight: bold; color: #495057;" />
+                        <p:inputText id="responsavelEntrega" size="60" maxlength="100" 
+                                     value="#{cadastroAnimalNovoBean.animal.responsavelEntrega}"
+                                     placeholder="Nome completo do responsável"
+                                     disabled="#{cadastroAnimalNovoBean.edicao}" />
+                        
+                        <p:outputLabel value="Endereço" for="enderecoEntrega" 
+                                       style="font-weight: bold; color: #495057;" />
+                        <p:inputText id="enderecoEntrega" size="60" maxlength="200" 
+                                     value="#{cadastroAnimalNovoBean.animal.enderecoEntrega}"
+                                     placeholder="Endereço do responsável"
+                                     disabled="#{cadastroAnimalNovoBean.edicao}" />
+                        
+                        <p:outputLabel value="Celular" for="celularEntrega" 
+                                       style="font-weight: bold; color: #495057;" />
+                        <p:inputMask id="celularEntrega" mask="(99) 99999-9999" 
+                                     value="#{cadastroAnimalNovoBean.animal.celularEntrega}"
+                                     placeholder="(00) 00000-0000"
+                                     disabled="#{cadastroAnimalNovoBean.edicao}" />
+                    </p:panelGrid>
                 </h:panelGroup>
 
                 <p:outputLabel value="Espécie" for="especie" />

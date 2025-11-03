@@ -37,8 +37,42 @@ public class Animal implements Serializable {
   public void setCor(String cor) {
     this.cor = cor;
   }
+
+  public String getResponsavelEntrega() {
+    return responsavelEntrega;
+  }
+
+  public void setResponsavelEntrega(String responsavelEntrega) {
+    this.responsavelEntrega = responsavelEntrega;
+  }
+
+  public String getEnderecoEntrega() {
+    return enderecoEntrega;
+  }
+
+  public void setEnderecoEntrega(String enderecoEntrega) {
+    this.enderecoEntrega = enderecoEntrega;
+  }
+
+  public String getCelularEntrega() {
+    return celularEntrega;
+  }
+
+  public void setCelularEntrega(String celularEntrega) {
+    this.celularEntrega = celularEntrega;
+  }
+
   @Column(name = "cor")
   private String cor;
+
+  @Column(name = "responsavel_entrega", length = 100)
+  private String responsavelEntrega;
+
+  @Column(name = "endereco_entrega", length = 200)
+  private String enderecoEntrega;
+
+  @Column(name = "celular_entrega", length = 20)
+  private String celularEntrega;
 
   private static final long serialVersionUID = 1L;
 

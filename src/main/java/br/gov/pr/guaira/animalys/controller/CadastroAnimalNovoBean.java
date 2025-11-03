@@ -105,6 +105,16 @@ public class CadastroAnimalNovoBean implements Serializable {
 					carregaRacasPorEspecie();
 				}
 				
+				// Verificar se é animal de rua (ID 2219 ou se tem campos de animal de rua preenchidos)
+				if (animal.getProprietario() != null && animal.getProprietario().getIdProprietario() == 2219) {
+					this.animalDeRua = true;
+					this.proprietarioDesabilitado = true;
+				} else if (animal.getResponsavelEntrega() != null && !animal.getResponsavelEntrega().trim().isEmpty()) {
+					// Se tem responsável pela entrega preenchido, também é animal de rua
+					this.animalDeRua = true;
+					this.proprietarioDesabilitado = true;
+				}
+				
 				this.edicao = true;
 			} catch (NumberFormatException e) {
 				FacesUtil.addErrorMessage("ID do animal inválido.");
@@ -128,6 +138,11 @@ public class CadastroAnimalNovoBean implements Serializable {
 		this.fotoBase64Preview = null;
 		this.animalDeRua = false;
 		this.proprietarioDesabilitado = false;
+		
+		// Limpar campos específicos de animal de rua
+		this.animal.setResponsavelEntrega(null);
+		this.animal.setEnderecoEntrega(null);
+		this.animal.setCelularEntrega(null);
 	}
 	// Listener para mudança do campo Animal de Rua
 	public void onAnimalDeRuaChange() {
@@ -140,6 +155,11 @@ public class CadastroAnimalNovoBean implements Serializable {
 		} else {
 			proprietarioDesabilitado = false;
 			animal.setProprietario(null);
+			
+			// Limpar campos específicos de animal de rua quando desmarcar
+			animal.setResponsavelEntrega(null);
+			animal.setEnderecoEntrega(null);
+			animal.setCelularEntrega(null);
 		}
 	}
 

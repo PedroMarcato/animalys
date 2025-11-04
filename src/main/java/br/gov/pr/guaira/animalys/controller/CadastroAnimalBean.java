@@ -722,8 +722,7 @@ public class CadastroAnimalBean implements Serializable {
 				this.endereco = this.proprietario.getEndereco() != null ? this.proprietario.getEndereco() : new Endereco();
 				this.animaisAtendidos = this.proprietario.getAnimais();
 				this.dataNascimento = this.proprietario.getDataNascimento().getTime();
-				this.animaisAdicionados.clear();
-				this.animaisAdicionados.addAll(this.proprietario.getAnimais());
+				// Não carregar animais já cadastrados - esta é uma tela de cadastro de novos animais
 				this.habilitaCampos = false; // Desabilitar campos para proprietário existente (pré-preenchidos)
 				// Restaurar modalidade preservada
 				this.solicitacao.setModalidade(modalidadeAtual);

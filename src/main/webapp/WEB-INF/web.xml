@@ -17,7 +17,7 @@
 	</resource-env-ref>
 	<context-param>
     	<param-name>caminhoFotos</param-name>
-    	<param-value>C:/animalys/fotos/</param-value> <!-- OU um caminho como C:/animalys/fotos/ para Windows -->
+    	<param-value>${user.home}/animalys/fotos/</param-value> <!-- Caminho compatível com Windows e Linux -->
 	</context-param>
 	<context-param>
 		<param-name>javax.faces.DATETIMECONVERTER_DEFAULT_TIMEZONE_IS_SYSTEM_TIMEZONE</param-name>
@@ -79,7 +79,7 @@
 		</init-param>
 		<init-param>
 			<param-name>docBase</param-name>
-			<param-value>C:/animalys/documentos</param-value>
+			<param-value>${user.home}/animalys/documentos</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>

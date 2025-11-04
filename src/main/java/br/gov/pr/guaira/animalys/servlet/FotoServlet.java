@@ -16,7 +16,9 @@ public class FotoServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     // Caminho base onde as fotos são salvas
-    private static final String CAMINHO_BASE = "C:/animalys/fotos/";
+    // Usa o diretório home do usuário para compatibilidade entre Windows e Linux
+    private static final String CAMINHO_BASE = System.getProperty("user.home") + 
+        File.separator + "animalys" + File.separator + "fotos" + File.separator;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

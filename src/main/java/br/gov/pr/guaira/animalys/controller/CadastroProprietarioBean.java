@@ -405,7 +405,9 @@ public class CadastroProprietarioBean implements Serializable {
 	// Função utilitária para salvar o arquivo
 	private String salvarArquivoUpload(FileUploadEvent event, String tipo) {
 		try {
-			String basePath = "C:\\animalys\\documentos";
+			// Usa o diretório home do usuário para compatibilidade entre Windows e Linux
+			String basePath = System.getProperty("user.home") + java.io.File.separator + 
+				"animalys" + java.io.File.separator + "documentos";
 			java.io.File dir = new java.io.File(basePath);
 			if (!dir.exists()) {
 				boolean created = dir.mkdirs();

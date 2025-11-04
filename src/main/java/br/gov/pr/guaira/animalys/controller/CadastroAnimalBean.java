@@ -574,14 +574,16 @@ public class CadastroAnimalBean implements Serializable {
 				manager.getTransaction().rollback();
 				System.out.println("[LOG] Rollback executado");
 				// Opcional: Limpar arquivos salvos em caso de erro (manual cleanup recomendado)
+				String basePath = System.getProperty("user.home") + java.io.File.separator + 
+					"animalys" + java.io.File.separator + "documentos" + java.io.File.separator;
 				if (cardUnicoFile != null) {
-					new java.io.File("C:\\animalys\\documentos\\" + cardUnicoFile).delete();
+					new java.io.File(basePath + cardUnicoFile).delete();
 				}
 				if (documentoComFotoFile != null) {
-					new java.io.File("C:\\animalys\\documentos\\" + documentoComFotoFile).delete();
+					new java.io.File(basePath + documentoComFotoFile).delete();
 				}
 				if (comprovanteEnderecoFile != null) {
-					new java.io.File("C:\\animalys\\documentos\\" + comprovanteEnderecoFile).delete();
+					new java.io.File(basePath + comprovanteEnderecoFile).delete();
 				}
 			}
 			FacesUtil.addErrorMessage("Erro ao salvar: " + e.getMessage());
@@ -591,8 +593,9 @@ public class CadastroAnimalBean implements Serializable {
 	// Função utilitária para salvar o arquivo
 	private String salvarArquivoUpload(org.primefaces.event.FileUploadEvent event, String tipo) {
 		try {
-			// Use absolute path as specified
-			String basePath = "C:\\animalys\\documentos";
+			// Usa o diretório home do usuário para compatibilidade entre Windows e Linux
+			String basePath = System.getProperty("user.home") + java.io.File.separator + 
+				"animalys" + java.io.File.separator + "documentos";
 			java.io.File dir = new java.io.File(basePath);
 			if (!dir.exists()) {
 				boolean created = dir.mkdirs();

@@ -33,7 +33,8 @@ public class FotoService {
         if (this.caminhoFotosBase == null || this.caminhoFotosBase.isEmpty()) {
             // Fallback para um caminho padrão ou lançar exceção se a configuração for obrigatória
             // Para fins de desenvolvimento, pode ser útil um fallback, mas em produção, é melhor que seja configurado.
-            this.caminhoFotosBase = System.getProperty("user.home") + "/animalys/fotos/"; // Exemplo de fallback
+            this.caminhoFotosBase = System.getProperty("user.home") + 
+                java.io.File.separator + "animalys" + java.io.File.separator + "fotos" + java.io.File.separator;
             System.err.println("ATENÇÃO: Parâmetro 'caminhoFotos' não configurado no web.xml. Usando fallback: " + this.caminhoFotosBase);
         }
 

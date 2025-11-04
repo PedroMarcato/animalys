@@ -23,7 +23,9 @@ public class FileUploadUtil implements Serializable {
 	private static final Log logger = LogFactory.getLog(FileUploadUtil.class);
 	
 	// Diretório onde os arquivos serão salvos
-	private static final String UPLOAD_DIRECTORY = "C:\\animalys\\receitas\\";
+	// Usa o diretório home do usuário para compatibilidade entre Windows e Linux
+	private static final String UPLOAD_DIRECTORY = System.getProperty("user.home") + 
+		File.separator + "animalys" + File.separator + "receitas" + File.separator;
 	
 	// Extensões permitidas (imagens e PDF)
 	private static final List<String> ALLOWED_EXTENSIONS = Arrays.asList(

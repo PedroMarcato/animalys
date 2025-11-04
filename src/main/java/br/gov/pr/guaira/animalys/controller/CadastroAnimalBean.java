@@ -486,6 +486,9 @@ public class CadastroAnimalBean implements Serializable {
 			for (Animal a : animaisAdicionados) {
 				// Set proprietário gerenciado
 				a.setProprietario(propAtual);
+				System.out.println("[LOG] Animal antes de persistir: Nome=" + a.getNome() + 
+						", Raça=" + (a.getRaca() != null ? a.getRaca().getNome() : "NULL") + 
+						", Espécie=" + (a.getEspecie() != null ? a.getEspecie().getNome() : "NULL"));
 				Animal animalGerenciado;
 				if (a.getIdAnimal() != null) {
 					animalGerenciado = manager.merge(a);  // Merge se já tem ID
@@ -651,10 +654,13 @@ public class CadastroAnimalBean implements Serializable {
 					+ (fotoUpload != null ? fotoUpload.getFileName() : "null"));
 			System.out.println("METODO: adicionarAnimal() DIZ: - Modalidade atual: " + 
 					(this.solicitacao.getModalidade() != null ? this.solicitacao.getModalidade() : "NULL"));
+			System.out.println("METODO: adicionarAnimal() DIZ: - Espécie selecionada: " + 
+					(this.especieSelecionada != null ? this.especieSelecionada.getNome() : "NULL"));
 
 			this.animal.setProprietario(this.proprietario);
 			this.animal.setStatus(Status.SOLICITADO);
 			this.animal.setDataEntrada(this.dataAtual);
+			this.animal.setEspecie(this.especieSelecionada); // Define a espécie selecionada
 
 			if (this.fotoUpload != null && this.fotoUpload.getSize() > 0) {
 
@@ -703,6 +709,8 @@ public class CadastroAnimalBean implements Serializable {
 	private void limparAposAdicionar() {
 		this.animal = null;
 		this.animal = new Animal();
+		this.especieSelecionada = null;
+		this.racasCadastradas = new ArrayList<>();
 	}
 
 	public void buscaCadastroPeloCPF() {

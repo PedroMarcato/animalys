@@ -27,6 +27,7 @@ import br.gov.pr.guaira.animalys.repository.Proprietarios;
 import br.gov.pr.guaira.animalys.repository.Racas;
 import br.gov.pr.guaira.animalys.service.FotoService;
 import br.gov.pr.guaira.animalys.service.NegocioException;
+import br.gov.pr.guaira.animalys.report.GerarTermoAnimal;
 import br.gov.pr.guaira.animalys.util.cdi.jpa.Transactional;
 import br.gov.pr.guaira.animalys.util.jsf.FacesUtil;
 
@@ -38,16 +39,16 @@ public class CadastroAnimalNovoBean implements Serializable {
 
 	@Inject
 	private Animais animais;
-	
+
 	@Inject
 	private Proprietarios proprietarios;
-	
+
 	@Inject
 	private Especies especies;
-	
+
 	@Inject
 	private Racas racas;
-	
+
 	@Inject
 	private FotoService fotoService;
 
@@ -64,7 +65,7 @@ public class CadastroAnimalNovoBean implements Serializable {
 	private String fotoBase64Preview;
 	private Boolean animalDeRua = false;
 	private boolean proprietarioDesabilitado = false;
-	
+
 	// Para pesquisa de proprietário
 	private String nomeProprietarioFiltro;
 	private String cpfProprietarioFiltro;
@@ -76,15 +77,15 @@ public class CadastroAnimalNovoBean implements Serializable {
 		carregarListas();
 		this.animalDeRua = false;
 		this.proprietarioDesabilitado = false;
-		
+
 		// Verificar se está editando
 		String idParam = FacesContext.getCurrentInstance()
-			.getExternalContext().getRequestParameterMap().get("animal");
+				.getExternalContext().getRequestParameterMap().get("animal");
 		if (idParam != null && !idParam.isEmpty()) {
 			try {
 				Integer id = Integer.valueOf(idParam);
 				this.animal = animais.porId(id);
-				
+
 				// Converter datas para Date
 				if (animal.getDataEntrada() != null) {
 					this.dataEntrada = animal.getDataEntrada().getTime();
@@ -98,14 +99,15 @@ public class CadastroAnimalNovoBean implements Serializable {
 				if (animal.getDataAgendaCastracao() != null) {
 					this.dataAgendaCastracao = animal.getDataAgendaCastracao().getTime();
 				}
-				
+
 				// Carregar raças da espécie do animal
 				if (animal.getRaca() != null && animal.getRaca().getEspecie() != null) {
 					this.especieSelecionada = animal.getRaca().getEspecie();
 					carregaRacasPorEspecie();
 				}
-				
-				// Verificar se é animal de rua (ID 2219 ou se tem campos de animal de rua preenchidos)
+
+				// Verificar se é animal de rua (ID 2219 ou se tem campos de animal de rua
+				// preenchidos)
 				if (animal.getProprietario() != null && animal.getProprietario().getIdProprietario() == 2219) {
 					this.animalDeRua = true;
 					this.proprietarioDesabilitado = true;
@@ -114,7 +116,7 @@ public class CadastroAnimalNovoBean implements Serializable {
 					this.animalDeRua = true;
 					this.proprietarioDesabilitado = true;
 				}
-				
+
 				this.edicao = true;
 			} catch (NumberFormatException e) {
 				FacesUtil.addErrorMessage("ID do animal inválido.");
@@ -138,12 +140,13 @@ public class CadastroAnimalNovoBean implements Serializable {
 		this.fotoBase64Preview = null;
 		this.animalDeRua = false;
 		this.proprietarioDesabilitado = false;
-		
+
 		// Limpar campos específicos de animal de rua
 		this.animal.setResponsavelEntrega(null);
 		this.animal.setEnderecoEntrega(null);
 		this.animal.setCelularEntrega(null);
 	}
+
 	// Listener para mudança do campo Animal de Rua
 	public void onAnimalDeRuaChange() {
 		if (Boolean.TRUE.equals(animalDeRua)) {
@@ -155,7 +158,7 @@ public class CadastroAnimalNovoBean implements Serializable {
 		} else {
 			proprietarioDesabilitado = false;
 			animal.setProprietario(null);
-			
+
 			// Limpar campos específicos de animal de rua quando desmarcar
 			animal.setResponsavelEntrega(null);
 			animal.setEnderecoEntrega(null);
@@ -194,9 +197,9 @@ public class CadastroAnimalNovoBean implements Serializable {
 	}
 
 	public void selecionarProprietario(Proprietario proprietario) {
- 		if (!Boolean.TRUE.equals(animalDeRua)) {
- 			this.animal.setProprietario(proprietario);
- 		}
+		if (!Boolean.TRUE.equals(animalDeRua)) {
+			this.animal.setProprietario(proprietario);
+		}
 	}
 
 	public void limparFiltroProprietario() {
@@ -208,25 +211,26 @@ public class CadastroAnimalNovoBean implements Serializable {
 	public void handleFotoUpload(FileUploadEvent event) {
 		try {
 			System.out.println("Iniciando upload de foto: " + event.getFile().getFileName());
-			
+
 			// Remover foto existente se houver
 			if (!animal.getFotos().isEmpty()) {
 				animal.getFotos().clear();
 			}
-			
+
 			FotoAnimal fotoAnimal = fotoService.salvarFoto(event.getFile(), animal);
 			animal.setFoto(fotoAnimal.getNomeArquivo());
-			
+
 			// Adicionar a foto à lista de fotos do animal
 			animal.adicionarFoto(fotoAnimal);
-			
+
 			// Gerar preview em base64
 			byte[] fileContent = event.getFile().getContents();
 			String base64String = java.util.Base64.getEncoder().encodeToString(fileContent);
 			this.fotoBase64Preview = "data:" + event.getFile().getContentType() + ";base64," + base64String;
-			
-			System.out.println("Preview base64 gerado. Tamanho: " + (fotoBase64Preview != null ? fotoBase64Preview.length() : 0));
-			
+
+			System.out.println(
+					"Preview base64 gerado. Tamanho: " + (fotoBase64Preview != null ? fotoBase64Preview.length() : 0));
+
 			FacesUtil.addInfoMessage("Foto enviada com sucesso!");
 		} catch (Exception e) {
 			System.err.println("Erro no upload: " + e.getMessage());
@@ -258,19 +262,19 @@ public class CadastroAnimalNovoBean implements Serializable {
 				cal.setTime(dataEntrada);
 				animal.setDataEntrada(cal);
 			}
-			
+
 			if (dataSaida != null) {
 				Calendar cal = Calendar.getInstance();
 				cal.setTime(dataSaida);
 				animal.setDataSaida(cal);
 			}
-			
+
 			if (dataCastracao != null) {
 				Calendar cal = Calendar.getInstance();
 				cal.setTime(dataCastracao);
 				animal.setDataCastracao(cal);
 			}
-			
+
 			if (dataAgendaCastracao != null) {
 				Calendar cal = Calendar.getInstance();
 				cal.setTime(dataAgendaCastracao);
@@ -290,14 +294,38 @@ public class CadastroAnimalNovoBean implements Serializable {
 			} else {
 				FacesUtil.addInfoMessage("Animal cadastrado com sucesso!");
 			}
-			
+
 			limpar();
 			carregarListas();
-			
+
 		} catch (NegocioException e) {
 			FacesUtil.addErrorMessage(e.getMessage());
 		} catch (Exception e) {
 			FacesUtil.addErrorMessage("Erro ao salvar animal: " + e.getMessage());
+		}
+	}
+
+	public void imprimirTermo() {
+		try {
+			if (animal == null || animal.getIdAnimal() == null) {
+				FacesUtil.addErrorMessage("É necessário salvar o animal antes de imprimir o termo.");
+				return;
+			}
+
+			if (animal.getProprietario() == null) {
+				FacesUtil.addErrorMessage("Animal sem proprietário cadastrado. Não é possível gerar o termo.");
+				return;
+			}
+
+			// Recarregar animal com todos os dados necessários
+			Animal animalCompleto = animais.porId(animal.getIdAnimal());
+			
+			GerarTermoAnimal gerador = new GerarTermoAnimal();
+			gerador.gerar(animalCompleto);
+			
+		} catch (Exception e) {
+			FacesUtil.addErrorMessage("Erro ao gerar termo: " + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 

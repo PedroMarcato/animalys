@@ -18,6 +18,12 @@
                 <p:toolbarGroup>
                     <p:commandButton value="Salvar" id="botao-salvar" action="#{cadastroAnimalNovoBean.salvar}"
                         update="@form" />
+                    <p:commandButton value="Imprimir Termo" id="botao-imprimir-termo" 
+                        action="#{cadastroAnimalNovoBean.imprimirTermo}"
+                        icon="fa fa-print"
+                        disabled="#{empty cadastroAnimalNovoBean.animal.idAnimal}"
+                        ajax="false"
+                        styleClass="ui-button-info" />
                 </p:toolbarGroup>
                 <p:toolbarGroup align="right">
                     <p:button value="Pesquisa" outcome="/cadastros/pesquisaAnimal" />
@@ -60,6 +66,13 @@
                     <p:commandButton value="Pesquisar" type="button" onclick="PF('dlgPesquisaProprietario').show();"
                         style="margin-left: 10px;" rendered="#{!cadastroAnimalNovoBean.edicao and !cadastroAnimalNovoBean.proprietarioDesabilitado}" />
                 </h:panelGroup>
+
+                <p:outputLabel value="Modalidade de Cadastro" for="modalidadeCadastro" />
+                <p:inputText id="modalidadeCadastro" size="60" 
+                             value="#{cadastroAnimalNovoBean.animal.proprietario != null and cadastroAnimalNovoBean.animal.proprietario.modalidade != null ? cadastroAnimalNovoBean.animal.proprietario.modalidade.descricao : 'Não informada'}"
+                             readonly="true" 
+                             disabled="true"
+                             styleClass="campo-readonly" />
 
                 <!-- Painel para campos de Animal de Rua -->
                 <h:panelGroup id="painel-animal-rua" layout="block" styleClass="animal-rua-fields" colspan="2">

@@ -1,5 +1,4 @@
-
-  package br.gov.pr.guaira.animalys.entity;
+package br.gov.pr.guaira.animalys.entity;
 
 import java.io.Serializable;
 import java.util.Calendar;
@@ -7,7 +6,6 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import br.gov.pr.guaira.animalys.model.TermoConsulta;
-
 
 @Entity
 @Table(schema = "animal")
@@ -22,10 +20,10 @@ public class Animal implements Serializable {
     this.numeroMicrochip = numeroMicrochip;
   }
 
-
   public String getNome() {
     return nome;
   }
+
   public void setNome(String nome) {
     this.nome = nome;
   }
@@ -86,7 +84,6 @@ public class Animal implements Serializable {
   @Column
   private String numeroMicrochip;
 
-
   @Column
   private String idade;
 
@@ -123,7 +120,8 @@ public class Animal implements Serializable {
   private Raca raca;
 
   @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
-  @JoinColumn(name = "especie", referencedColumnName = "idEspecie") // Assumindo que a chave primária em Especie é 'idEspecie'
+  @JoinColumn(name = "especie", referencedColumnName = "idEspecie") // Assumindo que a chave primária em Especie é
+                                                                    // 'idEspecie'
   private Especie especie;
 
   @Enumerated(EnumType.STRING)
@@ -141,17 +139,14 @@ public class Animal implements Serializable {
   @Column(name = "foto")
   private String foto;
 
-  
   @OneToMany(mappedBy = "animal", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<FotoAnimal> fotos = new ArrayList<>();
-  
+
   @OneToMany(mappedBy = "animal", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<TermoConsulta> termosConsulta = new ArrayList<>();
-  
+
   // Getters e Setters
 
-
-  
   public Integer getIdAnimal() {
     return idAnimal;
   }
@@ -287,52 +282,50 @@ public class Animal implements Serializable {
   public String getFoto() {
     return foto;
   }
+
   public void setFoto(String foto) {
     this.foto = foto;
   }
 
-
-
-  
   public List<FotoAnimal> getFotos() {
-	    return fotos;
-	  }
+    return fotos;
+  }
 
-	  public void setFotos(List<FotoAnimal> fotos) {
-	    this.fotos = fotos;
-	  }
+  public void setFotos(List<FotoAnimal> fotos) {
+    this.fotos = fotos;
+  }
 
-	  // Métodos utilitários para fotos
-	  public FotoAnimal getFotoPrincipal() {
-	    return fotos.stream()
-	        .filter(FotoAnimal::isPrincipal)
-	        .findFirst()
-	        .orElse(fotos.isEmpty() ? null : fotos.get(0));
-	  }
+  // Métodos utilitários para fotos
+  public FotoAnimal getFotoPrincipal() {
+    return fotos.stream()
+        .filter(FotoAnimal::isPrincipal)
+        .findFirst()
+        .orElse(fotos.isEmpty() ? null : fotos.get(0));
+  }
 
-      @Transient
-      public boolean getTemFoto() {
-        return !fotos.isEmpty();
-      }
+  @Transient
+  public boolean getTemFoto() {
+    return !fotos.isEmpty();
+  }
 
-	  public void adicionarFoto(FotoAnimal foto) {
-	    foto.setAnimal(this);
-	    this.fotos.add(foto);
-	  }
+  public void adicionarFoto(FotoAnimal foto) {
+    foto.setAnimal(this);
+    this.fotos.add(foto);
+  }
 
-	  // Getters e Setters para Termos de Consulta
-	  public List<TermoConsulta> getTermosConsulta() {
-		    return termosConsulta;
-	  }
+  // Getters e Setters para Termos de Consulta
+  public List<TermoConsulta> getTermosConsulta() {
+    return termosConsulta;
+  }
 
-	  public void setTermosConsulta(List<TermoConsulta> termosConsulta) {
-		    this.termosConsulta = termosConsulta;
-	  }
+  public void setTermosConsulta(List<TermoConsulta> termosConsulta) {
+    this.termosConsulta = termosConsulta;
+  }
 
-	  public void adicionarTermoConsulta(TermoConsulta termo) {
-		    termo.setAnimal(this);
-		    this.termosConsulta.add(termo);
-	  }
+  public void adicionarTermoConsulta(TermoConsulta termo) {
+    termo.setAnimal(this);
+    this.termosConsulta.add(termo);
+  }
 
   @Override
   public int hashCode() {
@@ -346,26 +339,35 @@ public class Animal implements Serializable {
 
   @Override
   public boolean equals(Object obj) {
-    if (this == obj) return true;
-    if (obj == null) return false;
-    if (getClass() != obj.getClass()) return false;
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
     Animal other = (Animal) obj;
     if (idAnimal == null) {
-      if (other.idAnimal != null) return false;
-    } else if (!idAnimal.equals(other.idAnimal)) return false;
+      if (other.idAnimal != null)
+        return false;
+    } else if (!idAnimal.equals(other.idAnimal))
+      return false;
     if (nome == null) {
-      if (other.nome != null) return false;
-    } else if (!nome.equals(other.nome)) return false;
+      if (other.nome != null)
+        return false;
+    } else if (!nome.equals(other.nome))
+      return false;
     if (numeroMicrochip == null) {
-      if (other.numeroMicrochip != null) return false;
-    } else if (!numeroMicrochip.equals(other.numeroMicrochip)) return false;
+      if (other.numeroMicrochip != null)
+        return false;
+    } else if (!numeroMicrochip.equals(other.numeroMicrochip))
+      return false;
     return true;
   }
 
   @Override
   public String toString() {
     return "Animal [idAnimal=" + idAnimal + ", nome=" + nome + ", numeroMicrochip=" + numeroMicrochip
-  + ", dataEntrada=" + dataEntrada + ", dataSaida=" + dataSaida
+        + ", dataEntrada=" + dataEntrada + ", dataSaida=" + dataSaida
         + ", castrado=" + castrado + ", vacinado=" + vacinado + ", desmifurgado=" + desmifurgado
         + ", visitado=" + visitado + "]";
   }

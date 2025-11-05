@@ -12,14 +12,17 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/uploads/*" )
+@WebServlet("/uploads/*")
 public class ImageServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
-    private static final String UPLOAD_PATH = System.getProperty("java.io.tmpdir") + File.separator + "animalys" + File.separator + "fotos" + File.separator;
+    private static final String UPLOAD_PATH = System.getProperty("java.io.tmpdir") + File.separator + "animalys"
+            + File.separator + "fotos" + File.separator;
 
-    // Caminho para a imagem padrão dentro do seu projeto (ex: src/main/webapp/resources/images/sem-foto.png)
-    private static final String CAMINHO_IMAGEM_PADRAO = "C:" + File.separator + "animalys" + File.separator + "fotos" + File.separator + "no_image.jpg";
+    // Caminho para a imagem padrão - usa user.home para compatibilidade
+    // Windows/Linux
+    private static final String CAMINHO_IMAGEM_PADRAO = System.getProperty("user.home") + File.separator + "animalys"
+            + File.separator + "fotos" + File.separator + "no_image.jpg";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -42,7 +45,8 @@ public class ImageServlet extends HttpServlet {
         String caminhoCompleto = UPLOAD_PATH + requestedFile.replace("/", File.separator);
         File file = new File(caminhoCompleto);
 
-        // Se o arquivo não existe ou não é um arquivo (é um diretório), envia a imagem padrão.
+        // Se o arquivo não existe ou não é um arquivo (é um diretório), envia a imagem
+        // padrão.
         if (!file.exists() || !file.isFile()) {
             enviarImagemPadrao(response);
             return;
@@ -87,7 +91,8 @@ public class ImageServlet extends HttpServlet {
         response.setDateHeader("Last-Modified", lastModified);
         response.setHeader("Cache-Control", "public, max-age=31536000");
 
-        // Otimização: se o navegador já tem a imagem em cache, envia um status 304 Not Modified
+        // Otimização: se o navegador já tem a imagem em cache, envia um status 304 Not
+        // Modified
         long ifModifiedSince = request.getDateHeader("If-Modified-Since");
         if (ifModifiedSince != -1 && lastModified <= ifModifiedSince) {
             response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
@@ -96,7 +101,7 @@ public class ImageServlet extends HttpServlet {
 
         // Envia os bytes do arquivo
         try (FileInputStream input = new FileInputStream(file);
-             OutputStream output = response.getOutputStream()) {
+                OutputStream output = response.getOutputStream()) {
 
             byte[] buffer = new byte[4096]; // Buffer um pouco maior para performance
             int length;

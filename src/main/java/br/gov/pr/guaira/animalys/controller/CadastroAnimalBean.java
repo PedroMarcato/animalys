@@ -252,8 +252,10 @@ public class CadastroAnimalBean implements Serializable {
 	// Método para logar os nomes dos arquivos enviados
 	public void logArquivosDocumentos() {
 		System.out.println("[LOG] Card Único: " + (cardUnicoFile != null ? cardUnicoFile : "NÃO ENVIADO"));
-		System.out.println("[LOG] Comprovante de Endereço: " + (comprovanteEnderecoFile != null ? comprovanteEnderecoFile : "NÃO ENVIADO"));
-		System.out.println("[LOG] Documento com Foto: " + (documentoComFotoFile != null ? documentoComFotoFile : "NÃO ENVIADO"));
+		System.out.println("[LOG] Comprovante de Endereço: "
+				+ (comprovanteEnderecoFile != null ? comprovanteEnderecoFile : "NÃO ENVIADO"));
+		System.out.println(
+				"[LOG] Documento com Foto: " + (documentoComFotoFile != null ? documentoComFotoFile : "NÃO ENVIADO"));
 	}
 
 	public String getCardUnicoFile() {
@@ -374,12 +376,13 @@ public class CadastroAnimalBean implements Serializable {
 		this.fotoUpload = fotoUpload;
 	}
 
-
 	public void salvar() {
 		System.out.println("[LOG] ========== INICIANDO MÉTODO SALVAR ==========");
-		System.out.println("[LOG] Modalidade da solicitação: " + (solicitacao != null && solicitacao.getModalidade() != null ? solicitacao.getModalidade() : "NULL"));
-		System.out.println("[LOG] Quantidade de animais adicionados: " + (animaisAdicionados != null ? animaisAdicionados.size() : 0));
-		
+		System.out.println("[LOG] Modalidade da solicitação: "
+				+ (solicitacao != null && solicitacao.getModalidade() != null ? solicitacao.getModalidade() : "NULL"));
+		System.out.println("[LOG] Quantidade de animais adicionados: "
+				+ (animaisAdicionados != null ? animaisAdicionados.size() : 0));
+
 		Proprietario propAtual;
 		// Busca o proprietário pelo CPF, se existir
 		if (cpf != null && !cpf.trim().isEmpty()) {
@@ -398,23 +401,30 @@ public class CadastroAnimalBean implements Serializable {
 		try {
 			manager.getTransaction().begin();
 
-			// Associar contato e endereço do formulário ao proprietário atual (para novos e existentes)
+			// Associar contato e endereço do formulário ao proprietário atual (para novos e
+			// existentes)
 			propAtual.setContato(this.contato);
 			propAtual.setEndereco(this.endereco);
 
-			// Se o contato está vazio, remove do proprietário para evitar erro de referência transiente
+			// Se o contato está vazio, remove do proprietário para evitar erro de
+			// referência transiente
 			if (propAtual.getContato() != null) {
 				boolean contatoVazio = true;
 				if (propAtual.getContato().getEmail() != null && !propAtual.getContato().getEmail().trim().isEmpty())
 					contatoVazio = false;
-				if (propAtual.getContato().getTelefone() != null && !propAtual.getContato().getTelefone().trim().isEmpty())
+				if (propAtual.getContato().getTelefone() != null
+						&& !propAtual.getContato().getTelefone().trim().isEmpty())
 					contatoVazio = false;
-				if (propAtual.getContato().getCelular() != null && !propAtual.getContato().getCelular().trim().isEmpty())
+				if (propAtual.getContato().getCelular() != null
+						&& !propAtual.getContato().getCelular().trim().isEmpty())
 					contatoVazio = false;
 				if (!contatoVazio && propAtual.getContato().getIdContato() == null) {
 					manager.persist(propAtual.getContato());
 					manager.flush();
-					System.out.println("[LOG] Contato persistido: id=" + propAtual.getContato().getIdContato() + ", Email: " + propAtual.getContato().getEmail() + ", Telefone: " + propAtual.getContato().getTelefone() + ", Celular: " + propAtual.getContato().getCelular());
+					System.out.println("[LOG] Contato persistido: id=" + propAtual.getContato().getIdContato()
+							+ ", Email: " + propAtual.getContato().getEmail() + ", Telefone: "
+							+ propAtual.getContato().getTelefone() + ", Celular: "
+							+ propAtual.getContato().getCelular());
 					Contato contatoGerenciado = manager.find(Contato.class, propAtual.getContato().getIdContato());
 					propAtual.setContato(contatoGerenciado);
 				} else if (contatoVazio) {
@@ -425,18 +435,23 @@ public class CadastroAnimalBean implements Serializable {
 			// Persistir endereço antes do proprietário se novo
 			if (propAtual.getEndereco() != null && propAtual.getEndereco().getIdEndereco() == null) {
 				// Validação básica para endereço (campos obrigatórios)
-				if (propAtual.getEndereco().getLogradouro() == null || propAtual.getEndereco().getLogradouro().trim().isEmpty()) {
+				if (propAtual.getEndereco().getLogradouro() == null
+						|| propAtual.getEndereco().getLogradouro().trim().isEmpty()) {
 					throw new NegocioException("O logradouro é obrigatório.");
 				}
-				if (propAtual.getEndereco().getNumero() == null || propAtual.getEndereco().getNumero().trim().isEmpty()) {
+				if (propAtual.getEndereco().getNumero() == null
+						|| propAtual.getEndereco().getNumero().trim().isEmpty()) {
 					throw new NegocioException("O número do endereço é obrigatório.");
 				}
-				if (propAtual.getEndereco().getBairro() == null || propAtual.getEndereco().getBairro().trim().isEmpty()) {
+				if (propAtual.getEndereco().getBairro() == null
+						|| propAtual.getEndereco().getBairro().trim().isEmpty()) {
 					throw new NegocioException("O bairro é obrigatório.");
 				}
 				manager.persist(propAtual.getEndereco());
 				manager.flush();
-				System.out.println("[LOG] Endereço persistido: id=" + propAtual.getEndereco().getIdEndereco() + ", Logradouro: " + propAtual.getEndereco().getLogradouro() + ", Numero: " + propAtual.getEndereco().getNumero() + ", Bairro: " + propAtual.getEndereco().getBairro());
+				System.out.println("[LOG] Endereço persistido: id=" + propAtual.getEndereco().getIdEndereco()
+						+ ", Logradouro: " + propAtual.getEndereco().getLogradouro() + ", Numero: "
+						+ propAtual.getEndereco().getNumero() + ", Bairro: " + propAtual.getEndereco().getBairro());
 				Endereco enderecoGerenciado = manager.find(Endereco.class, propAtual.getEndereco().getIdEndereco());
 				propAtual.setEndereco(enderecoGerenciado);
 			}
@@ -467,12 +482,14 @@ public class CadastroAnimalBean implements Serializable {
 					throw new NegocioException("A data de nascimento é obrigatória.");
 				}
 				// NIS é opcional, não validar
-				System.out.println("[LOG] Validações para novo proprietário passadas. Nome: " + propAtual.getNome() + ", RG: " + propAtual.getRg() + ", DataNascimento: " + propAtual.getDataNascimento());
+				System.out.println("[LOG] Validações para novo proprietário passadas. Nome: " + propAtual.getNome()
+						+ ", RG: " + propAtual.getRg() + ", DataNascimento: " + propAtual.getDataNascimento());
 				manager.persist(propAtual);
 				manager.flush();
 				System.out.println("[LOG] Proprietário persistido. id=" + propAtual.getIdProprietario());
 			} else {
-				// Para proprietário existente, atualiza campos do formulário (embora desabilitados, para consistência)
+				// Para proprietário existente, atualiza campos do formulário (embora
+				// desabilitados, para consistência)
 				propAtual.setNome(this.proprietario.getNome());
 				propAtual.setRg(this.proprietario.getRg());
 				propAtual.setNis(this.proprietario.getNis());
@@ -481,17 +498,18 @@ public class CadastroAnimalBean implements Serializable {
 				System.out.println("[LOG] Proprietário existente atualizado. id=" + propAtual.getIdProprietario());
 			}
 
-			// Garantir que todos os animais adicionados referenciem o proprietário gerenciado
+			// Garantir que todos os animais adicionados referenciem o proprietário
+			// gerenciado
 			List<Animal> animaisGerenciados = new ArrayList<>();
 			for (Animal a : animaisAdicionados) {
 				// Set proprietário gerenciado
 				a.setProprietario(propAtual);
-				System.out.println("[LOG] Animal antes de persistir: Nome=" + a.getNome() + 
-						", Raça=" + (a.getRaca() != null ? a.getRaca().getNome() : "NULL") + 
+				System.out.println("[LOG] Animal antes de persistir: Nome=" + a.getNome() +
+						", Raça=" + (a.getRaca() != null ? a.getRaca().getNome() : "NULL") +
 						", Espécie=" + (a.getEspecie() != null ? a.getEspecie().getNome() : "NULL"));
 				Animal animalGerenciado;
 				if (a.getIdAnimal() != null) {
-					animalGerenciado = manager.merge(a);  // Merge se já tem ID
+					animalGerenciado = manager.merge(a); // Merge se já tem ID
 				} else {
 					manager.persist(a);
 					animalGerenciado = a;
@@ -517,11 +535,14 @@ public class CadastroAnimalBean implements Serializable {
 				protocolo = solicitacao.getIdSolicitacao();
 				System.out.println("[LOG] Solicitação salva: id=" + protocolo);
 
-				// Validação e persistência de documentos apenas para novos proprietários ou sem docs existentes
+				// Validação e persistência de documentos apenas para novos proprietários ou sem
+				// docs existentes
 				if (isNovoProprietario || propAtual.getDocumentos() == null) {
 					// Validação: Requer todos os documentos para novos proprietários
-					if (isNovoProprietario && (cardUnicoFile == null || documentoComFotoFile == null || comprovanteEnderecoFile == null)) {
-						throw new NegocioException("Todos os documentos pessoais (Card Único, Documento com Foto e Comprovante de Endereço) são obrigatórios para novos proprietários.");
+					if (isNovoProprietario && (cardUnicoFile == null || documentoComFotoFile == null
+							|| comprovanteEnderecoFile == null)) {
+						throw new NegocioException(
+								"Todos os documentos pessoais (Card Único, Documento com Foto e Comprovante de Endereço) são obrigatórios para novos proprietários.");
 					}
 
 					// Logs detalhados dos arquivos enviados
@@ -574,8 +595,8 @@ public class CadastroAnimalBean implements Serializable {
 				manager.getTransaction().rollback();
 				System.out.println("[LOG] Rollback executado");
 				// Opcional: Limpar arquivos salvos em caso de erro (manual cleanup recomendado)
-				String basePath = System.getProperty("user.home") + java.io.File.separator + 
-					"animalys" + java.io.File.separator + "documentos" + java.io.File.separator;
+				String basePath = System.getProperty("user.home") + java.io.File.separator +
+						"animalys" + java.io.File.separator + "documentos" + java.io.File.separator;
 				if (cardUnicoFile != null) {
 					new java.io.File(basePath + cardUnicoFile).delete();
 				}
@@ -594,8 +615,8 @@ public class CadastroAnimalBean implements Serializable {
 	private String salvarArquivoUpload(org.primefaces.event.FileUploadEvent event, String tipo) {
 		try {
 			// Usa o diretório home do usuário para compatibilidade entre Windows e Linux
-			String basePath = System.getProperty("user.home") + java.io.File.separator + 
-				"animalys" + java.io.File.separator + "documentos";
+			String basePath = System.getProperty("user.home") + java.io.File.separator +
+					"animalys" + java.io.File.separator + "documentos";
 			java.io.File dir = new java.io.File(basePath);
 			if (!dir.exists()) {
 				boolean created = dir.mkdirs();
@@ -655,9 +676,9 @@ public class CadastroAnimalBean implements Serializable {
 
 			System.out.println("METODO: adicionarAnimal() DIZ: - FotoUpload: "
 					+ (fotoUpload != null ? fotoUpload.getFileName() : "null"));
-			System.out.println("METODO: adicionarAnimal() DIZ: - Modalidade atual: " + 
+			System.out.println("METODO: adicionarAnimal() DIZ: - Modalidade atual: " +
 					(this.solicitacao.getModalidade() != null ? this.solicitacao.getModalidade() : "NULL"));
-			System.out.println("METODO: adicionarAnimal() DIZ: - Espécie selecionada: " + 
+			System.out.println("METODO: adicionarAnimal() DIZ: - Espécie selecionada: " +
 					(this.especieSelecionada != null ? this.especieSelecionada.getNome() : "NULL"));
 
 			this.animal.setProprietario(this.proprietario);
@@ -682,12 +703,14 @@ public class CadastroAnimalBean implements Serializable {
 			}
 
 			// Adiciona à lista (persistência completa em salvar())
-			System.out.println("METODO: adicionarAnimal() DIZ: NOME DA FOTO ANTES DE ADICIONAR: " + this.animal.getFoto());
-			
+			System.out.println(
+					"METODO: adicionarAnimal() DIZ: NOME DA FOTO ANTES DE ADICIONAR: " + this.animal.getFoto());
+
 			// Adiciona o animal à lista independente da modalidade
 			if (!this.animaisAdicionados.contains(this.animal)) {
 				this.animaisAdicionados.add(this.animal);
-				System.out.println("METODO: adicionarAnimal() DIZ: ANIMAL ADICIONADO A LISTA - Modalidade: " + this.solicitacao.getModalidade());
+				System.out.println("METODO: adicionarAnimal() DIZ: ANIMAL ADICIONADO A LISTA - Modalidade: "
+						+ this.solicitacao.getModalidade());
 			} else {
 				System.out.println("METODO: adicionarAnimal() DIZ: ANIMAL JA EXISTE NA LISTA");
 			}
@@ -695,12 +718,13 @@ public class CadastroAnimalBean implements Serializable {
 			System.out.println("METODO: adicionarAnimal() DIZ: CHAMANDO METODO: limparCamposFoto()");
 			this.limparCamposFoto();
 			this.limparAposAdicionar();
-			
+
 			FacesUtil.addInfoMessage("Animal adicionado com sucesso!");
 
 		} catch (NegocioException | IOException e) {
 			e.printStackTrace();
-			FacesUtil.addErrorMessage("METODO: adicionarAnimal() DIZ: Erro ao processar animal/foto: " + e.getMessage());
+			FacesUtil
+					.addErrorMessage("METODO: adicionarAnimal() DIZ: Erro ao processar animal/foto: " + e.getMessage());
 		}
 		System.out.println("METODO: adicionarAnimal() EXECUTADO");
 	}
@@ -724,16 +748,20 @@ public class CadastroAnimalBean implements Serializable {
 
 			try {
 				this.proprietario = this.proprietarios.proprietarioPorCPF(this.cpf);
-				
+
 				// Se chegou aqui, o proprietário foi encontrado
 				System.out
 						.println("[LOG] Proprietario buscado: idProprietario=" + this.proprietario.getIdProprietario());
-				System.out.println("[LOG] Documentos do proprietario: " + (this.proprietario.getDocumentos() != null ? "carregados com ID " + this.proprietario.getDocumentos().getId() : "NULL"));
+				System.out.println("[LOG] Documentos do proprietario: " + (this.proprietario.getDocumentos() != null
+						? "carregados com ID " + this.proprietario.getDocumentos().getId()
+						: "NULL"));
 				this.contato = this.proprietario.getContato() != null ? this.proprietario.getContato() : new Contato();
-				this.endereco = this.proprietario.getEndereco() != null ? this.proprietario.getEndereco() : new Endereco();
+				this.endereco = this.proprietario.getEndereco() != null ? this.proprietario.getEndereco()
+						: new Endereco();
 				this.animaisAtendidos = this.proprietario.getAnimais();
 				this.dataNascimento = this.proprietario.getDataNascimento().getTime();
-				// Não carregar animais já cadastrados - esta é uma tela de cadastro de novos animais
+				// Não carregar animais já cadastrados - esta é uma tela de cadastro de novos
+				// animais
 				this.habilitaCampos = false; // Desabilitar campos para proprietário existente (pré-preenchidos)
 				// Restaurar modalidade preservada
 				this.solicitacao.setModalidade(modalidadeAtual);
@@ -842,7 +870,8 @@ public class CadastroAnimalBean implements Serializable {
 	public void removerComprovanteEndereco() {
 		System.out.println("DEBUG: Executando removerComprovanteEndereco()");
 		setComprovanteEnderecoFile(null);
-		System.out.println("DEBUG: Comprovante de Endereço removido - comprovanteEnderecoFile = " + comprovanteEnderecoFile);
+		System.out.println(
+				"DEBUG: Comprovante de Endereço removido - comprovanteEnderecoFile = " + comprovanteEnderecoFile);
 	}
 
 	// Método para limpar todos os documentos
@@ -851,14 +880,14 @@ public class CadastroAnimalBean implements Serializable {
 		setDocumentoComFotoFile(null);
 		setComprovanteEnderecoFile(null);
 	}
-	
+
 	// Método para verificar se o proprietário atual tem documentos preenchidos
 	public boolean proprietarioTemDocumentos() {
 		// Verifica se o proprietário está carregado
 		if (proprietario == null || proprietario.getIdProprietario() == null) {
 			return false;
 		}
-		
+
 		// Verifica se o proprietário tem documentos
 		if (proprietario.getDocumentos() == null) {
 			// Tentar recarregar o proprietário com documentos
@@ -873,25 +902,26 @@ public class CadastroAnimalBean implements Serializable {
 				return false;
 			}
 		}
-		
+
 		DocumentosPessoais docs = proprietario.getDocumentos();
 		if (docs == null) {
 			return false;
 		}
-		
+
 		// Verifica se pelo menos um documento está preenchido
 		boolean temCardUnico = docs.getCardUnico() != null && !docs.getCardUnico().trim().isEmpty();
 		boolean temDocComFoto = docs.getDocumentoComFoto() != null && !docs.getDocumentoComFoto().trim().isEmpty();
-		boolean temComprovante = docs.getComprovanteEndereco() != null && !docs.getComprovanteEndereco().trim().isEmpty();
-		
+		boolean temComprovante = docs.getComprovanteEndereco() != null
+				&& !docs.getComprovanteEndereco().trim().isEmpty();
+
 		return temCardUnico || temDocComFoto || temComprovante;
 	}
-	
+
 	// Método para verificar se há um proprietário carregado
 	public boolean temProprietarioCarregado() {
 		return proprietario != null && proprietario.getIdProprietario() != null;
 	}
-	
+
 	// Método para forçar refresh do estado dos documentos (para debug)
 	public void refreshDocumentos() {
 		if (proprietario != null && proprietario.getIdProprietario() != null) {
@@ -899,7 +929,8 @@ public class CadastroAnimalBean implements Serializable {
 				Proprietario recarregado = proprietarios.porId(proprietario.getIdProprietario());
 				if (recarregado != null) {
 					this.proprietario = recarregado;
-					System.out.println("[REFRESH] Proprietário recarregado. Tem documentos: " + proprietarioTemDocumentos());
+					System.out.println(
+							"[REFRESH] Proprietário recarregado. Tem documentos: " + proprietarioTemDocumentos());
 				}
 			} catch (Exception e) {
 				System.out.println("[REFRESH] Erro ao recarregar: " + e.getMessage());

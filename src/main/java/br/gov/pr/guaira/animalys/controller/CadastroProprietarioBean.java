@@ -36,20 +36,20 @@ public class CadastroProprietarioBean implements Serializable {
 
 	@Inject
 	private Proprietarios proprietarios;
-	
+
 	@Inject
 	private Cidades cidades;
-	
+
 	@Inject
 	private EntityManager manager;
-	
+
 	private Proprietario proprietario;
 	private Endereco endereco;
 	private Contato contato;
 	private String cpf;
 	private Date dataNascimento;
 	private boolean edicao = false;
-	
+
 	// Propriedades para upload de documentos
 	private String cardUnicoFile;
 	private String documentoComFotoFile;
@@ -58,10 +58,10 @@ public class CadastroProprietarioBean implements Serializable {
 	@PostConstruct
 	public void inicializar() {
 		limpar();
-		
+
 		// Verificar se está editando
 		String idParam = FacesContext.getCurrentInstance()
-			.getExternalContext().getRequestParameterMap().get("proprietario");
+				.getExternalContext().getRequestParameterMap().get("proprietario");
 		if (idParam != null && !idParam.isEmpty()) {
 			try {
 				Integer id = Integer.valueOf(idParam);
@@ -102,10 +102,10 @@ public class CadastroProprietarioBean implements Serializable {
 				Proprietario proprietarioExistente = proprietarios.proprietarioPorCPF(cpf);
 				if (proprietarioExistente != null) {
 					this.proprietario = proprietarioExistente;
-					this.endereco = proprietarioExistente.getEndereco() != null ? 
-						proprietarioExistente.getEndereco() : new Endereco();
-					this.contato = proprietarioExistente.getContato() != null ? 
-						proprietarioExistente.getContato() : new Contato();
+					this.endereco = proprietarioExistente.getEndereco() != null ? proprietarioExistente.getEndereco()
+							: new Endereco();
+					this.contato = proprietarioExistente.getContato() != null ? proprietarioExistente.getContato()
+							: new Contato();
 					if (proprietarioExistente.getDataNascimento() != null) {
 						this.dataNascimento = proprietarioExistente.getDataNascimento().getTime();
 					}
@@ -128,7 +128,7 @@ public class CadastroProprietarioBean implements Serializable {
 				String cpfLimpo = cpf.replaceAll("[^0-9]", ""); // Remove caracteres não numéricos
 				proprietario.setCpf(cpfLimpo);
 			}
-			
+
 			// Converter data de nascimento
 			if (dataNascimento != null) {
 				Calendar cal = Calendar.getInstance();
@@ -148,7 +148,7 @@ public class CadastroProprietarioBean implements Serializable {
 			// Salvar contato usando manager
 			this.contato = manager.merge(contato);
 			proprietario.setContato(contato);
-			
+
 			// Processar documentos pessoais se houver uploads
 			boolean isNovoProprietario = (proprietario.getIdProprietario() == null);
 			if ((cardUnicoFile != null || documentoComFotoFile != null || comprovanteEnderecoFile != null)) {
@@ -183,7 +183,8 @@ public class CadastroProprietarioBean implements Serializable {
 				}
 			}
 
-			// Salvar proprietário (guardar já tem @Transactional, mas está dentro desta transação maior)
+			// Salvar proprietário (guardar já tem @Transactional, mas está dentro desta
+			// transação maior)
 			this.proprietario = proprietarios.guardar(proprietario);
 
 			System.out.println("[LOG] Proprietário salvo com sucesso");
@@ -193,9 +194,9 @@ public class CadastroProprietarioBean implements Serializable {
 			} else {
 				FacesUtil.addInfoMessage("Proprietário cadastrado com sucesso!");
 			}
-			
+
 			limpar();
-			
+
 		} catch (NegocioException e) {
 			FacesUtil.addErrorMessage(e.getMessage());
 			e.printStackTrace();
@@ -253,38 +254,38 @@ public class CadastroProprietarioBean implements Serializable {
 	public void setEdicao(boolean edicao) {
 		this.edicao = edicao;
 	}
-	
+
 	public List<Cidade> completarCidade(String descricao) {
 		System.out.println("=== COMPLETAR CIDADE ===");
 		System.out.println("Descrição buscada: " + descricao);
-		
+
 		List<Cidade> resultado = this.cidades.porNome(descricao);
 		System.out.println("Quantidade de cidades encontradas: " + (resultado != null ? resultado.size() : 0));
-		
+
 		if (resultado != null && !resultado.isEmpty()) {
 			for (int i = 0; i < Math.min(5, resultado.size()); i++) {
 				Cidade cidade = resultado.get(i);
-				System.out.println("Cidade " + (i+1) + ": " + cidade.getNome() + 
-					" - Estado: " + (cidade.getEstado() != null ? cidade.getEstado().getUf() : "NULL") +
-					" - ID: " + cidade.getId());
+				System.out.println("Cidade " + (i + 1) + ": " + cidade.getNome() +
+						" - Estado: " + (cidade.getEstado() != null ? cidade.getEstado().getUf() : "NULL") +
+						" - ID: " + cidade.getId());
 			}
 		}
-		
+
 		return resultado;
 	}
-	
+
 	public void onCidadeSelecionada() {
 		System.out.println("=== CIDADE SELECIONADA ===");
 		System.out.println("Método chamado!");
 		System.out.println("Endereco é null? " + (this.endereco == null));
-		
+
 		if (this.endereco != null) {
 			System.out.println("Endereco.cidade é null? " + (this.endereco.getCidade() == null));
-			
+
 			if (this.endereco.getCidade() != null) {
 				Cidade cidade = this.endereco.getCidade();
 				System.out.println("Cidade selecionada: " + cidade.getNome());
-				
+
 				if (cidade.getEstado() != null) {
 					System.out.println("UF da cidade: " + cidade.getEstado().getUf());
 					System.out.println("Seleção realizada com sucesso!");
@@ -293,20 +294,20 @@ public class CadastroProprietarioBean implements Serializable {
 				}
 			} else {
 				System.out.println("A cidade no endereço está NULL - tentando recovery");
-				
+
 				// Força um pequeno delay para permitir que o JSF processe
 				try {
 					Thread.sleep(100);
 				} catch (InterruptedException e) {
 					Thread.currentThread().interrupt();
 				}
-				
+
 				// Verifica novamente após o delay
 				if (this.endereco.getCidade() != null) {
 					System.out.println("Cidade encontrada após delay: " + this.endereco.getCidade().getNome());
 				} else {
 					System.out.println("Cidade ainda é null após delay - verificando componente");
-					
+
 					// Tenta recuperar a cidade do contexto JSF
 					try {
 						FacesContext context = FacesContext.getCurrentInstance();
@@ -320,7 +321,7 @@ public class CadastroProprietarioBean implements Serializable {
 									this.endereco.setCidade((Cidade) value);
 									Cidade cidade = (Cidade) value;
 									System.out.println("Cidade recuperada do componente: " + cidade.getNome());
-									
+
 									if (cidade.getEstado() != null) {
 										System.out.println("UF da cidade recuperada: " + cidade.getEstado().getUf());
 									}
@@ -337,9 +338,9 @@ public class CadastroProprietarioBean implements Serializable {
 		}
 		System.out.println("=== FIM CIDADE SELECIONADA ===");
 	}
-	
+
 	// ========== MÉTODOS PARA UPLOAD E GERENCIAMENTO DE DOCUMENTOS ==========
-	
+
 	// Getters e Setters para os arquivos de documentos
 	public String getCardUnicoFile() {
 		return cardUnicoFile;
@@ -364,7 +365,7 @@ public class CadastroProprietarioBean implements Serializable {
 	public void setComprovanteEnderecoFile(String comprovanteEnderecoFile) {
 		this.comprovanteEnderecoFile = comprovanteEnderecoFile;
 	}
-	
+
 	// Métodos para processar upload de cada documento
 	public void handleCardUnicoUpload(FileUploadEvent event) {
 		System.out.println("[LOG] handleCardUnicoUpload chamado");
@@ -401,13 +402,13 @@ public class CadastroProprietarioBean implements Serializable {
 			System.out.println("[DEBUG] comprovanteEnderecoFile NÃO setado (null)");
 		}
 	}
-	
+
 	// Função utilitária para salvar o arquivo
 	private String salvarArquivoUpload(FileUploadEvent event, String tipo) {
 		try {
 			// Usa o diretório home do usuário para compatibilidade entre Windows e Linux
-			String basePath = System.getProperty("user.home") + java.io.File.separator + 
-				"animalys" + java.io.File.separator + "documentos";
+			String basePath = System.getProperty("user.home") + java.io.File.separator +
+					"animalys" + java.io.File.separator + "documentos";
 			java.io.File dir = new java.io.File(basePath);
 			if (!dir.exists()) {
 				boolean created = dir.mkdirs();
@@ -436,7 +437,7 @@ public class CadastroProprietarioBean implements Serializable {
 			return null;
 		}
 	}
-	
+
 	// Métodos para remoção de documentos individuais
 	public void removerCardUnico() {
 		System.out.println("DEBUG: Executando removerCardUnico()");
@@ -455,17 +456,18 @@ public class CadastroProprietarioBean implements Serializable {
 	public void removerComprovanteEndereco() {
 		System.out.println("DEBUG: Executando removerComprovanteEndereco()");
 		setComprovanteEnderecoFile(null);
-		System.out.println("DEBUG: Comprovante de Endereço removido - comprovanteEnderecoFile = " + comprovanteEnderecoFile);
+		System.out.println(
+				"DEBUG: Comprovante de Endereço removido - comprovanteEnderecoFile = " + comprovanteEnderecoFile);
 		FacesUtil.addInfoMessage("Comprovante de Endereço removido com sucesso!");
 	}
-	
+
 	// Método para verificar se o proprietário atual tem documentos preenchidos
 	public boolean proprietarioTemDocumentos() {
 		// Verifica se o proprietário está carregado
 		if (proprietario == null || proprietario.getIdProprietario() == null) {
 			return false;
 		}
-		
+
 		// Verifica se o proprietário tem documentos
 		if (proprietario.getDocumentos() == null) {
 			// Tentar recarregar o proprietário com documentos
@@ -480,20 +482,21 @@ public class CadastroProprietarioBean implements Serializable {
 				return false;
 			}
 		}
-		
+
 		DocumentosPessoais docs = proprietario.getDocumentos();
 		if (docs == null) {
 			return false;
 		}
-		
+
 		// Verifica se pelo menos um documento está preenchido
 		boolean temCardUnico = docs.getCardUnico() != null && !docs.getCardUnico().trim().isEmpty();
 		boolean temDocComFoto = docs.getDocumentoComFoto() != null && !docs.getDocumentoComFoto().trim().isEmpty();
-		boolean temComprovante = docs.getComprovanteEndereco() != null && !docs.getComprovanteEndereco().trim().isEmpty();
-		
+		boolean temComprovante = docs.getComprovanteEndereco() != null
+				&& !docs.getComprovanteEndereco().trim().isEmpty();
+
 		return temCardUnico || temDocComFoto || temComprovante;
 	}
-	
+
 	// Método para forçar refresh do estado dos documentos
 	public void refreshDocumentos() {
 		if (proprietario != null && proprietario.getIdProprietario() != null) {
@@ -501,7 +504,8 @@ public class CadastroProprietarioBean implements Serializable {
 				Proprietario recarregado = proprietarios.porId(proprietario.getIdProprietario());
 				if (recarregado != null) {
 					this.proprietario = recarregado;
-					System.out.println("[REFRESH] Proprietário recarregado. Tem documentos: " + proprietarioTemDocumentos());
+					System.out.println(
+							"[REFRESH] Proprietário recarregado. Tem documentos: " + proprietarioTemDocumentos());
 				}
 			} catch (Exception e) {
 				System.out.println("[REFRESH] Erro ao recarregar: " + e.getMessage());
